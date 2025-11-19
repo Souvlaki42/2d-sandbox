@@ -9,7 +9,7 @@ class_name PlayerCamera
 @export var zoom_speed: float = 0.1
 @export var min_zoom: float = 0.05
 @export var max_zoom: float = 10.0
-@export var zoom_smoothness: float = 15.0 
+@export var zoom_smoothness: float = 15.0
 
 var target_zoom: Vector2
 var is_dragging: bool = false
@@ -30,9 +30,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_dragging and event is InputEventMouseMotion:
 		position -= event.relative * drag_sensitivity / zoom.x
 
-	if event.is_action_pressed("cam_zoom_in", true):
+	if event.is_action_pressed("cam_zoom_in"):
 		zoom_towards_mouse(1.0 + zoom_speed)
-	elif event.is_action_pressed("cam_zoom_out", true):
+	elif event.is_action_pressed("cam_zoom_out"):
 		zoom_towards_mouse(1.0 - zoom_speed)
 
 func handle_movement(delta: float) -> void:

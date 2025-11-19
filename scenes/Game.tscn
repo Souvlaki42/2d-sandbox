@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_cpr0p"]
 [ext_resource type="Texture2D" uid="uid://cdlonnknbqpuh" path="res://assets/Tiles/dirt.png" id="2_cpr0p"]
-[ext_resource type="Script" uid="uid://wbsdh35xt4e7" path="res://scripts/player.gd" id="3_s0nni"]
+[ext_resource type="Script" uid="uid://wbsdh35xt4e7" path="res://scripts/player_camera.gd" id="3_s0nni"]
 
 [node name="Game" type="Node2D"]
 
@@ -14,7 +14,6 @@ tile = NodePath("../Tile")
 visible = false
 texture = ExtResource("2_cpr0p")
 
-[node name="Player" type="Camera2D" parent="."]
+[node name="PlayerCamera" type="Camera2D" parent="."]
 process_callback = 0
 script = ExtResource("3_s0nni")
-max_zoom = 10.0
