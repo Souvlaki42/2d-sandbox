@@ -1,19 +1,47 @@
-[gd_scene load_steps=4 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=8 format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_cpr0p"]
-[ext_resource type="Texture2D" uid="uid://cdlonnknbqpuh" path="res://assets/Tiles/dirt.png" id="2_cpr0p"]
+[ext_resource type="Texture2D" path="res://assets/Tiles/dirt.png" id="2_cpr0p"]
+[ext_resource type="Texture2D" path="res://assets/Tiles/dirt_grass.png" id="3_aug50"]
 [ext_resource type="Script" uid="uid://wbsdh35xt4e7" path="res://scripts/player_camera.gd" id="3_s0nni"]
+[ext_resource type="Texture2D" path="res://assets/Tiles/stone.png" id="5_kiw3p"]
+[ext_resource type="Texture2D" path="res://assets/Tiles/trunk_mid.png" id="6_400sg"]
+[ext_resource type="Texture2D" path="res://assets/Tiles/leaves_transparent.png" id="7_400sg"]
 
 [node name="Game" type="Node2D"]
 
-[node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("tile")]
+[node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("grass_sprite", "dirt_sprite", "stone_sprite", "log_sprite", "leaf_sprite")]
 script = ExtResource("1_cpr0p")
-tile = NodePath("../Tile")
-
-[node name="Tile" type="Sprite2D" parent="."]
-visible = false
-texture = ExtResource("2_cpr0p")
+seed_num = 4102.0
+grass_sprite = NodePath("../Sprites/Grass")
+dirt_sprite = NodePath("../Sprites/Dirt")
+stone_sprite = NodePath("../Sprites/Stone")
+log_sprite = NodePath("../Sprites/Log")
+leaf_sprite = NodePath("../Sprites/Leaf")
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
 process_callback = 0
 script = ExtResource("3_s0nni")
+
+[node name="Sprites" type="Node2D" parent="."]
+visible = false
+
+[node name="Grass" type="Sprite2D" parent="Sprites"]
+position = Vector2(63.799988, 62.699997)
+texture = ExtResource("3_aug50")
+
+[node name="Dirt" type="Sprite2D" parent="Sprites"]
+position = Vector2(63.799988, 62.699997)
+texture = ExtResource("2_cpr0p")
+
+[node name="Stone" type="Sprite2D" parent="Sprites"]
+position = Vector2(63.799988, 62.699997)
+texture = ExtResource("5_kiw3p")
+
+[node name="Log" type="Sprite2D" parent="Sprites"]
+position = Vector2(63.799988, 62.699997)
+texture = ExtResource("6_400sg")
+
+[node name="Leaf" type="Sprite2D" parent="Sprites"]
+position = Vector2(63.799988, 62.699997)
+texture = ExtResource("7_400sg")

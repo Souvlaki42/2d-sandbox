@@ -15,6 +15,7 @@ var target_zoom: Vector2
 var is_dragging: bool = false
 
 func _ready() -> void:
+	RenderingServer.set_default_clear_color("#a3c4f8")
 	target_zoom = zoom
 
 func _process(delta: float) -> void:

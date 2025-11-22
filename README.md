@@ -2,12 +2,13 @@
 
 A 2D sandbox game like Terraria, made with Godot 4.5+.
 
-![Preview screenshot](preview.png)
+![Preview screenshot](screenshots/preview.png)
 
 ## Features
 
 - Very basic empty terrain generation.
 - Very basic camera movement.
+- Very basic tree generation.
 
 ## How to run
 
