@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_u5sy4"]
-[ext_resource type="Script" uid="uid://wbsdh35xt4e7" path="res://scripts/player_camera.gd" id="2_gee14"]
+[ext_resource type="Script" uid="uid://wbsdh35xt4e7" path="res://scripts/runtime_debugger.gd" id="2_gee14"]
 [ext_resource type="Texture2D" uid="uid://c347oyka37nhq" path="res://assets/tiles/dirt_grass.png" id="3_0tnpc"]
 [ext_resource type="Texture2D" uid="uid://cdlonnknbqpuh" path="res://assets/tiles/dirt.png" id="4_vtaks"]
 [ext_resource type="Texture2D" uid="uid://dt16g01huyj85" path="res://assets/tiles/stone.png" id="5_kvpfn"]
@@ -19,7 +19,7 @@ stone_sprite = NodePath("../Sprites/Stone")
 log_sprite = NodePath("../Sprites/Log")
 leaf_sprite = NodePath("../Sprites/Leaf")
 
-[node name="PlayerCamera" type="Camera2D" parent="."]
+[node name="RuntimeDebugger" type="Camera2D" parent="."]
 process_callback = 0
 script = ExtResource("2_gee14")
 

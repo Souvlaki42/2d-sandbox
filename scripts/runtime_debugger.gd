@@ -1,5 +1,7 @@
 extends Camera2D
-class_name PlayerCamera
+class_name RuntimeDebugger
+
+@export var background_color: Color = Color("a3c4f8")
 
 @export_group("Movement")
 @export var move_speed: float = 600.0
@@ -11,18 +13,18 @@ class_name PlayerCamera
 @export var max_zoom: float = 10.0
 @export var zoom_smoothness: float = 15.0
 
-var target_zoom: Vector2
+var target_zoom: Vector2 = Vector2.ZERO
 var is_dragging: bool = false
 
 func _ready() -> void:
-	RenderingServer.set_default_clear_color("#a3c4f8")
+	RenderingServer.set_default_clear_color(background_color)
 	target_zoom = zoom
 
 func _process(delta: float) -> void:
 	handle_movement(delta)
 	handle_zoom(delta)
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("cam_pan"):
 		is_dragging = true
 	elif event.is_action_released("cam_pan"):
@@ -35,7 +37,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		zoom_towards_mouse(1.0 + zoom_speed)
 	elif event.is_action_pressed("cam_zoom_out"):
 		zoom_towards_mouse(1.0 - zoom_speed)
-
+		
 func handle_movement(delta: float) -> void:
 	if is_dragging: return
 

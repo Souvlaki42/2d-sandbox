@@ -5,12 +5,15 @@ var terrain_noise: FastNoiseLite = FastNoiseLite.new()
 var cave_noise: FastNoiseLite = FastNoiseLite.new()
 
 var world_tiles: Array[Vector2] = []
+var world_chunks: Array[Node2D] = []
+
 var unity_gradient: Gradient
 var noise_texture: NoiseTexture2D
 
 @export_category("Generation")
-@export var generate_caves: bool = true
+@export var chunk_size: int = 20
 @export var world_size: int = 100
+@export var generate_caves: bool = true
 @export var height_addition: int = 25
 @export var surface_value: float = 0.25
 @export var height_multiplier: float = 25
@@ -55,8 +58,20 @@ func _ready() -> void:
 	terrain_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
 	
 	await generate_noise_texture()
+	create_chunks()
 	generate_terrain()
 	
+func create_chunks() -> void:
+	var num_of_chunks: int = roundi(float(world_size) / chunk_size)
+	world_chunks.resize(num_of_chunks)
+	
+	for i: int in range(num_of_chunks):
+		var new_chunk: Node2D = Node2D.new()
+		new_chunk.name = "Chunk #%d" % i
+		world_chunks[i] = new_chunk
+		add_child(new_chunk)
+		
+
 func generate_noise_texture() -> void:
 	if noise_texture == null:
 		noise_texture = NoiseTexture2D.new()
@@ -68,12 +83,12 @@ func generate_noise_texture() -> void:
 	await noise_texture.changed
 
 func place_tile(tile: Sprite2D, x: int, y: int) -> void:
-	var new_tile: Node = tile.duplicate()
+	var chunk_coord: int = floori(float(x) / chunk_size)
+	var new_tile: Sprite2D = tile.duplicate()
 	new_tile.visible = true
 	new_tile.position = Vector2(x * tile_size, ground_offset - (y * tile_size))
 	new_tile.name += " (%d, %d)" % [new_tile.position.x, new_tile.position.y]
-	new_tile.owner = get_tree().edited_scene_root
-	add_child(new_tile)
+	world_chunks[chunk_coord].add_child(new_tile)
 	world_tiles.push_back(Vector2(x, y))
 	
 func place_tree(x: int, y: int) -> void:
