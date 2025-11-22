@@ -7,7 +7,6 @@ A 2D sandbox game like Terraria, made with Godot 4.5+.
 ## Features
 
 - Very basic empty terrain generation.
-- Very basic runtime debugging system.
 - Very basic tree generation.
 - Very basic chunk splitting.
 

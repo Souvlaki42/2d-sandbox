@@ -1,3 +1,4 @@
+@tool
 extends Node2D
 class_name TerrainGenerator
 
@@ -6,11 +7,13 @@ var cave_noise: FastNoiseLite = FastNoiseLite.new()
 
 var world_tiles: Array[Vector2] = []
 var world_chunks: Array[Node2D] = []
-
 var unity_gradient: Gradient
-var noise_texture: NoiseTexture2D
 
 @export_category("Generation")
+@export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
+@export_tool_button("Reset Generation") var reset_generation_btn: Callable = reset_generation
+
+@export var noise_texture: NoiseTexture2D = null
 @export var chunk_size: int = 20
 @export var world_size: int = 100
 @export var generate_caves: bool = true
@@ -24,7 +27,7 @@ var noise_texture: NoiseTexture2D
 @export_category("Noise")
 @export var terrain_frequency: float = 0.04
 @export var cave_frequency: float = 0.08
-@export var seed_num: float = 0
+@export var noise_seed: float = 0.0
 
 @export_category("Trees")
 @export var tree_chance: int = 15 # 15%
@@ -39,21 +42,32 @@ var noise_texture: NoiseTexture2D
 @export var leaf_sprite: Sprite2D
 
 func _ready() -> void:
-	seed_num = randi_range(-10000, 10000)
+	if not Engine.is_editor_hint():
+		start_generation()
+
+func reset_generation() -> void:
+	world_tiles.clear()
+	world_chunks.clear()
+	for i: Node2D in get_children():
+		i.queue_free()
+		
+func start_generation() -> void:
+	reset_generation()
 	
+	noise_seed = randi_range(-10000, 10000)
 	unity_gradient = Gradient.new()
 	unity_gradient.set_color(0, Color.BLACK)
 	unity_gradient.set_color(1, Color.WHITE)
 
 	cave_noise.seed = 0
 	cave_noise.frequency = cave_frequency
-	cave_noise.offset = Vector3(seed_num, seed_num, 0)
+	cave_noise.offset = Vector3(noise_seed, noise_seed, 0)
 	cave_noise.noise_type = FastNoiseLite.TYPE_PERLIN
 	cave_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
 	
 	terrain_noise.seed = 0
 	terrain_noise.frequency = terrain_frequency
-	terrain_noise.offset = Vector3(seed_num, seed_num, 0)
+	terrain_noise.offset = Vector3(noise_seed, noise_seed, 0)
 	terrain_noise.noise_type = FastNoiseLite.TYPE_PERLIN
 	terrain_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
 	
@@ -70,7 +84,8 @@ func create_chunks() -> void:
 		new_chunk.name = "Chunk #%d" % i
 		world_chunks[i] = new_chunk
 		add_child(new_chunk)
-		
+		if Engine.is_editor_hint():
+			new_chunk.owner = get_tree().edited_scene_root
 
 func generate_noise_texture() -> void:
 	if noise_texture == null:
@@ -81,15 +96,18 @@ func generate_noise_texture() -> void:
 	noise_texture.color_ramp = unity_gradient
 	noise_texture.normalize = true
 	await noise_texture.changed
+	notify_property_list_changed()
 
 func place_tile(tile: Sprite2D, x: int, y: int) -> void:
 	var chunk_coord: int = floori(float(x) / chunk_size)
 	var new_tile: Sprite2D = tile.duplicate()
 	new_tile.visible = true
 	new_tile.position = Vector2(x * tile_size, ground_offset - (y * tile_size))
-	new_tile.name += " (%d, %d)" % [new_tile.position.x, new_tile.position.y]
+	new_tile.name += " (%d, %d)" % [new_tile.position.x / tile_size, new_tile.position.y / tile_size]
 	world_chunks[chunk_coord].add_child(new_tile)
 	world_tiles.push_back(Vector2(x, y))
+	if Engine.is_editor_hint():
+		new_tile.owner = get_tree().edited_scene_root
 	
 func place_tree(x: int, y: int) -> void:
 	if randi_range(0, tree_chance) == 1 and world_tiles.has(Vector2(x, y)):
