@@ -11,7 +11,6 @@
 
 [node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("grass_sprite", "dirt_sprite", "stone_sprite", "log_sprite", "leaf_sprite")]
 script = ExtResource("1_u5sy4")
-chunk_size = 30
 grass_sprite = NodePath("../Sprites/Grass")
 dirt_sprite = NodePath("../Sprites/Dirt")
 stone_sprite = NodePath("../Sprites/Stone")
