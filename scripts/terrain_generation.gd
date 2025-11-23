@@ -8,6 +8,7 @@ var cave_noise: FastNoiseLite = FastNoiseLite.new()
 var world_tiles: Array[Vector2] = []
 var world_chunks: Array[Node2D] = []
 var unity_gradient: Gradient
+var current_script: Script = get_script()
 
 @export_category("Generation")
 @export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
@@ -45,30 +46,34 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		start_generation()
 
+
 func reset_generation() -> void:
 	world_tiles.clear()
 	world_chunks.clear()
+	
 	for i: Node2D in get_children():
 		i.queue_free()
 	
-	noise_texture = get_script().get_property_default_value("noise_texture")
-	chunk_size = get_script().get_property_default_value("chunk_size")
-	world_size = get_script().get_property_default_value("world_size")
-	generate_caves = get_script().get_property_default_value("generate_caves")
-	height_addition = get_script().get_property_default_value("height_addition")
-	surface_value = get_script().get_property_default_value("surface_value")
-	height_multiplier = get_script().get_property_default_value("height_multiplier")
-	dirt_layer_height = get_script().get_property_default_value("dirt_layer_height")
-	ground_offset = get_script().get_property_default_value("ground_offset")
-	tile_size = get_script().get_property_default_value("tile_size")
+	assert(current_script != null, "There is should be a script here!")
+	
+	noise_texture = current_script.get_property_default_value("noise_texture")
+	chunk_size = current_script.get_property_default_value("chunk_size")
+	world_size = current_script.get_property_default_value("world_size")
+	generate_caves = current_script.get_property_default_value("generate_caves")
+	height_addition = current_script.get_property_default_value("height_addition")
+	surface_value = current_script.get_property_default_value("surface_value")
+	height_multiplier = current_script.get_property_default_value("height_multiplier")
+	dirt_layer_height = current_script.get_property_default_value("dirt_layer_height")
+	ground_offset = current_script.get_property_default_value("ground_offset")
+	tile_size = current_script.get_property_default_value("tile_size")
 
-	terrain_frequency = get_script().get_property_default_value("terrain_frequency")
-	cave_frequency = get_script().get_property_default_value("cave_frequency")
-	noise_seed = get_script().get_property_default_value("noise_seed")
+	terrain_frequency = current_script.get_property_default_value("terrain_frequency")
+	cave_frequency = current_script.get_property_default_value("cave_frequency")
+	noise_seed = current_script.get_property_default_value("noise_seed")
 
-	tree_chance = get_script().get_property_default_value("tree_chance")
-	min_tree_height = get_script().get_property_default_value("min_tree_height")
-	max_tree_height = get_script().get_property_default_value("max_tree_height")
+	tree_chance = current_script.get_property_default_value("tree_chance")
+	min_tree_height = current_script.get_property_default_value("min_tree_height")
+	max_tree_height = current_script.get_property_default_value("max_tree_height")
 	
 func start_generation() -> void:
 	reset_generation()
