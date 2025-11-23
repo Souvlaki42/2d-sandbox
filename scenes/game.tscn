@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=7 format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://c347oyka37nhq" path="res://assets/tiles/dirt_grass.png" id="3_0tnpc"]
@@ -7,26 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://c617ihfy12bow" path="res://assets/tiles/trunk_mid.png" id="6_dinhu"]
 [ext_resource type="Texture2D" uid="uid://boo8uh7hm4q8n" path="res://assets/tiles/leaves_transparent.png" id="7_kvuet"]
 
-[sub_resource type="Gradient" id="Gradient_p57ef"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_u5sy4"]
-noise_type = 3
-frequency = 0.08
-offset = Vector3(-322, -322, 0)
-fractal_type = 0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gee14"]
-width = 100
-height = 100
-noise = SubResource("FastNoiseLite_u5sy4")
-color_ramp = SubResource("Gradient_p57ef")
-
 [node name="Game" type="Node2D"]
 
 [node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("grass_sprite", "dirt_sprite", "stone_sprite", "log_sprite", "leaf_sprite")]
 script = ExtResource("1_u5sy4")
-noise_texture = SubResource("NoiseTexture2D_gee14")
-noise_seed = -322.0
+chunk_size = 30
 grass_sprite = NodePath("../Sprites/Grass")
 dirt_sprite = NodePath("../Sprites/Dirt")
 stone_sprite = NodePath("../Sprites/Stone")
