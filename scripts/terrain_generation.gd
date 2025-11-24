@@ -10,6 +10,9 @@ var world_chunks: Array[Node2D] = []
 var unity_gradient: Gradient
 var current_script: Script = get_script()
 
+@export_category("Tile Atlas")
+@export var tile_atlas: TileAtlas
+
 @export_category("Generation")
 @export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
 @export_tool_button("Reset Generation") var reset_generation_btn: Callable = reset_generation
@@ -34,13 +37,6 @@ var current_script: Script = get_script()
 @export var tree_chance: int = 15 # 15%
 @export var min_tree_height: int = 4
 @export var max_tree_height: int = 6
-
-@export_category("Tiles")
-@export var grass_sprite: Sprite2D
-@export var dirt_sprite: Sprite2D
-@export var stone_sprite: Sprite2D
-@export var log_sprite: Sprite2D
-@export var leaf_sprite: Sprite2D
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
@@ -77,6 +73,7 @@ func reset_generation() -> void:
 	
 func start_generation() -> void:
 	reset_generation()
+	assert(tile_atlas != null, "Tile atlas should be here!")
 	
 	noise_seed = randi_range(-10000, 10000)
 	unity_gradient = Gradient.new()
@@ -122,12 +119,13 @@ func generate_noise_texture() -> void:
 	await noise_texture.changed
 	notify_property_list_changed()
 
-func place_tile(tile: Sprite2D, x: int, y: int) -> void:
+func place_tile(tile: Tile, x: int, y: int) -> void:
 	var chunk_coord: int = floori(float(x) / chunk_size)
-	var new_tile: Sprite2D = tile.duplicate()
+	var new_tile: Sprite2D = Sprite2D.new()
+	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
+	new_tile.texture = tile.tile_sprite
 	new_tile.visible = true
 	new_tile.position = Vector2(x * tile_size, ground_offset - (y * tile_size))
-	new_tile.name += " (%d, %d)" % [new_tile.position.x / tile_size, new_tile.position.y / tile_size]
 	world_chunks[chunk_coord].add_child(new_tile)
 	world_tiles.push_back(Vector2(x, y))
 	if Engine.is_editor_hint():
@@ -137,30 +135,30 @@ func place_tree(x: int, y: int) -> void:
 	if randi_range(0, tree_chance) == 1 and world_tiles.has(Vector2(x, y)):
 		var tree_height: int = randi_range(min_tree_height, max_tree_height)
 		for i in range(1, tree_height + 1):
-			place_tile(log_sprite, x, y + i)
+			place_tile(tile_atlas.tree_log, x, y + i)
 			
-		place_tile(leaf_sprite, x, y + tree_height + 1)
-		place_tile(leaf_sprite, x, y + tree_height + 2)
-		place_tile(leaf_sprite, x, y + tree_height + 3)
+		place_tile(tile_atlas.tree_leaves, x, y + tree_height + 1)
+		place_tile(tile_atlas.tree_leaves, x, y + tree_height + 2)
+		place_tile(tile_atlas.tree_leaves, x, y + tree_height + 3)
 		
-		place_tile(leaf_sprite, x - 1, y + tree_height + 1)
-		place_tile(leaf_sprite, x - 1, y + tree_height + 2)
+		place_tile(tile_atlas.tree_leaves, x - 1, y + tree_height + 1)
+		place_tile(tile_atlas.tree_leaves, x - 1, y + tree_height + 2)
 		
-		place_tile(leaf_sprite, x + 1, y + tree_height + 1)
-		place_tile(leaf_sprite, x + 1, y + tree_height + 2)
+		place_tile(tile_atlas.tree_leaves, x + 1, y + tree_height + 1)
+		place_tile(tile_atlas.tree_leaves, x + 1, y + tree_height + 2)
 			
 func generate_terrain() -> void:
 	var noise_image: Image = noise_texture.get_image()
 	for x: int in range(world_size):
 		var height: float = terrain_noise.get_noise_2d(x, 0) * height_multiplier + height_addition
 		for y: int in range(height):
-			var tile: Sprite2D
+			var tile: Tile
 			if y < height - dirt_layer_height:
-				tile = stone_sprite
+				tile = tile_atlas.stone
 			elif y < int(height - 1):
-				tile = dirt_sprite
+				tile = tile_atlas.dirt
 			else:
-				tile = grass_sprite
+				tile = tile_atlas.grass
 				
 			if noise_image.get_pixel(x, y).r > surface_value or not generate_caves:
 				place_tile(tile, x, y)

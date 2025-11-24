@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Tile" load_steps=3 format=3 uid="uid://k7qsvwfcl1r7"]
+
+[ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_rib1y"]
+[ext_resource type="Texture2D" uid="uid://cdlonnknbqpuh" path="res://assets/tiles/dirt.png" id="2_0qcco"]
+
+[resource]
+script = ExtResource("1_rib1y")
+tile_name = "Dirt"
+tile_sprite = ExtResource("2_0qcco")
+metadata/_custom_type_script = "uid://u8f786gwmld3"

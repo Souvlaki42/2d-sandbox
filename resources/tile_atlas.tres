@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TileAtlas" load_steps=7 format=3 uid="uid://bujhuidy7rits"]
+
+[ext_resource type="Resource" uid="uid://k7qsvwfcl1r7" path="res://resources/tiles/dirt.tres" id="1_lte84"]
+[ext_resource type="Script" uid="uid://b655t5t7k4q06" path="res://scripts/tile_atlas.gd" id="1_ogb4k"]
+[ext_resource type="Resource" uid="uid://cb8y3ulu3xbki" path="res://resources/tiles/grass.tres" id="2_7ddyp"]
+[ext_resource type="Resource" uid="uid://xiobbgfvvuyk" path="res://resources/tiles/stone.tres" id="4_je73j"]
+[ext_resource type="Resource" uid="uid://jqu5fleggnsk" path="res://resources/tiles/leaves.tres" id="5_wqtmj"]
+[ext_resource type="Resource" uid="uid://ebevcvpfbf50" path="res://resources/tiles/log.tres" id="6_cpy8u"]
+
+[resource]
+script = ExtResource("1_ogb4k")
+grass = ExtResource("2_7ddyp")
+dirt = ExtResource("1_lte84")
+stone = ExtResource("4_je73j")
+tree_log = ExtResource("6_cpy8u")
+tree_leaves = ExtResource("5_wqtmj")
+metadata/_custom_type_script = "uid://b655t5t7k4q06"
