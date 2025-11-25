@@ -5,6 +5,8 @@
 
 [resource]
 script = ExtResource("1_t5eri")
+rarity = 0.8
+vein_size = 0.89
 tile_name = "Diamond"
 tile_sprite = ExtResource("2_t5eri")
 metadata/_custom_type_script = "uid://dpymexds7swdt"
