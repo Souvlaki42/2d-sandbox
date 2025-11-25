@@ -1,3 +1,4 @@
+@tool
 extends Tile
 class_name Ore
 

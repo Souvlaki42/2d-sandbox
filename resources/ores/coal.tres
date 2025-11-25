@@ -5,7 +5,6 @@
 
 [resource]
 script = ExtResource("1_skn1u")
-rarity = 0.8
 tile_name = "Coal"
 tile_sprite = ExtResource("2_qui1i")
 metadata/_custom_type_script = "uid://dpymexds7swdt"
