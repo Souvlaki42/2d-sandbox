@@ -8,6 +8,10 @@ var cave_noise: PerlinNoise = null
 var world_tiles: Array[Vector2] = []
 var world_chunks: Array[Node2D] = []
 
+@export_category("Actions")
+@export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
+@export_tool_button("Clear Generation") var reset_generation_btn: Callable = clear_generation
+
 @export_category("Terrain Settings")
 @export var chunk_size: int = 20:
 	set(new_value):
@@ -75,10 +79,6 @@ var world_chunks: Array[Node2D] = []
 		max_tree_height = new_value
 		Globals.terrain_settings_changed.emit()
 
-@export_category("Actions")
-@export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
-@export_tool_button("Clear Generation") var reset_generation_btn: Callable = clear_generation
-
 func _ready() -> void:
 	Globals.terrain_settings_changed.connect(_on_terrain_settings_connect)
 	Globals.noise_settings_changed.connect(_on_noise_settings_connect)
@@ -133,28 +133,22 @@ func create_chunks() -> void:
 			new_chunk.owner = get_tree().edited_scene_root
 			
 func create_noise_images() -> void:
-	if not cave_noise:
-		cave_noise = PerlinNoise.new(noise_seed, cave_frequency)
+	cave_noise = PerlinNoise.new(noise_seed, cave_frequency)
 	cave_noise_image = cave_noise.get_threshold_image(world_size, surface_value)
 	
-	if not terrain_noise:
-		terrain_noise = PerlinNoise.new(noise_seed, terrain_frequency)
+	terrain_noise = PerlinNoise.new(noise_seed, terrain_frequency)
 	
-	if not world_atlas.coal.noise:
-		world_atlas.coal.noise = PerlinNoise.new(noise_seed, world_atlas.coal.rarity)
+	world_atlas.coal.noise = PerlinNoise.new(noise_seed, world_atlas.coal.rarity)
 	world_atlas.coal.noise_image = world_atlas.coal.noise.get_threshold_image(world_size, world_atlas.coal.vein_size)
 		
-	if not world_atlas.iron.noise:
-		world_atlas.iron.noise = PerlinNoise.new(noise_seed, world_atlas.iron.rarity)
+	world_atlas.iron.noise = PerlinNoise.new(noise_seed, world_atlas.iron.rarity)
 	world_atlas.iron.noise_image = world_atlas.iron.noise.get_threshold_image(world_size, world_atlas.iron.vein_size)
-
-	if not world_atlas.gold.noise:
-		world_atlas.gold.noise = PerlinNoise.new(noise_seed, world_atlas.gold.rarity)
+	
+	world_atlas.gold.noise = PerlinNoise.new(noise_seed, world_atlas.gold.rarity)
 	world_atlas.gold.noise_image = world_atlas.gold.noise.get_threshold_image(world_size, world_atlas.gold.vein_size)
 		
-	if not world_atlas.diamond.noise:
-		world_atlas.diamond.noise = PerlinNoise.new(noise_seed, world_atlas.diamond.rarity)
-	world_atlas.gold.noise_image = world_atlas.gold.noise.get_threshold_image(world_size, world_atlas.gold.vein_size)
+	world_atlas.diamond.noise = PerlinNoise.new(noise_seed, world_atlas.diamond.rarity)
+	world_atlas.diamond.noise_image = world_atlas.diamond.noise.get_threshold_image(world_size, world_atlas.diamond.vein_size)
 	
 	notify_property_list_changed()
 
@@ -188,7 +182,7 @@ func place_tree(x: int, y: int) -> void:
 			
 func generate_terrain() -> void:
 	for x: int in range(world_size):
-		var height: float = ((terrain_noise.get_noise_2d(x, 0) + 1.0) / 2.0) * height_multiplier + height_addition
+		var height: float = terrain_noise.get_unity_noise(x, 0) * height_multiplier + height_addition
 		for y: int in range(height):
 			var tile: Tile
 			if y < height - dirt_layer_height:
@@ -198,7 +192,7 @@ func generate_terrain() -> void:
 			else:
 				tile = world_atlas.grass
 				
-			if cave_noise_image.get_pixel(x, y).r > surface_value or not generate_caves:
+			if cave_noise_image.get_pixel(x, y).r > 0.5 or not generate_caves:
 				place_tile(tile, x, y)
 			
 			if y >= int(height - 1):
