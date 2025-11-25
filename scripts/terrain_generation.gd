@@ -8,45 +8,98 @@ var cave_noise: FastNoiseLite = FastNoiseLite.new()
 var world_tiles: Array[Vector2] = []
 var world_chunks: Array[Node2D] = []
 
+@export_category("Terrain Settings")
+@export var chunk_size: int = 20:
+	set(new_value):
+		chunk_size = new_value
+		Globals.terrain_settings_changed.emit()
+@export var world_size: int = 100:
+	set(new_value):
+		chunk_size = new_value
+		Globals.terrain_settings_changed.emit()
+@export var generate_caves: bool = true:
+	set(new_value):
+		generate_caves = new_value
+		Globals.terrain_settings_changed.emit()
+@export var height_addition: int = 25:
+	set(new_value):
+		height_addition = new_value
+		Globals.terrain_settings_changed.emit()
+@export var surface_value: float = 0.25:
+	set(new_value):
+		surface_value = new_value
+		Globals.terrain_settings_changed.emit()
+@export var height_multiplier: float = 25:
+	set(new_value):
+		height_multiplier = new_value
+		Globals.terrain_settings_changed.emit()
+@export var dirt_layer_height: int = 5:
+	set(new_value):
+		dirt_layer_height = new_value
+		Globals.terrain_settings_changed.emit()
+@export var ground_offset: float = 600.0:
+	set(new_value):
+		ground_offset = new_value
+		Globals.terrain_settings_changed.emit()
+@export var tile_size: int = 128:
+	set(new_value):
+		tile_size = new_value
+		Globals.terrain_settings_changed.emit()
 
 @export_category("Noise Settings")
 @export var world_atlas: WorldAtlas
 @export var cave_noise_texture: NoiseTexture2D = null
 
-@export var noise_texture: NoiseTexture2D = null
-@export var chunk_size: int = 20
-@export var world_size: int = 100
-@export var generate_caves: bool = true
-@export var height_addition: int = 25
-@export var surface_value: float = 0.25
-@export var height_multiplier: float = 25
-@export var dirt_layer_height: int = 5
-@export var ground_offset: float = 600.0
-@export var tile_size: int = 128
+@export var terrain_frequency: float = 0.04:
+	set(new_value):
+		terrain_frequency = new_value
+		Globals.noise_settings_changed.emit()
+@export var cave_frequency: float = 0.08:
+	set(new_value):
+		cave_frequency = new_value
+		Globals.noise_settings_changed.emit()
+@export var noise_seed: int = 0:
+	set(new_value):
+		noise_seed = new_value
+		Globals.noise_settings_changed.emit()
 
-@export_category("Noise")
-@export var terrain_frequency: float = 0.04
-@export var cave_frequency: float = 0.08
-@export var noise_seed: float = 0.0
+@export_category("Tree Settings")
+@export var tree_percent_chance: int = 15:
+	set(new_value):
+		tree_percent_chance = new_value
+		Globals.terrain_settings_changed.emit()
+@export var min_tree_height: int = 4:
+	set(new_value):
+		min_tree_height = new_value
+		Globals.terrain_settings_changed.emit()
+@export var max_tree_height: int = 6:
+	set(new_value):
+		max_tree_height = new_value
+		Globals.terrain_settings_changed.emit()
 
-@export_category("Trees")
-@export var tree_chance: int = 15 # 15%
-@export var min_tree_height: int = 4
-@export var max_tree_height: int = 6
 @export_category("Actions")
 @export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
 @export_tool_button("Clear Generation") var reset_generation_btn: Callable = clear_generation
 
 func _ready() -> void:
+	Globals.terrain_settings_changed.connect(_on_terrain_settings_connect)
+	Globals.noise_settings_changed.connect(_on_noise_settings_connect)
 	if not Engine.is_editor_hint():
 		start_generation()
+		
+func _on_terrain_settings_connect() -> void:
+	start_generation()
 
+func _on_noise_settings_connect() -> void:
+	create_noise_textures()
 
 func clear_generation() -> void:
 	world_tiles.clear()
 	world_chunks.clear()
 	
 	cave_noise_texture = null
+	noise_seed = 0
+	
 	for i: Node2D in get_children():
 		i.queue_free()
 	
