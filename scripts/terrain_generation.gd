@@ -7,15 +7,11 @@ var cave_noise: FastNoiseLite = FastNoiseLite.new()
 
 var world_tiles: Array[Vector2] = []
 var world_chunks: Array[Node2D] = []
-var unity_gradient: Gradient
-var current_script: Script = get_script()
 
-@export_category("Tile Atlas")
-@export var tile_atlas: TileAtlas
 
-@export_category("Generation")
-@export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
-@export_tool_button("Reset Generation") var reset_generation_btn: Callable = reset_generation
+@export_category("Noise Settings")
+@export var world_atlas: WorldAtlas
+@export var cave_noise_texture: NoiseTexture2D = null
 
 @export var noise_texture: NoiseTexture2D = null
 @export var chunk_size: int = 20
@@ -37,62 +33,31 @@ var current_script: Script = get_script()
 @export var tree_chance: int = 15 # 15%
 @export var min_tree_height: int = 4
 @export var max_tree_height: int = 6
+@export_category("Actions")
+@export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
+@export_tool_button("Clear Generation") var reset_generation_btn: Callable = clear_generation
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		start_generation()
 
 
-func reset_generation() -> void:
+func clear_generation() -> void:
 	world_tiles.clear()
 	world_chunks.clear()
 	
+	cave_noise_texture = null
 	for i: Node2D in get_children():
 		i.queue_free()
 	
-	assert(current_script != null, "There is should be a script here!")
-	
-	noise_texture = current_script.get_property_default_value("noise_texture")
-	chunk_size = current_script.get_property_default_value("chunk_size")
-	world_size = current_script.get_property_default_value("world_size")
-	generate_caves = current_script.get_property_default_value("generate_caves")
-	height_addition = current_script.get_property_default_value("height_addition")
-	surface_value = current_script.get_property_default_value("surface_value")
-	height_multiplier = current_script.get_property_default_value("height_multiplier")
-	dirt_layer_height = current_script.get_property_default_value("dirt_layer_height")
-	ground_offset = current_script.get_property_default_value("ground_offset")
-	tile_size = current_script.get_property_default_value("tile_size")
-
-	terrain_frequency = current_script.get_property_default_value("terrain_frequency")
-	cave_frequency = current_script.get_property_default_value("cave_frequency")
-	noise_seed = current_script.get_property_default_value("noise_seed")
-
-	tree_chance = current_script.get_property_default_value("tree_chance")
-	min_tree_height = current_script.get_property_default_value("min_tree_height")
-	max_tree_height = current_script.get_property_default_value("max_tree_height")
-	
 func start_generation() -> void:
-	reset_generation()
-	assert(tile_atlas != null, "Tile atlas should be here!")
-	
-	noise_seed = randi_range(-10000, 10000)
-	unity_gradient = Gradient.new()
-	unity_gradient.set_color(0, Color.BLACK)
-	unity_gradient.set_color(1, Color.WHITE)
+	clear_generation()
+	assert(world_atlas != null, "World atlas should be here!")
 
-	cave_noise.seed = 0
-	cave_noise.frequency = cave_frequency
-	cave_noise.offset = Vector3(noise_seed, noise_seed, 0)
-	cave_noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	cave_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
-	
-	terrain_noise.seed = 0
-	terrain_noise.frequency = terrain_frequency
-	terrain_noise.offset = Vector3(noise_seed, noise_seed, 0)
-	terrain_noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	terrain_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
-	
-	await generate_noise_texture()
+	if noise_seed == 0:
+		noise_seed = randi_range(-10000, 10000)
+		
+	await create_noise_textures()
 	create_chunks()
 	generate_terrain()
 	
@@ -107,17 +72,30 @@ func create_chunks() -> void:
 		add_child(new_chunk)
 		if Engine.is_editor_hint():
 			new_chunk.owner = get_tree().edited_scene_root
-
-func generate_noise_texture() -> void:
-	if noise_texture == null:
-		noise_texture = NoiseTexture2D.new()
-	noise_texture.width = world_size
-	noise_texture.height = world_size
-	noise_texture.noise = cave_noise
-	noise_texture.color_ramp = unity_gradient
-	noise_texture.normalize = true
-	await noise_texture.changed
+			
+func create_noise_textures() -> void:
+	cave_noise.seed = noise_seed
+	cave_noise.frequency = cave_frequency
+	cave_noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	cave_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
+	
+	terrain_noise.seed = noise_seed
+	terrain_noise.frequency = terrain_frequency
+	terrain_noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	terrain_noise.fractal_type = FastNoiseLite.FRACTAL_NONE
+	
+	cave_noise_texture = await _generate_noise_texture(cave_noise)
+	
 	notify_property_list_changed()
+
+func _generate_noise_texture(noise: Noise) -> NoiseTexture2D:
+	var texture: NoiseTexture2D = NoiseTexture2D.new()
+	texture.width = world_size
+	texture.height = world_size
+	texture.noise = noise
+	texture.normalize = true
+	await texture.changed
+	return texture
 
 func place_tile(tile: Tile, x: int, y: int) -> void:
 	var chunk_coord: int = floori(float(x) / chunk_size)
@@ -132,33 +110,33 @@ func place_tile(tile: Tile, x: int, y: int) -> void:
 		new_tile.owner = get_tree().edited_scene_root
 	
 func place_tree(x: int, y: int) -> void:
-	if randi_range(0, tree_chance) == 1 and world_tiles.has(Vector2(x, y)):
+	if randi_range(0, tree_percent_chance) == 1 and world_tiles.has(Vector2(x, y)):
 		var tree_height: int = randi_range(min_tree_height, max_tree_height)
 		for i in range(1, tree_height + 1):
-			place_tile(tile_atlas.tree_log, x, y + i)
+			place_tile(world_atlas.tree_log, x, y + i)
 			
-		place_tile(tile_atlas.tree_leaves, x, y + tree_height + 1)
-		place_tile(tile_atlas.tree_leaves, x, y + tree_height + 2)
-		place_tile(tile_atlas.tree_leaves, x, y + tree_height + 3)
+		place_tile(world_atlas.tree_leaves, x, y + tree_height + 1)
+		place_tile(world_atlas.tree_leaves, x, y + tree_height + 2)
+		place_tile(world_atlas.tree_leaves, x, y + tree_height + 3)
 		
-		place_tile(tile_atlas.tree_leaves, x - 1, y + tree_height + 1)
-		place_tile(tile_atlas.tree_leaves, x - 1, y + tree_height + 2)
+		place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 1)
+		place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 2)
 		
-		place_tile(tile_atlas.tree_leaves, x + 1, y + tree_height + 1)
-		place_tile(tile_atlas.tree_leaves, x + 1, y + tree_height + 2)
+		place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 1)
+		place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 2)
 			
 func generate_terrain() -> void:
-	var noise_image: Image = noise_texture.get_image()
+	var noise_image: Image = cave_noise_texture.get_image()
 	for x: int in range(world_size):
 		var height: float = terrain_noise.get_noise_2d(x, 0) * height_multiplier + height_addition
 		for y: int in range(height):
 			var tile: Tile
 			if y < height - dirt_layer_height:
-				tile = tile_atlas.stone
+				tile = world_atlas.stone
 			elif y < int(height - 1):
-				tile = tile_atlas.dirt
+				tile = world_atlas.dirt
 			else:
-				tile = tile_atlas.grass
+				tile = world_atlas.grass
 				
 			if noise_image.get_pixel(x, y).r > surface_value or not generate_caves:
 				place_tile(tile, x, y)
