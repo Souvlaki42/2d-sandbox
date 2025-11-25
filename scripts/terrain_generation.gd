@@ -186,7 +186,16 @@ func generate_terrain() -> void:
 		for y: int in range(height):
 			var tile: Tile
 			if y < height - dirt_layer_height:
-				tile = world_atlas.stone
+				if world_atlas.coal.noise_image.get_pixel(x, y).r > 0.5:
+					tile = world_atlas.coal
+				elif world_atlas.iron.noise_image.get_pixel(x, y).r > 0.5:
+					tile = world_atlas.iron
+				elif world_atlas.gold.noise_image.get_pixel(x, y).r > 0.5:
+					tile = world_atlas.gold
+				elif world_atlas.diamond.noise_image.get_pixel(x, y).r > 0.5:
+					tile = world_atlas.diamond
+				else:
+					tile = world_atlas.stone
 			elif y < int(height - 1):
 				tile = world_atlas.dirt
 			else:
