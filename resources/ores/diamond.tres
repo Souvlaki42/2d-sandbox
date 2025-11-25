@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Ore" load_steps=3 format=3 uid="uid://pbm8it5u00ps"]
+
+[ext_resource type="Script" uid="uid://dpymexds7swdt" path="res://scripts/ore_class.gd" id="1_t5eri"]
+[ext_resource type="Texture2D" uid="uid://d14u1jyutro3j" path="res://assets/tiles/stone_diamond.png" id="2_t5eri"]
+
+[resource]
+script = ExtResource("1_t5eri")
+rarity = 0.8
+vein_size = 0.89
+tile_name = "Diamond"
+tile_sprite = ExtResource("2_t5eri")
+metadata/_custom_type_script = "uid://dpymexds7swdt"
