@@ -47,9 +47,8 @@ var world_chunks: Array[Node2D] = []
 		Globals.terrain_settings_changed.emit()
 
 @export_category("Noise Settings")
-@export var world_atlas: WorldAtlas
 @export var cave_noise_texture: NoiseTexture2D = null
-
+@export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
 @export var terrain_frequency: float = 0.04:
 	set(new_value):
 		terrain_frequency = new_value
@@ -58,10 +57,8 @@ var world_chunks: Array[Node2D] = []
 	set(new_value):
 		cave_frequency = new_value
 		Globals.noise_settings_changed.emit()
-@export var noise_seed: int = 0:
-	set(new_value):
-		noise_seed = new_value
-		Globals.noise_settings_changed.emit()
+@export var world_atlas: WorldAtlas
+
 
 @export_category("Tree Settings")
 @export var tree_percent_chance: int = 15:
@@ -99,6 +96,8 @@ func clear_generation() -> void:
 	
 	cave_noise_texture = null
 	noise_seed = 0
+		
+	notify_property_list_changed()
 	
 	for i: Node2D in get_children():
 		i.queue_free()
