@@ -6,13 +6,12 @@ A 2D sandbox game like Terraria, made with Godot 4.5+.
 
 ## Features
 
-- Very basic empty terrain generation.
-- Very basic tree generation.
-- Very basic chunk splitting.
+- Terrain generation.
+- Tree generation.
+- Chunk splitting.
 
 ## Resources
 - [2D Sandbox Tutorial Series for Unity](https://www.youtube.com/playlist?list=PLn1X2QyVjFVDE9syarF1HoUFwB_3K7z2y)
-- [Runtime Debugging Tools PoC plugin](https://github.com/bbbscarter/GodotRuntimeDebugTools)
 - [2D Voxel Asset Pack by Kenney](https://www.kenney.nl/assets/voxel-pack)
 
 ## How to run

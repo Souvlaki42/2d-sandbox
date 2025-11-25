@@ -1,6 +1,7 @@
 extends Resource
-class_name TileAtlas
+class_name WorldAtlas
 
+@export_category("Tiles")
 @export var grass: Tile
 @export var dirt: Tile
 @export var stone: Tile
