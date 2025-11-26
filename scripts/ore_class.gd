@@ -14,4 +14,4 @@ var noise: PerlinNoise = null
 		vein_size = new_value
 		Globals.noise_settings_changed.emit()
 
-@export var noise_image: Image
+@export var spread_image: Image

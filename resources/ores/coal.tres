@@ -1,12 +1,14 @@
-[gd_resource type="Resource" script_class="Ore" load_steps=3 format=3 uid="uid://bocd008hwo6tl"]
+[gd_resource type="Resource" script_class="Ore" load_steps=4 format=3 uid="uid://bocd008hwo6tl"]
 
 [ext_resource type="Script" uid="uid://dpymexds7swdt" path="res://scripts/ore_class.gd" id="1_skn1u"]
+[ext_resource type="Texture2D" uid="uid://b05e14kctc40g" path="res://assets/tiles/stone_coal.png" id="2_b1nrh"]
 [ext_resource type="Texture2D" uid="uid://b5gwjcxacm4hp" path="res://assets/tiles/stone_coal_alt.png" id="2_qui1i"]
 
 [resource]
 script = ExtResource("1_skn1u")
 rarity = 0.1
 vein_size = 0.8
+max_spawn_height = null
 tile_name = "Coal"
-tile_sprite = ExtResource("2_qui1i")
+tile_sprites = Array[Texture2D]([ExtResource("2_b1nrh"), ExtResource("2_qui1i")])
 metadata/_custom_type_script = "uid://dpymexds7swdt"

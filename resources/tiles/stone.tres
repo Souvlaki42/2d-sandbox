@@ -6,5 +6,5 @@
 [resource]
 script = ExtResource("1_djx2r")
 tile_name = "Stone"
-tile_sprite = ExtResource("2_31y08")
+tile_sprites = Array[Texture2D]([ExtResource("2_31y08")])
 metadata/_custom_type_script = "uid://u8f786gwmld3"

@@ -97,10 +97,10 @@ func clear_generation() -> void:
 	world_chunks.clear()
 	
 	cave_noise_image = null
-	world_atlas.coal.noise_image = null
-	world_atlas.iron.noise_image = null
-	world_atlas.gold.noise_image = null
-	world_atlas.diamond.noise_image = null
+	world_atlas.coal.spread_image = null
+	world_atlas.iron.spread_image = null
+	world_atlas.gold.spread_image = null
+	world_atlas.diamond.spread_image = null
 	noise_seed = 0
 		
 	notify_property_list_changed()
@@ -113,8 +113,10 @@ func start_generation() -> void:
 
 	assert(world_atlas != null, "World atlas should be here!")
 	
+	randomize()
 	if noise_seed == 0:
 		noise_seed = randi_range(-10000, 10000)
+		seed(noise_seed)
 	
 	create_noise_images()
 	create_chunks()
@@ -139,16 +141,16 @@ func create_noise_images() -> void:
 	terrain_noise = PerlinNoise.new(noise_seed, terrain_frequency)
 	
 	world_atlas.coal.noise = PerlinNoise.new(noise_seed, world_atlas.coal.rarity)
-	world_atlas.coal.noise_image = world_atlas.coal.noise.get_threshold_image(world_size, world_atlas.coal.vein_size)
+	world_atlas.coal.spread_image = world_atlas.coal.noise.get_threshold_image(world_size, world_atlas.coal.vein_size)
 		
 	world_atlas.iron.noise = PerlinNoise.new(noise_seed, world_atlas.iron.rarity)
-	world_atlas.iron.noise_image = world_atlas.iron.noise.get_threshold_image(world_size, world_atlas.iron.vein_size)
+	world_atlas.iron.spread_image = world_atlas.iron.noise.get_threshold_image(world_size, world_atlas.iron.vein_size)
 	
 	world_atlas.gold.noise = PerlinNoise.new(noise_seed, world_atlas.gold.rarity)
-	world_atlas.gold.noise_image = world_atlas.gold.noise.get_threshold_image(world_size, world_atlas.gold.vein_size)
+	world_atlas.gold.spread_image = world_atlas.gold.noise.get_threshold_image(world_size, world_atlas.gold.vein_size)
 		
 	world_atlas.diamond.noise = PerlinNoise.new(noise_seed, world_atlas.diamond.rarity)
-	world_atlas.diamond.noise_image = world_atlas.diamond.noise.get_threshold_image(world_size, world_atlas.diamond.vein_size)
+	world_atlas.diamond.spread_image = world_atlas.diamond.noise.get_threshold_image(world_size, world_atlas.diamond.vein_size)
 	
 	notify_property_list_changed()
 
@@ -156,7 +158,7 @@ func place_tile(tile: Tile, x: int, y: int) -> void:
 	var chunk_coord: int = floori(float(x) / chunk_size)
 	var new_tile: Sprite2D = Sprite2D.new()
 	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
-	new_tile.texture = tile.tile_sprite
+	new_tile.texture = tile.tile_sprites[randi_range(0, tile.tile_sprites.size() - 1)]
 	new_tile.visible = true
 	new_tile.position = Vector2(x * tile_size, ground_offset - (y * tile_size))
 	world_chunks[chunk_coord].add_child(new_tile)
@@ -186,13 +188,13 @@ func generate_terrain() -> void:
 		for y: int in range(height):
 			var tile: Tile
 			if y < height - dirt_layer_height:
-				if world_atlas.coal.noise_image.get_pixel(x, y).r > 0.5:
+				if world_atlas.coal.spread_image.get_pixel(x, y).r > 0.5:
 					tile = world_atlas.coal
-				elif world_atlas.iron.noise_image.get_pixel(x, y).r > 0.5:
+				elif world_atlas.iron.spread_image.get_pixel(x, y).r > 0.5:
 					tile = world_atlas.iron
-				elif world_atlas.gold.noise_image.get_pixel(x, y).r > 0.5:
+				elif world_atlas.gold.spread_image.get_pixel(x, y).r > 0.5:
 					tile = world_atlas.gold
-				elif world_atlas.diamond.noise_image.get_pixel(x, y).r > 0.5:
+				elif world_atlas.diamond.spread_image.get_pixel(x, y).r > 0.5:
 					tile = world_atlas.diamond
 				else:
 					tile = world_atlas.stone
