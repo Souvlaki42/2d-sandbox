@@ -7,8 +7,8 @@
 [resource]
 script = ExtResource("1_skn1u")
 rarity = 0.1
-vein_size = 0.8
-max_spawn_height = null
+vein_size = 0.76
+max_spawn_height = 5
 tile_name = "Coal"
 tile_sprites = Array[Texture2D]([ExtResource("2_b1nrh"), ExtResource("2_qui1i")])
 metadata/_custom_type_script = "uid://dpymexds7swdt"
