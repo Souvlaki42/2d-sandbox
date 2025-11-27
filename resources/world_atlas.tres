@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WorldAtlas" load_steps=11 format=3 uid="uid://b5uwjwolot0v2"]
+[gd_resource type="Resource" script_class="WorldAtlas" load_steps=12 format=3 uid="uid://b5uwjwolot0v2"]
 
 [ext_resource type="Resource" uid="uid://bocd008hwo6tl" path="res://resources/ores/coal.tres" id="1_6q4n7"]
 [ext_resource type="Script" uid="uid://b655t5t7k4q06" path="res://scripts/world_atlas.gd" id="1_vkyk3"]
@@ -9,6 +9,7 @@
 [ext_resource type="Resource" uid="uid://snd2te27ofb8" path="res://resources/ores/iron.tres" id="6_41ltb"]
 [ext_resource type="Resource" uid="uid://xiobbgfvvuyk" path="res://resources/tiles/stone.tres" id="8_hc101"]
 [ext_resource type="Resource" uid="uid://jqu5fleggnsk" path="res://resources/tiles/leaves.tres" id="9_6rkd3"]
+[ext_resource type="Resource" uid="uid://blcw8w30c034u" path="res://resources/tiles/tall_grass.tres" id="9_pkr34"]
 [ext_resource type="Resource" uid="uid://ebevcvpfbf50" path="res://resources/tiles/log.tres" id="10_gv65d"]
 
 [resource]
@@ -16,6 +17,7 @@ script = ExtResource("1_vkyk3")
 grass = ExtResource("5_n6af0")
 dirt = ExtResource("3_n1km0")
 stone = ExtResource("8_hc101")
+tall_grass = ExtResource("9_pkr34")
 tree_log = ExtResource("10_gv65d")
 tree_leaves = ExtResource("9_6rkd3")
 coal = ExtResource("1_6q4n7")

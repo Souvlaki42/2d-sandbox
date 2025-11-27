@@ -5,7 +5,7 @@ class_name TerrainGenerator
 var terrain_noise: PerlinNoise = null
 var cave_noise: PerlinNoise = null
 
-var world_tiles: Array[Vector2] = []
+var world_tiles: Array[Vector2i] = []
 var world_chunks: Array[Node2D] = []
 
 @export_category("Actions")
@@ -25,7 +25,7 @@ var world_chunks: Array[Node2D] = []
 	set(new_value):
 		generate_caves = new_value
 		Globals.terrain_settings_changed.emit()
-@export var height_addition: int = 25:
+@export var height_addition: int = 50:
 	set(new_value):
 		height_addition = new_value
 		Globals.terrain_settings_changed.emit()
@@ -41,13 +41,31 @@ var world_chunks: Array[Node2D] = []
 	set(new_value):
 		dirt_layer_height = new_value
 		Globals.terrain_settings_changed.emit()
-@export var ground_offset: float = 600.0:
+@export var ground_offset: int = 600:
 	set(new_value):
 		ground_offset = new_value
 		Globals.terrain_settings_changed.emit()
 @export var tile_size: int = 128:
 	set(new_value):
 		tile_size = new_value
+		Globals.terrain_settings_changed.emit()
+
+@export_category("Prop Settings")
+@export var tall_grass_percent_chance: int = 2:
+	set(new_value):
+		tall_grass_percent_chance = new_value
+		Globals.terrain_settings_changed.emit()
+@export var tree_percent_chance: int = 15:
+	set(new_value):
+		tree_percent_chance = new_value
+		Globals.terrain_settings_changed.emit()
+@export var min_tree_height: int = 4:
+	set(new_value):
+		min_tree_height = new_value
+		Globals.terrain_settings_changed.emit()
+@export var max_tree_height: int = 6:
+	set(new_value):
+		max_tree_height = new_value
 		Globals.terrain_settings_changed.emit()
 
 @export_category("Noise Settings")
@@ -63,21 +81,6 @@ var world_chunks: Array[Node2D] = []
 		cave_frequency = new_value
 		Globals.noise_settings_changed.emit()
 @export var world_atlas: WorldAtlas
-
-
-@export_category("Tree Settings")
-@export var tree_percent_chance: int = 15:
-	set(new_value):
-		tree_percent_chance = new_value
-		Globals.terrain_settings_changed.emit()
-@export var min_tree_height: int = 4:
-	set(new_value):
-		min_tree_height = new_value
-		Globals.terrain_settings_changed.emit()
-@export var max_tree_height: int = 6:
-	set(new_value):
-		max_tree_height = new_value
-		Globals.terrain_settings_changed.emit()
 
 func _ready() -> void:
 	Globals.terrain_settings_changed.connect(_on_terrain_settings_connect)
@@ -155,49 +158,48 @@ func create_noise_images() -> void:
 	notify_property_list_changed()
 
 func place_tile(tile: Tile, x: int, y: int) -> void:
+	if world_tiles.has(Vector2i(x, y)): return
+	
 	var chunk_coord: int = floori(float(x) / chunk_size)
 	var new_tile: Sprite2D = Sprite2D.new()
 	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
 	new_tile.texture = tile.tile_sprites[randi_range(0, tile.tile_sprites.size() - 1)]
 	new_tile.visible = true
-	new_tile.position = Vector2(x * tile_size, ground_offset - (y * tile_size))
+	new_tile.position = Vector2i(x * tile_size, ground_offset - (y * tile_size))
 	world_chunks[chunk_coord].add_child(new_tile)
-	world_tiles.push_back(Vector2(x, y))
+	world_tiles.push_back(Vector2i(x, y))
 	if Engine.is_editor_hint():
 		new_tile.owner = get_tree().edited_scene_root
 	
 func place_tree(x: int, y: int) -> void:
-	if randi_range(0, tree_percent_chance) == 1 and world_tiles.has(Vector2(x, y)):
-		var tree_height: int = randi_range(min_tree_height, max_tree_height)
-		for i in range(1, tree_height + 1):
-			place_tile(world_atlas.tree_log, x, y + i)
-			
-		place_tile(world_atlas.tree_leaves, x, y + tree_height + 1)
-		place_tile(world_atlas.tree_leaves, x, y + tree_height + 2)
-		place_tile(world_atlas.tree_leaves, x, y + tree_height + 3)
+	var tree_height: int = randi_range(min_tree_height, max_tree_height)
+	for i in range(1, tree_height + 1):
+		place_tile(world_atlas.tree_log, x, y + i)
 		
-		place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 1)
-		place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 2)
-		
-		place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 1)
-		place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 2)
+	place_tile(world_atlas.tree_leaves, x, y + tree_height + 1)
+	place_tile(world_atlas.tree_leaves, x, y + tree_height + 2)
+	place_tile(world_atlas.tree_leaves, x, y + tree_height + 3)
+	
+	place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 1)
+	place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 2)
+	
+	place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 1)
+	place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 2)
 			
 func generate_terrain() -> void:
 	for x: int in range(world_size):
 		var height: float = terrain_noise.get_unity_noise(x, 0) * height_multiplier + height_addition
 		for y: int in range(height):
-			var tile: Tile
+			var tile: Tile = world_atlas.stone
 			if y < height - dirt_layer_height:
-				if world_atlas.coal.spread_image.get_pixel(x, y).r > 0.5:
+				if world_atlas.coal.spread_image.get_pixel(x, y).r > 0.5 and height - y > world_atlas.coal.max_spawn_height:
 					tile = world_atlas.coal
-				elif world_atlas.iron.spread_image.get_pixel(x, y).r > 0.5:
+				if world_atlas.iron.spread_image.get_pixel(x, y).r > 0.5 and height - y > world_atlas.iron.max_spawn_height:
 					tile = world_atlas.iron
-				elif world_atlas.gold.spread_image.get_pixel(x, y).r > 0.5:
+				if world_atlas.gold.spread_image.get_pixel(x, y).r > 0.5 and height - y > world_atlas.gold.max_spawn_height:
 					tile = world_atlas.gold
-				elif world_atlas.diamond.spread_image.get_pixel(x, y).r > 0.5:
+				if world_atlas.diamond.spread_image.get_pixel(x, y).r > 0.5 and height - y > world_atlas.diamond.max_spawn_height:
 					tile = world_atlas.diamond
-				else:
-					tile = world_atlas.stone
 			elif y < int(height - 1):
 				tile = world_atlas.dirt
 			else:
@@ -207,4 +209,8 @@ func generate_terrain() -> void:
 				place_tile(tile, x, y)
 			
 			if y >= int(height - 1):
-				place_tree(x, y)
+				if randi_range(0, tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
+					place_tree(x, y)
+				elif randi_range(0, tall_grass_percent_chance) == 1 && world_tiles.has(Vector2i(x, y)):
+					place_tile(world_atlas.tall_grass, x, y + 1)
+				

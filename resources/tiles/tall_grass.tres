@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Tile" load_steps=9 format=3 uid="uid://blcw8w30c034u"]
+
+[ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_s8xhg"]
+[ext_resource type="Texture2D" uid="uid://rn4sp0tmsfui" path="res://assets/tiles/grass1.png" id="2_3ni8w"]
+[ext_resource type="Texture2D" uid="uid://gbjiephsqch0" path="res://assets/tiles/grass2.png" id="3_rotko"]
+[ext_resource type="Texture2D" uid="uid://ckoam81o64b2h" path="res://assets/tiles/grass3.png" id="4_l6egp"]
+[ext_resource type="Texture2D" uid="uid://dyh2n53ttdkk6" path="res://assets/tiles/grass4.png" id="5_rx82i"]
+[ext_resource type="Texture2D" uid="uid://deoaedqv2hxq4" path="res://assets/tiles/mushroom_red.png" id="6_rx82i"]
+[ext_resource type="Texture2D" uid="uid://c61pay82adoe1" path="res://assets/tiles/mushroom_tan.png" id="7_3mc18"]
+[ext_resource type="Texture2D" uid="uid://r6qjtjsm2fq2" path="res://assets/tiles/mushroom_brown.png" id="8_5t3ql"]
+
+[resource]
+script = ExtResource("1_s8xhg")
+tile_name = "Tall Grass"
+tile_sprites = Array[Texture2D]([ExtResource("2_3ni8w"), ExtResource("3_rotko"), ExtResource("4_l6egp"), ExtResource("5_rx82i"), ExtResource("6_rx82i"), ExtResource("7_3mc18"), ExtResource("8_5t3ql")])
+metadata/_custom_type_script = "uid://u8f786gwmld3"

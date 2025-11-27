@@ -5,6 +5,7 @@ class_name WorldAtlas
 @export var grass: Tile
 @export var dirt: Tile
 @export var stone: Tile
+@export var tall_grass: Tile
 @export var tree_log: Tile
 @export var tree_leaves: Tile
 
