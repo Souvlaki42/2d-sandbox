@@ -13,79 +13,39 @@ var world_chunks: Array[Node2D] = []
 @export_tool_button("Clear Generation") var reset_generation_btn: Callable = clear_generation
 
 @export_category("Terrain Settings")
-@export var chunk_size: int = 20:
-	set(new_value):
-		chunk_size = new_value
-		Globals.terrain_settings_changed.emit()
-@export var world_size: int = 100:
-	set(new_value):
-		world_size = new_value
-		Globals.terrain_settings_changed.emit()
-@export var generate_caves: bool = true:
-	set(new_value):
-		generate_caves = new_value
-		Globals.terrain_settings_changed.emit()
-@export var height_addition: int = 50:
-	set(new_value):
-		height_addition = new_value
-		Globals.terrain_settings_changed.emit()
-@export var surface_value: float = 0.25:
-	set(new_value):
-		surface_value = new_value
-		Globals.terrain_settings_changed.emit()
-@export var height_multiplier: float = 25:
-	set(new_value):
-		height_multiplier = new_value
-		Globals.terrain_settings_changed.emit()
-@export var dirt_layer_height: int = 5:
-	set(new_value):
-		dirt_layer_height = new_value
-		Globals.terrain_settings_changed.emit()
-@export var ground_offset: int = 600:
-	set(new_value):
-		ground_offset = new_value
-		Globals.terrain_settings_changed.emit()
-@export var tile_size: int = 128:
-	set(new_value):
-		tile_size = new_value
-		Globals.terrain_settings_changed.emit()
+@export var chunk_size: int = 20
+@export var world_size: int = 100
+@export var generate_caves: bool = true
+@export var height_addition: int = 50
+@export var surface_value: float = 0.25
+@export var height_multiplier: float = 25
+@export var dirt_layer_height: int = 5
+@export var ground_offset: int = 600
+@export var tile_size: int = 128
+
+@export_category("Biome Settings")
+@export var biome_map: Image = null
+@export var biome_frequency: float
+@export var grassland_color: Color
+@export var forest_color: Color
+@export var desert_color: Color
+@export var freezing_color: Color
 
 @export_category("Prop Settings")
-@export var tall_grass_percent_chance: int = 2:
-	set(new_value):
-		tall_grass_percent_chance = new_value
-		Globals.terrain_settings_changed.emit()
-@export var tree_percent_chance: int = 15:
-	set(new_value):
-		tree_percent_chance = new_value
-		Globals.terrain_settings_changed.emit()
-@export var min_tree_height: int = 4:
-	set(new_value):
-		min_tree_height = new_value
-		Globals.terrain_settings_changed.emit()
-@export var max_tree_height: int = 6:
-	set(new_value):
-		max_tree_height = new_value
-		Globals.terrain_settings_changed.emit()
+@export var tall_grass_percent_chance: int = 2
+@export var tree_percent_chance: int = 15
+@export var min_tree_height: int = 4
+@export var max_tree_height: int = 6
 
 @export_category("Noise Settings")
 @export var cave_noise_image: Image = null
 @export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
 
-@export var terrain_frequency: float = 0.04:
-	set(new_value):
-		terrain_frequency = new_value
-		Globals.noise_settings_changed.emit()
-@export var cave_frequency: float = 0.08:
-	set(new_value):
-		cave_frequency = new_value
-		Globals.noise_settings_changed.emit()
+@export var terrain_frequency: float = 0.04
+@export var cave_frequency: float = 0.08
 @export var world_atlas: WorldAtlas
 
 func _ready() -> void:
-	Globals.terrain_settings_changed.connect(_on_terrain_settings_connect)
-	Globals.noise_settings_changed.connect(_on_noise_settings_connect)
-
 	if not Engine.is_editor_hint():
 		start_generation()
 		
@@ -156,7 +116,7 @@ func create_noise_images() -> void:
 	world_atlas.diamond.spread_image = world_atlas.diamond.noise.get_threshold_image(world_size, world_atlas.diamond.vein_size)
 	
 	notify_property_list_changed()
-
+	
 func place_tile(tile: Tile, x: int, y: int) -> void:
 	if world_tiles.has(Vector2i(x, y)): return
 	

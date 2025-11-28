@@ -15,10 +15,6 @@ run/main_scene="uid://cwa6mv2eb5g1c"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
-
-Globals="*res://scripts/globals.gd"
-
 [input]
 
 move_up={
