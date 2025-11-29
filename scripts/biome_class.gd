@@ -1,5 +1,10 @@
-extends Node2D
-class_name Biome
+@tool
+class_name Biome extends Resource
+
+var cave_noise: PerlinNoise = null
+
+@export var name: StringName
+@export var tint: Color
 
 @export_category("Terrain Settings")
 @export var generate_caves: bool = true
@@ -17,4 +22,4 @@ class_name Biome
 @export var cave_noise_image: Image = null
 @export var terrain_frequency: float = 0.04
 @export var cave_frequency: float = 0.08
-@export var ore_atlas: OreAtlas
+@export var ores: Array[Ore] = []

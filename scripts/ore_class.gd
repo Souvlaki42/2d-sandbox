@@ -1,6 +1,4 @@
-@tool
-extends Tile
-class_name Ore
+class_name Ore extends Resource
 
 var noise: PerlinNoise = null
 
