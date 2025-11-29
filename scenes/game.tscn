@@ -1,15 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=8 format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_uwrxv"]
 [ext_resource type="Gradient" uid="uid://6brd2gugvfoo" path="res://resources/biome_colors.tres" id="2_lnu2h"]
-[ext_resource type="Resource" uid="uid://bujhuidy7rits" path="res://resources/tile_atlas.tres" id="3_gee14"]
-[ext_resource type="Resource" uid="uid://bc5w10um2ym0l" path="res://resources/ore_atlas.tres" id="4_lbhrr"]
+[ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome_class.gd" id="3_0tnpc"]
+[ext_resource type="Resource" uid="uid://d3bxxfgjtguq3" path="res://resources/biomes/grassland.tres" id="4_vtaks"]
+[ext_resource type="Resource" uid="uid://ct1waa40kouyw" path="res://resources/biomes/forest.tres" id="5_kvpfn"]
+[ext_resource type="Resource" uid="uid://b4t71amptw1a1" path="res://resources/biomes/desert.tres" id="6_dinhu"]
+[ext_resource type="Resource" uid="uid://rid1l5kympi0" path="res://resources/biomes/snow.tres" id="7_kvuet"]
 
 [node name="Game" type="Node2D"]
 
 [node name="TerrainGenerator" type="Node2D" parent="."]
 script = ExtResource("1_uwrxv")
+world_size = 200
+biome_frequency = 0.02
 biome_colors = ExtResource("2_lnu2h")
-tile_atlas = ExtResource("3_gee14")
-ore_atlas = ExtResource("4_lbhrr")
+biomes = Array[ExtResource("3_0tnpc")]([ExtResource("4_vtaks"), ExtResource("5_kvpfn"), ExtResource("6_dinhu"), ExtResource("7_kvuet")])
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"

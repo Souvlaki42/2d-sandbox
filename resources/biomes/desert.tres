@@ -1,15 +1,12 @@
-[gd_resource type="Resource" script_class="Biome" load_steps=7 format=3 uid="uid://b4t71amptw1a1"]
+[gd_resource type="Resource" script_class="Biome" load_steps=3 format=3 uid="uid://b4t71amptw1a1"]
 
-[ext_resource type="Script" uid="uid://dpymexds7swdt" path="res://scripts/ore_class.gd" id="1_pwvfs"]
-[ext_resource type="Resource" uid="uid://bocd008hwo6tl" path="res://resources/ores/coal.tres" id="2_mh7a4"]
-[ext_resource type="Resource" uid="uid://snd2te27ofb8" path="res://resources/ores/iron.tres" id="3_7cjfo"]
-[ext_resource type="Resource" uid="uid://cugjt1xx7gmby" path="res://resources/ores/gold.tres" id="4_5fr7w"]
-[ext_resource type="Resource" uid="uid://pbm8it5u00ps" path="res://resources/ores/diamond.tres" id="5_kbrv5"]
+[ext_resource type="Resource" uid="uid://caslblhge36p1" path="res://resources/atlas/desert.tres" id="2_b013v"]
 [ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome_class.gd" id="6_eaorh"]
 
 [resource]
 script = ExtResource("6_eaorh")
 name = &"Desert"
 tint = Color(0.8, 0.5686275, 0.1882353, 1)
-ores = Array[ExtResource("1_pwvfs")]([ExtResource("2_mh7a4"), ExtResource("3_7cjfo"), ExtResource("4_5fr7w"), ExtResource("5_kbrv5")])
+tile_atlas = ExtResource("2_b013v")
+terrain_frequency = 0.02
 metadata/_custom_type_script = "uid://c12s5rq2s2rnb"

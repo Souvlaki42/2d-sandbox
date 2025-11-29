@@ -1,15 +1,15 @@
-[gd_resource type="Resource" script_class="Biome" load_steps=7 format=3 uid="uid://ct1waa40kouyw"]
+[gd_resource type="Resource" script_class="Biome" load_steps=3 format=3 uid="uid://ct1waa40kouyw"]
 
-[ext_resource type="Script" uid="uid://dpymexds7swdt" path="res://scripts/ore_class.gd" id="1_585gf"]
-[ext_resource type="Resource" uid="uid://bocd008hwo6tl" path="res://resources/ores/coal.tres" id="2_7dsm8"]
-[ext_resource type="Resource" uid="uid://snd2te27ofb8" path="res://resources/ores/iron.tres" id="3_atvns"]
-[ext_resource type="Resource" uid="uid://cugjt1xx7gmby" path="res://resources/ores/gold.tres" id="4_6x1ki"]
-[ext_resource type="Resource" uid="uid://pbm8it5u00ps" path="res://resources/ores/diamond.tres" id="5_4k4hs"]
+[ext_resource type="Resource" uid="uid://b2n4n8adys6or" path="res://resources/atlas/forest.tres" id="2_wtp1g"]
 [ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome_class.gd" id="6_sadjo"]
 
 [resource]
 script = ExtResource("6_sadjo")
 name = &"Grassland"
 tint = Color(0, 0.8352941, 0, 1)
-ores = Array[ExtResource("1_585gf")]([ExtResource("2_7dsm8"), ExtResource("3_atvns"), ExtResource("4_6x1ki"), ExtResource("5_4k4hs")])
+tile_atlas = ExtResource("2_wtp1g")
+tree_percent_chance = 8
+min_tree_height = 7
+max_tree_height = 11
+terrain_frequency = 0.05
 metadata/_custom_type_script = "uid://c12s5rq2s2rnb"

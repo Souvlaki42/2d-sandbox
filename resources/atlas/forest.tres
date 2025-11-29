@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TileAtlas" load_steps=14 format=3 uid="uid://b2n4n8adys6or"]
+
+[ext_resource type="Resource" uid="uid://k7qsvwfcl1r7" path="res://resources/tiles/dirt.tres" id="1_nuvlo"]
+[ext_resource type="Resource" uid="uid://blcw8w30c034u" path="res://resources/tiles/addons.tres" id="1_u8c1e"]
+[ext_resource type="Resource" uid="uid://bocd008hwo6tl" path="res://resources/ores/coal.tres" id="2_1y5ht"]
+[ext_resource type="Resource" uid="uid://cb8y3ulu3xbki" path="res://resources/tiles/grass.tres" id="2_38s1v"]
+[ext_resource type="Resource" uid="uid://pbm8it5u00ps" path="res://resources/ores/diamond.tres" id="3_bfd6x"]
+[ext_resource type="Script" uid="uid://vi6hct8hqf71" path="res://scripts/tile_atlas.gd" id="3_q1ye6"]
+[ext_resource type="Resource" uid="uid://xiobbgfvvuyk" path="res://resources/tiles/stone.tres" id="4_amdu0"]
+[ext_resource type="Resource" uid="uid://cugjt1xx7gmby" path="res://resources/ores/gold.tres" id="5_18wuo"]
+[ext_resource type="Resource" uid="uid://snd2te27ofb8" path="res://resources/ores/iron.tres" id="7_ura1i"]
+[ext_resource type="Resource" uid="uid://ck80f6kwqi1pg" path="res://resources/tiles/sand.tres" id="8_pmr46"]
+[ext_resource type="Resource" uid="uid://kijjahq4mk8t" path="res://resources/tiles/snow.tres" id="10_6v740"]
+[ext_resource type="Resource" uid="uid://jqu5fleggnsk" path="res://resources/tiles/leaves.tres" id="12_0f1yl"]
+[ext_resource type="Resource" uid="uid://ebevcvpfbf50" path="res://resources/tiles/log.tres" id="13_fkrh1"]
+
+[resource]
+script = ExtResource("3_q1ye6")
+grass = ExtResource("2_38s1v")
+dirt = ExtResource("1_nuvlo")
+stone = ExtResource("4_amdu0")
+addons = ExtResource("1_u8c1e")
+tree_log = ExtResource("13_fkrh1")
+tree_leaves = ExtResource("12_0f1yl")
+snow = ExtResource("10_6v740")
+sand = ExtResource("8_pmr46")
+coal = ExtResource("2_1y5ht")
+iron = ExtResource("7_ura1i")
+gold = ExtResource("5_18wuo")
+diamond = ExtResource("3_bfd6x")
+metadata/_custom_type_script = "uid://vi6hct8hqf71"
