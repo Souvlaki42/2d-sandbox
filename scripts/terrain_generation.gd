@@ -4,13 +4,15 @@ class_name TerrainGenerator
 
 var terrain_noise: PerlinNoise = null
 var cave_noise: PerlinNoise = null
+var biome_noise: PerlinNoise = null
 
 var world_tiles: Array[Vector2i] = []
 var world_chunks: Array[Node2D] = []
 
 @export_category("Actions")
 @export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
-@export_tool_button("Clear Generation") var reset_generation_btn: Callable = clear_generation
+@export_tool_button("Draw Noise Images") var draw_noise_images_btn: Callable = draw_noise_images
+@export_tool_button("Clear Everything") var reset_generation_btn: Callable = clear_everything
 
 @export_category("Terrain Settings")
 @export var chunk_size: int = 20
@@ -25,11 +27,13 @@ var world_chunks: Array[Node2D] = []
 
 @export_category("Biome Settings")
 @export var biome_map: Image = null
-@export var biome_frequency: float
-@export var grassland_color: Color
-@export var forest_color: Color
-@export var desert_color: Color
-@export var freezing_color: Color
+@export var biome_frequency: float = 0.05
+@export var biome_colors: Gradient
+
+@export var grass_biome: Biome
+@export var desert_biome: Biome
+@export var forest_biome: Biome
+@export var snow_biome: Biome
 
 @export_category("Prop Settings")
 @export var tall_grass_percent_chance: int = 2
@@ -50,11 +54,12 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		start_generation()
 
-func clear_generation() -> void:
+func clear_everything() -> void:
 	world_tiles.clear()
 	world_chunks.clear()
 
 	cave_noise_image = null
+	biome_map = null
 	if ore_atlas != null:
 		ore_atlas.coal.spread_image = null
 		ore_atlas.iron.spread_image = null
@@ -68,9 +73,8 @@ func clear_generation() -> void:
 		i.queue_free()
 
 func start_generation() -> void:
-	clear_generation()
+	clear_everything()
 
-	assert(world_atlas != null, "World atlas should be here!")
 	assert(tile_atlas != null, "Tile atlas should be here!")
 	assert(ore_atlas != null, "Ore atlas should be here!")
 
@@ -100,6 +104,9 @@ func create_chunks() -> void:
 func draw_noise_images() -> void:
 	cave_noise = PerlinNoise.new(noise_seed, cave_frequency)
 	cave_noise_image = draw_noise_image(cave_noise, world_size, surface_value)
+
+	biome_noise = PerlinNoise.new(noise_seed, biome_frequency)
+	biome_map = draw_biome_image(biome_noise, world_size)
 
 	terrain_noise = PerlinNoise.new(noise_seed, terrain_frequency)
 
@@ -155,6 +162,17 @@ func draw_noise_image(noise: PerlinNoise, size: int, threshold: float) -> Image:
 			if  noise.get_unity_noise(x, y) > threshold:
 				image.set_pixel(x, y, Color.WHITE)
 	return image
+
+func draw_biome_image(noise: PerlinNoise, size: int) -> Image:
+	var image: Image = Image.create_empty(size, size, true, Image.FORMAT_RGBA8)
+	image.fill(Color.BLACK)
+
+	for x: int in range(size):
+		for y: int in range(size):
+			var biome_color: Color = biome_colors.sample(noise.get_unity_noise(x, y))
+			image.set_pixel(x, y, biome_color)
+	return image
+
 func generate_terrain() -> void:
 	for x: int in range(world_size):
 		var height: float = terrain_noise.get_unity_noise(x, 0) * height_multiplier + height_addition

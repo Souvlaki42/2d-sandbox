@@ -1,6 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_uwrxv"]
+[ext_resource type="Gradient" uid="uid://6brd2gugvfoo" path="res://resources/biome_colors.tres" id="2_lnu2h"]
 [ext_resource type="Resource" uid="uid://bujhuidy7rits" path="res://resources/tile_atlas.tres" id="3_gee14"]
 [ext_resource type="Resource" uid="uid://bc5w10um2ym0l" path="res://resources/ore_atlas.tres" id="4_lbhrr"]
 
@@ -8,6 +9,7 @@
 
 [node name="TerrainGenerator" type="Node2D" parent="."]
 script = ExtResource("1_uwrxv")
+biome_colors = ExtResource("2_lnu2h")
 tile_atlas = ExtResource("3_gee14")
 ore_atlas = ExtResource("4_lbhrr")
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"
