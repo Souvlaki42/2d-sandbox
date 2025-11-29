@@ -48,47 +48,43 @@ var world_chunks: Array[Node2D] = []
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		start_generation()
-		
-func _on_terrain_settings_connect() -> void:
-	start_generation()
-
-func _on_noise_settings_connect() -> void:
-	create_noise_images()
 
 func clear_generation() -> void:
 	world_tiles.clear()
 	world_chunks.clear()
-	
+
 	cave_noise_image = null
 	world_atlas.coal.spread_image = null
 	world_atlas.iron.spread_image = null
 	world_atlas.gold.spread_image = null
 	world_atlas.diamond.spread_image = null
 	noise_seed = 0
-		
+
 	notify_property_list_changed()
-	
+
 	for i: Node2D in get_children():
 		i.queue_free()
-	
+
 func start_generation() -> void:
 	clear_generation()
 
 	assert(world_atlas != null, "World atlas should be here!")
-	
+
 	randomize()
 	if noise_seed == 0:
 		noise_seed = randi_range(-10000, 10000)
 		seed(noise_seed)
-	
-	create_noise_images()
+
+	draw_noise_images()
 	create_chunks()
 	generate_terrain()
-	
+
+
+
 func create_chunks() -> void:
 	var num_of_chunks: int = roundi(float(world_size) / chunk_size)
 	world_chunks.resize(num_of_chunks)
-	
+
 	for i: int in range(num_of_chunks):
 		var new_chunk: Node2D = Node2D.new()
 		new_chunk.name = "Chunk #%d" % i
@@ -96,30 +92,30 @@ func create_chunks() -> void:
 		add_child(new_chunk)
 		if Engine.is_editor_hint():
 			new_chunk.owner = get_tree().edited_scene_root
-			
-func create_noise_images() -> void:
+
+func draw_noise_images() -> void:
 	cave_noise = PerlinNoise.new(noise_seed, cave_frequency)
-	cave_noise_image = cave_noise.get_threshold_image(world_size, surface_value)
-	
+	cave_noise_image = draw_noise_image(cave_noise, world_size, surface_value)
+
 	terrain_noise = PerlinNoise.new(noise_seed, terrain_frequency)
-	
+
 	world_atlas.coal.noise = PerlinNoise.new(noise_seed, world_atlas.coal.rarity)
-	world_atlas.coal.spread_image = world_atlas.coal.noise.get_threshold_image(world_size, world_atlas.coal.vein_size)
-		
+	world_atlas.coal.spread_image = draw_noise_image(world_atlas.coal.noise, world_size, world_atlas.coal.vein_size)
+
 	world_atlas.iron.noise = PerlinNoise.new(noise_seed, world_atlas.iron.rarity)
-	world_atlas.iron.spread_image = world_atlas.iron.noise.get_threshold_image(world_size, world_atlas.iron.vein_size)
-	
+	world_atlas.iron.spread_image = draw_noise_image(world_atlas.iron.noise, world_size, world_atlas.iron.vein_size)
+
 	world_atlas.gold.noise = PerlinNoise.new(noise_seed, world_atlas.gold.rarity)
-	world_atlas.gold.spread_image = world_atlas.gold.noise.get_threshold_image(world_size, world_atlas.gold.vein_size)
-		
+	world_atlas.gold.spread_image = draw_noise_image(world_atlas.gold.noise, world_size, world_atlas.gold.vein_size)
+
 	world_atlas.diamond.noise = PerlinNoise.new(noise_seed, world_atlas.diamond.rarity)
-	world_atlas.diamond.spread_image = world_atlas.diamond.noise.get_threshold_image(world_size, world_atlas.diamond.vein_size)
-	
+	world_atlas.diamond.spread_image = draw_noise_image(world_atlas.diamond.noise, world_size, world_atlas.diamond.vein_size)
+
 	notify_property_list_changed()
-	
+
 func place_tile(tile: Tile, x: int, y: int) -> void:
 	if world_tiles.has(Vector2i(x, y)): return
-	
+
 	var chunk_coord: int = floori(float(x) / chunk_size)
 	var new_tile: Sprite2D = Sprite2D.new()
 	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
@@ -130,22 +126,31 @@ func place_tile(tile: Tile, x: int, y: int) -> void:
 	world_tiles.push_back(Vector2i(x, y))
 	if Engine.is_editor_hint():
 		new_tile.owner = get_tree().edited_scene_root
-	
+
 func place_tree(x: int, y: int) -> void:
 	var tree_height: int = randi_range(min_tree_height, max_tree_height)
 	for i in range(1, tree_height + 1):
 		place_tile(world_atlas.tree_log, x, y + i)
-		
+
 	place_tile(world_atlas.tree_leaves, x, y + tree_height + 1)
 	place_tile(world_atlas.tree_leaves, x, y + tree_height + 2)
 	place_tile(world_atlas.tree_leaves, x, y + tree_height + 3)
-	
+
 	place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 1)
 	place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 2)
-	
+
 	place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 1)
 	place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 2)
-			
+
+func draw_noise_image(noise: PerlinNoise, size: int, threshold: float) -> Image:
+	var image: Image = Image.create_empty(size, size, true, Image.FORMAT_RGBA8)
+	image.fill(Color.BLACK)
+
+	for x: int in range(size):
+		for y: int in range(size):
+			if  noise.get_unity_noise(x, y) > threshold:
+				image.set_pixel(x, y, Color.WHITE)
+	return image
 func generate_terrain() -> void:
 	for x: int in range(world_size):
 		var height: float = terrain_noise.get_unity_noise(x, 0) * height_multiplier + height_addition
@@ -164,13 +169,12 @@ func generate_terrain() -> void:
 				tile = world_atlas.dirt
 			else:
 				tile = world_atlas.grass
-				
+
 			if cave_noise_image.get_pixel(x, y).r > 0.5 or not generate_caves:
 				place_tile(tile, x, y)
-			
+
 			if y >= int(height - 1):
 				if randi_range(0, tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
 					place_tree(x, y)
 				elif randi_range(0, tall_grass_percent_chance) == 1 && world_tiles.has(Vector2i(x, y)):
 					place_tile(world_atlas.tall_grass, x, y + 1)
-				
