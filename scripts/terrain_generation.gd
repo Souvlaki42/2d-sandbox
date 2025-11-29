@@ -43,7 +43,8 @@ var world_chunks: Array[Node2D] = []
 
 @export var terrain_frequency: float = 0.04
 @export var cave_frequency: float = 0.08
-@export var world_atlas: WorldAtlas
+@export var tile_atlas: TileAtlas
+@export var ore_atlas: OreAtlas
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
@@ -54,10 +55,11 @@ func clear_generation() -> void:
 	world_chunks.clear()
 
 	cave_noise_image = null
-	world_atlas.coal.spread_image = null
-	world_atlas.iron.spread_image = null
-	world_atlas.gold.spread_image = null
-	world_atlas.diamond.spread_image = null
+	if ore_atlas != null:
+		ore_atlas.coal.spread_image = null
+		ore_atlas.iron.spread_image = null
+		ore_atlas.gold.spread_image = null
+		ore_atlas.diamond.spread_image = null
 	noise_seed = 0
 
 	notify_property_list_changed()
@@ -69,6 +71,8 @@ func start_generation() -> void:
 	clear_generation()
 
 	assert(world_atlas != null, "World atlas should be here!")
+	assert(tile_atlas != null, "Tile atlas should be here!")
+	assert(ore_atlas != null, "Ore atlas should be here!")
 
 	randomize()
 	if noise_seed == 0:
@@ -99,17 +103,17 @@ func draw_noise_images() -> void:
 
 	terrain_noise = PerlinNoise.new(noise_seed, terrain_frequency)
 
-	world_atlas.coal.noise = PerlinNoise.new(noise_seed, world_atlas.coal.rarity)
-	world_atlas.coal.spread_image = draw_noise_image(world_atlas.coal.noise, world_size, world_atlas.coal.vein_size)
+	ore_atlas.coal.noise = PerlinNoise.new(noise_seed, ore_atlas.coal.rarity)
+	ore_atlas.coal.spread_image = draw_noise_image(ore_atlas.coal.noise, world_size, ore_atlas.coal.vein_size)
 
-	world_atlas.iron.noise = PerlinNoise.new(noise_seed, world_atlas.iron.rarity)
-	world_atlas.iron.spread_image = draw_noise_image(world_atlas.iron.noise, world_size, world_atlas.iron.vein_size)
+	ore_atlas.iron.noise = PerlinNoise.new(noise_seed, ore_atlas.iron.rarity)
+	ore_atlas.iron.spread_image = draw_noise_image(ore_atlas.iron.noise, world_size, ore_atlas.iron.vein_size)
 
-	world_atlas.gold.noise = PerlinNoise.new(noise_seed, world_atlas.gold.rarity)
-	world_atlas.gold.spread_image = draw_noise_image(world_atlas.gold.noise, world_size, world_atlas.gold.vein_size)
+	ore_atlas.gold.noise = PerlinNoise.new(noise_seed, ore_atlas.gold.rarity)
+	ore_atlas.gold.spread_image = draw_noise_image(ore_atlas.gold.noise, world_size, ore_atlas.gold.vein_size)
 
-	world_atlas.diamond.noise = PerlinNoise.new(noise_seed, world_atlas.diamond.rarity)
-	world_atlas.diamond.spread_image = draw_noise_image(world_atlas.diamond.noise, world_size, world_atlas.diamond.vein_size)
+	ore_atlas.diamond.noise = PerlinNoise.new(noise_seed, ore_atlas.diamond.rarity)
+	ore_atlas.diamond.spread_image = draw_noise_image(ore_atlas.diamond.noise, world_size, ore_atlas.diamond.vein_size)
 
 	notify_property_list_changed()
 
@@ -130,17 +134,17 @@ func place_tile(tile: Tile, x: int, y: int) -> void:
 func place_tree(x: int, y: int) -> void:
 	var tree_height: int = randi_range(min_tree_height, max_tree_height)
 	for i in range(1, tree_height + 1):
-		place_tile(world_atlas.tree_log, x, y + i)
+		place_tile(tile_atlas.tree_log, x, y + i)
 
-	place_tile(world_atlas.tree_leaves, x, y + tree_height + 1)
-	place_tile(world_atlas.tree_leaves, x, y + tree_height + 2)
-	place_tile(world_atlas.tree_leaves, x, y + tree_height + 3)
+	place_tile(tile_atlas.tree_leaves, x, y + tree_height + 1)
+	place_tile(tile_atlas.tree_leaves, x, y + tree_height + 2)
+	place_tile(tile_atlas.tree_leaves, x, y + tree_height + 3)
 
-	place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 1)
-	place_tile(world_atlas.tree_leaves, x - 1, y + tree_height + 2)
+	place_tile(tile_atlas.tree_leaves, x - 1, y + tree_height + 1)
+	place_tile(tile_atlas.tree_leaves, x - 1, y + tree_height + 2)
 
-	place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 1)
-	place_tile(world_atlas.tree_leaves, x + 1, y + tree_height + 2)
+	place_tile(tile_atlas.tree_leaves, x + 1, y + tree_height + 1)
+	place_tile(tile_atlas.tree_leaves, x + 1, y + tree_height + 2)
 
 func draw_noise_image(noise: PerlinNoise, size: int, threshold: float) -> Image:
 	var image: Image = Image.create_empty(size, size, true, Image.FORMAT_RGBA8)
@@ -155,20 +159,20 @@ func generate_terrain() -> void:
 	for x: int in range(world_size):
 		var height: float = terrain_noise.get_unity_noise(x, 0) * height_multiplier + height_addition
 		for y: int in range(height):
-			var tile: Tile = world_atlas.stone
+			var tile: Tile = tile_atlas.stone
 			if y < height - dirt_layer_height:
-				if world_atlas.coal.spread_image.get_pixel(x, y).r > 0.5 and height - y > world_atlas.coal.max_spawn_height:
-					tile = world_atlas.coal
-				if world_atlas.iron.spread_image.get_pixel(x, y).r > 0.5 and height - y > world_atlas.iron.max_spawn_height:
-					tile = world_atlas.iron
-				if world_atlas.gold.spread_image.get_pixel(x, y).r > 0.5 and height - y > world_atlas.gold.max_spawn_height:
-					tile = world_atlas.gold
-				if world_atlas.diamond.spread_image.get_pixel(x, y).r > 0.5 and height - y > world_atlas.diamond.max_spawn_height:
-					tile = world_atlas.diamond
+				if ore_atlas.coal.spread_image.get_pixel(x, y).r > 0.5 and height - y > ore_atlas.coal.max_spawn_height:
+					tile = ore_atlas.coal
+				if ore_atlas.iron.spread_image.get_pixel(x, y).r > 0.5 and height - y > ore_atlas.iron.max_spawn_height:
+					tile = ore_atlas.iron
+				if ore_atlas.gold.spread_image.get_pixel(x, y).r > 0.5 and height - y > ore_atlas.gold.max_spawn_height:
+					tile = ore_atlas.gold
+				if ore_atlas.diamond.spread_image.get_pixel(x, y).r > 0.5 and height - y > ore_atlas.diamond.max_spawn_height:
+					tile = ore_atlas.diamond
 			elif y < int(height - 1):
-				tile = world_atlas.dirt
+				tile = tile_atlas.dirt
 			else:
-				tile = world_atlas.grass
+				tile = tile_atlas.grass
 
 			if cave_noise_image.get_pixel(x, y).r > 0.5 or not generate_caves:
 				place_tile(tile, x, y)
@@ -177,4 +181,4 @@ func generate_terrain() -> void:
 				if randi_range(0, tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
 					place_tree(x, y)
 				elif randi_range(0, tall_grass_percent_chance) == 1 && world_tiles.has(Vector2i(x, y)):
-					place_tile(world_atlas.tall_grass, x, y + 1)
+					place_tile(tile_atlas.tall_grass, x, y + 1)

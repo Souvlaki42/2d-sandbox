@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="OreAtlas" load_steps=6 format=3 uid="uid://bc5w10um2ym0l"]
+
+[ext_resource type="Resource" uid="uid://bocd008hwo6tl" path="res://resources/ores/coal.tres" id="1_3u0q8"]
+[ext_resource type="Script" uid="uid://b655t5t7k4q06" path="res://scripts/ore_atlas.gd" id="1_sj08h"]
+[ext_resource type="Resource" uid="uid://pbm8it5u00ps" path="res://resources/ores/diamond.tres" id="2_llfjn"]
+[ext_resource type="Resource" uid="uid://cugjt1xx7gmby" path="res://resources/ores/gold.tres" id="3_vf6ph"]
+[ext_resource type="Resource" uid="uid://snd2te27ofb8" path="res://resources/ores/iron.tres" id="4_48bpq"]
+
+[resource]
+script = ExtResource("1_sj08h")
+coal = ExtResource("1_3u0q8")
+iron = ExtResource("4_48bpq")
+gold = ExtResource("3_vf6ph")
+diamond = ExtResource("2_llfjn")
+metadata/_custom_type_script = "uid://b655t5t7k4q06"

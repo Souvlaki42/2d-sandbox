@@ -1,11 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=5 format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_uwrxv"]
-[ext_resource type="Resource" uid="uid://b5uwjwolot0v2" path="res://resources/world_atlas.tres" id="2_yqjtg"]
+[ext_resource type="Resource" uid="uid://bujhuidy7rits" path="res://resources/tile_atlas.tres" id="3_gee14"]
+[ext_resource type="Resource" uid="uid://bc5w10um2ym0l" path="res://resources/ore_atlas.tres" id="4_lbhrr"]
 
 [node name="Game" type="Node2D"]
 
 [node name="TerrainGenerator" type="Node2D" parent="."]
 script = ExtResource("1_uwrxv")
-world_atlas = ExtResource("2_yqjtg")
+tile_atlas = ExtResource("3_gee14")
+ore_atlas = ExtResource("4_lbhrr")
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"

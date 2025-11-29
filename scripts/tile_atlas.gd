@@ -1,5 +1,5 @@
 extends Resource
-class_name WorldAtlas
+class_name TileAtlas
 
 @export_category("Tiles")
 @export var grass: Tile
@@ -8,9 +8,5 @@ class_name WorldAtlas
 @export var tall_grass: Tile
 @export var tree_log: Tile
 @export var tree_leaves: Tile
-
-@export_category("Ores")
-@export var coal: Ore
-@export var iron: Ore
-@export var gold: Ore
-@export var diamond: Ore
+@export var snow: Tile
+@export var sand: Tile
