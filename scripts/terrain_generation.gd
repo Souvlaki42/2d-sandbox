@@ -13,12 +13,10 @@ var world_chunks: Array[Node2D] = []
 @export_tool_button("Clear Everything") var reset_generation_btn: Callable = clear_everything
 
 @export_category("Terrain Settings")
+@export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
 @export var chunk_size: int = 20
 @export var world_size: int = 100
 @export var height_addition: int = 50
-@export var surface_value: float = 0.25
-@export var height_multiplier: float = 25
-@export var dirt_layer_height: int = 5
 @export var ground_offset: int = 600
 @export var tile_size: int = 128
 
@@ -27,18 +25,6 @@ var world_chunks: Array[Node2D] = []
 @export var biome_frequency: float = 0.01
 @export var biome_colors: Gradient
 @export var biomes: Array[Biome] = []
-
-@export_category("Prop Settings")
-@export var addon_percent_chance: int = 2
-@export var tree_percent_chance: int = 15
-@export var min_tree_height: int = 4
-@export var max_tree_height: int = 6
-
-@export_category("Noise Settings")
-@export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
-
-@export var terrain_frequency: float = 0.04
-@export var cave_frequency: float = 0.08
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
@@ -86,6 +72,7 @@ func get_biome(x: int, y: int) -> Biome:
 	return null
 
 func create_chunks() -> void:
+	# TODO: Fix out of bounds errors
 	var num_of_chunks: int = roundi(float(world_size) / chunk_size)
 	world_chunks.resize(num_of_chunks)
 
@@ -168,7 +155,7 @@ func generate_terrain() -> void:
 		for y: int in range(height):
 			current_biome = get_biome(x, y)
 			var current_tile: Tile = current_biome.tile_atlas.stone
-			if y < height - dirt_layer_height:
+			if y < height - current_biome.dirt_layer_height:
 				if current_biome.tile_atlas.coal.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.coal.max_spawn_height:
 					current_tile = current_biome.tile_atlas.coal
 				if current_biome.tile_atlas.iron.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.iron.max_spawn_height:

@@ -5,11 +5,8 @@
 
 [resource]
 script = ExtResource("6_sadjo")
-name = &"Grassland"
-tint = Color(0, 0.8352941, 0, 1)
+name = &"Forest"
+tint = Color(0.039215688, 0.20392157, 0.12156863, 1)
 tile_atlas = ExtResource("2_wtp1g")
-tree_percent_chance = 8
-min_tree_height = 7
-max_tree_height = 11
-terrain_frequency = 0.05
+cave_frequency = 0.04
 metadata/_custom_type_script = "uid://c12s5rq2s2rnb"
