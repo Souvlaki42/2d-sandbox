@@ -1,23 +1,23 @@
 @tool
-extends Node2D
+extends TileMapLayer
 class_name TerrainGenerator
 
 var biome_noise: PerlinNoise = null
-var biome_lookup: Dictionary = {}
-var world_tiles: Array[Vector2i] = []
-var world_chunks: Array[Node2D] = []
+var biome_lookup: Dictionary[Color, Biome] = {}
+var biome_data: PackedByteArray = PackedByteArray()
+var cave_data: Dictionary[Biome, PackedByteArray] = {}
+var ore_data: Dictionary[Ore, PackedByteArray] = {}
 
 @export_category("Actions")
 @export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
-@export_tool_button("Draw Noise Images") var draw_noise_images_btn: Callable = draw_noise_images
+@export_tool_button("Generate Noise Maps") var generate_noise_maps_btn: Callable = _generate_maps
 @export_tool_button("Clear Everything") var reset_generation_btn: Callable = clear_everything
 
 @export_category("Terrain Settings")
 @export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
-@export var chunk_size: int = 20
-@export var world_size: int = 100
+@export var world_size: int = 200
 @export var height_addition: int = 50
-@export var ground_offset: int = 600
+@export var ground_offset: int = 10
 @export var tile_size: int = 128
 
 @export_category("Biome Settings")
@@ -32,147 +32,127 @@ func _ready() -> void:
 
 func clear_everything() -> void:
 	assert(not biomes.is_empty(), "Biomes should be here!")
-
-	world_tiles.clear()
-	world_chunks.clear()
+	self.clear()
+	cave_data.clear()
+	ore_data.clear()
+	biome_lookup.clear()
 
 	biome_map = null
 	for biome in biomes:
 		biome.cave_noise_image = null
-		var ores: Array[Ore] = biome.tile_atlas.get_ores()
-		for ore in ores:
+		for ore in biome.tile_atlas.get_ores():
 			ore.spread_image = null
 
 	noise_seed = 0
-
 	notify_property_list_changed()
-
-	for i: Node2D in get_children():
-		i.queue_free()
 
 func start_generation() -> void:
 	clear_everything()
 
-	randomize()
 	if noise_seed == 0:
+		randomize()
 		noise_seed = randi_range(-10000, 10000)
 		seed(noise_seed)
 
 	for biome in biomes:
 		biome_lookup[biome.tint] = biome
 
-	draw_noise_images()
-	create_chunks()
-	generate_terrain()
+	_generate_maps()
+	_generate_terrain()
 
-func get_biome(x: int, y: int) -> Biome:
-	return biome_lookup.get(biome_map.get_pixel(x, y), null)
-
-func create_chunks() -> void:
-	# TODO: Fix out of bounds errors
-	var num_of_chunks: int = roundi(float(world_size) / chunk_size)
-	world_chunks.resize(num_of_chunks)
-
-	for i: int in range(num_of_chunks):
-		var new_chunk: Node2D = Node2D.new()
-		new_chunk.name = "Chunk #%d" % i
-		world_chunks[i] = new_chunk
-		add_child(new_chunk)
-		if Engine.is_editor_hint():
-			new_chunk.owner = get_tree().edited_scene_root
-
-func draw_noise_images() -> void:
-	biome_noise = PerlinNoise.new(noise_seed, biome_frequency)
-	biome_map = generate_biome_image(biome_noise, world_size)
-
-	for biome in biomes:
-		biome.terrain_noise = PerlinNoise.new(noise_seed, biome.terrain_frequency)
-		biome.cave_noise = PerlinNoise.new(noise_seed, biome.cave_frequency)
-		biome.cave_noise_image = generate_noise_image(biome.cave_noise, world_size, biome.surface_value)
-
-		for ore in biome.tile_atlas.get_ores():
-			ore.noise = PerlinNoise.new(noise_seed, ore.frequency)
-			ore.spread_image = generate_noise_image(ore.noise, world_size, ore.vein_size)
-
+func _generate_maps() -> void:
+	var group_id = WorkerThreadPool.add_group_task(_generate_map_task, 1 + biomes.size(), -1, true)
+	WorkerThreadPool.wait_for_group_task_completion(group_id)
 	notify_property_list_changed()
 
-func place_tile(tile: Tile, x: int, y: int) -> void:
-	if world_tiles.has(Vector2i(x, y)): return
-	if x < 0 or y < 0 or x >= world_size or y >= world_size: return
+func _generate_map_task(index: int) -> void:
+	if index == 0:
+		biome_noise = PerlinNoise.new(noise_seed, biome_frequency)
+		biome_map = generate_noise_image(biome_noise, world_size)
+		biome_data = biome_map.get_data()
+		return
 
-	var chunk_coord: int = clamp(floori(float(x) / chunk_size), 0, world_chunks.size() - 1)
-	var new_tile: Sprite2D = Sprite2D.new()
-	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
-	new_tile.texture = tile.tile_sprites[randi_range(0, tile.tile_sprites.size() - 1)]
-	new_tile.visible = true
-	new_tile.position = Vector2i(x * tile_size, ground_offset - (y * tile_size))
-	world_chunks[chunk_coord].add_child(new_tile)
-	world_tiles.push_back(Vector2i(x, y))
-	if Engine.is_editor_hint():
-		new_tile.owner = get_tree().edited_scene_root
+	var biome: Biome = biomes[index - 1]
+	biome.terrain_noise = PerlinNoise.new(noise_seed, biome.terrain_frequency)
+	biome.cave_noise = PerlinNoise.new(noise_seed, biome.cave_frequency)
+	biome.cave_noise_image = generate_noise_image(biome.cave_noise, world_size, biome.surface_value)
+	cave_data[biome] = biome.cave_noise_image.get_data()
 
-func place_tree(current_biome: Biome, x: int, y: int) -> void:
-	var tree_height: int = randi_range(current_biome.min_tree_height, current_biome.max_tree_height)
-	for i in range(1, tree_height + 1):
-		place_tile(current_biome.tile_atlas.tree_log, x, y + i)
+	for ore in biome.tile_atlas.get_ores():
+		ore.noise = PerlinNoise.new(noise_seed, ore.frequency)
+		ore.spread_image = generate_noise_image(ore.noise, world_size, ore.vein_size)
+		ore_data[ore] = ore.spread_image.get_data()
 
-	if current_biome.tile_atlas.tree_leaves:
-		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 1)
-		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 2)
-		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 3)
-
-		place_tile(current_biome.tile_atlas.tree_leaves, x - 1, y + tree_height + 1)
-		place_tile(current_biome.tile_atlas.tree_leaves, x - 1, y + tree_height + 2)
-
-		place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 1)
-		place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 2)
-
-func generate_noise_image(noise: PerlinNoise, size: int, threshold: float) -> Image:
+func generate_noise_image(noise: PerlinNoise, size: int, threshold: float = -1) -> Image:
 	var image: Image = Image.create_empty(size, size, true, Image.FORMAT_RGBA8)
-	image.fill(Color.BLACK)
+	var buffer: PackedByteArray = image.get_data()
 
-	for x: int in range(size):
-		for y: int in range(size):
-			if  noise.get_unity_noise(x, y) > threshold:
-				image.set_pixel(x, y, Color.WHITE)
+	# WARNING: This is too slow, for worlds with more than 100k tiles
+	for i in range(size * size):
+		var y: int = i / size
+		var x: int = i % size
+
+		var val: float = noise.get_unity_noise(x, y)
+		var col: Color
+
+		if threshold != -1:
+			col = Color.WHITE if val > threshold else Color.BLACK
+		else:
+			col = biome_colors.sample(val)
+
+		var off = i * 4
+		buffer[off] = col.r8
+		buffer[off+1] = col.g8
+		buffer[off+2] = col.b8
+		buffer[off+3] = col.a8
+
+	image.set_data(size, size, false, Image.FORMAT_RGBA8, buffer)
 	return image
 
-func generate_biome_image(noise: PerlinNoise, size: int) -> Image:
-	var image: Image = Image.create_empty(size, size, true, Image.FORMAT_RGBA8)
-	image.fill(Color.BLACK)
+func get_biome(x: int, y: int) -> Biome:
+	var offset: int = (y * world_size + x) * 4
 
-	for x: int in range(size):
-		for y: int in range(size):
-			var biome_color: Color = biome_colors.sample(noise.get_unity_noise(x, y))
-			image.set_pixel(x, y, biome_color)
-	return image
+	var r: int = biome_data[offset]
+	var g: int = biome_data[offset+1]
+	var b: int = biome_data[offset+2]
+	var a: int = biome_data[offset+3]
 
-func generate_terrain() -> void:
-	for x: int in range(world_size):
-		for y: int in range(world_size):
-			var current_biome: Biome = get_biome(x, y)
-			var height: float = current_biome.terrain_noise.get_unity_noise(x, 0) * current_biome.height_multiplier + height_addition
+	var color: int = (r << 24) | (g << 16) | (b << 8) | a
+	return biome_lookup.get(color)
+
+func _generate_terrain() -> void:
+	var cells_to_set: Array[Vector2i] = []
+	var source_ids: Array[int] = []
+	var atlas_coords: Array[Vector2i] = []
+
+	for x in range(world_size):
+		for y in range(world_size):
+			var biome: Biome = get_biome(x, y)
+			if not biome: continue
+
+			var height: float = biome.terrain_noise.get_unity_noise(x, 0) * biome.height_multiplier + height_addition
 			if y >= height: break
-			var current_tile: Tile = current_biome.tile_atlas.stone
-			if y < height - current_biome.dirt_layer_height and not current_biome.tile_atlas.get_ores().is_empty():
-				if current_biome.tile_atlas.coal.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.coal.max_spawn_height:
-					current_tile = current_biome.tile_atlas.coal
-				if current_biome.tile_atlas.iron.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.iron.max_spawn_height:
-					current_tile = current_biome.tile_atlas.iron
-				if current_biome.tile_atlas.gold.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.gold.max_spawn_height:
-					current_tile = current_biome.tile_atlas.gold
-				if current_biome.tile_atlas.diamond.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.diamond.max_spawn_height:
-					current_tile = current_biome.tile_atlas.diamond
+
+			var off: int = (y * world_size + x) * 4
+			var tile_to_place: Tile = null
+			if y < height - biome.dirt_layer_height:
+				tile_to_place = biome.tile_atlas.stone
+				for ore in biome.tile_atlas.get_ores():
+					if ore_data[ore][off] > 127:
+						if height - y > ore.max_spawn_height:
+							tile_to_place = ore
+							break
 			elif y < int(height - 1):
-				current_tile = current_biome.tile_atlas.dirt
+				tile_to_place = biome.tile_atlas.dirt
 			else:
-				current_tile = current_biome.tile_atlas.grass
+				tile_to_place = biome.tile_atlas.grass
 
-			if current_biome.cave_noise_image.get_pixel(x, y).r > 0.5 or not current_biome.generate_caves:
-				place_tile(current_tile, x, y)
+			var is_cave = cave_data[biome][off] > 127
 
-			if y >= int(height - 1):
-				if randi_range(0, current_biome.tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
-					place_tree(current_biome, x, y)
-				elif current_biome.tile_atlas.addons != null and randi_range(0, current_biome.addon_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
-					place_tile(current_biome.tile_atlas.addons, x, y + 1)
+			if is_cave or not biome.generate_caves:
+				cells_to_set.append(Vector2i(x, ground_offset - y))
+				source_ids.append(tile_to_place.source_id)
+				atlas_coords.append(tile_to_place.atlas_coord)
+
+	for i in range(cells_to_set.size()):
+		set_cell(cells_to_set[i], source_ids[i], atlas_coords[i])
