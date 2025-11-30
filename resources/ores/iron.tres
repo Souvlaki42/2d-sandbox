@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("1_qky80")
-rarity = 0.08
+frequency = 0.08
 vein_size = 0.8
 max_spawn_height = 10
 tile_name = &"Iron"

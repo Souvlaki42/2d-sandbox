@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Tile" load_steps=3 format=3 uid="uid://bvvhkqyhxeq4w"]
+
+[ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_4vbty"]
+[ext_resource type="Texture2D" uid="uid://d0hskp3h45cl7" path="res://assets/tiles/rock.png" id="2_f14sn"]
+
+[resource]
+script = ExtResource("1_4vbty")
+tile_name = &"Snow addons"
+tile_sprites = Array[Texture2D]([ExtResource("2_f14sn")])
+metadata/_custom_type_script = "uid://u8f786gwmld3"

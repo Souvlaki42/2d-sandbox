@@ -18,4 +18,13 @@ class_name TileAtlas extends Resource
 @export var diamond: Ore
 
 func get_ores() -> Array[Ore]:
-	return [coal, iron, gold, diamond]
+	var ores: Array[Ore] = []
+	if coal != null:
+		ores.push_back(coal)
+	if iron != null:
+		ores.push_back(iron)
+	if gold != null:
+		ores.push_back(gold)
+	if diamond != null:
+		ores.push_back(diamond)
+	return ores

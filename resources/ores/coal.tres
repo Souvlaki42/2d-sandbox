@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("1_skn1u")
-rarity = 0.1
+frequency = 0.1
 vein_size = 0.76
 max_spawn_height = 5
 tile_name = &"Coal"

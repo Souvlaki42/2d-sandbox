@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Tile" load_steps=3 format=3 uid="uid://btjucj7pl5sf5"]
+
+[ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_m1jss"]
+[ext_resource type="Texture2D" uid="uid://dku6vo3lwmaat" path="res://assets/tiles/cactus_side.png" id="2_dr0vs"]
+
+[resource]
+script = ExtResource("1_m1jss")
+tile_name = &"Cactus"
+tile_sprites = Array[Texture2D]([ExtResource("2_dr0vs")])
+metadata/_custom_type_script = "uid://u8f786gwmld3"

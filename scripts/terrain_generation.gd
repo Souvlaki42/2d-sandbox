@@ -40,7 +40,6 @@ func clear_everything() -> void:
 	for biome in biomes:
 		biome.cave_noise_image = null
 		var ores: Array[Ore] = biome.tile_atlas.get_ores()
-		assert(not ores.is_empty(), "Biome should have ores!")
 		for ore in ores:
 			ore.spread_image = null
 
@@ -94,15 +93,16 @@ func draw_noise_images() -> void:
 		biome.cave_noise_image = draw_noise_image(biome.cave_noise, world_size, biome.surface_value)
 
 		for ore in biome.tile_atlas.get_ores():
-			ore.noise = PerlinNoise.new(noise_seed, ore.rarity)
+			ore.noise = PerlinNoise.new(noise_seed, ore.frequency)
 			ore.spread_image = draw_noise_image(ore.noise, world_size, ore.vein_size)
 
 	notify_property_list_changed()
 
 func place_tile(tile: Tile, x: int, y: int) -> void:
 	if world_tiles.has(Vector2i(x, y)): return
+	if x < 0 or y < 0 or x >= world_size or y >= world_size: return
 
-	var chunk_coord: int = floori(float(x) / chunk_size)
+	var chunk_coord: int = clamp(floori(float(x) / chunk_size), 0, world_chunks.size() - 1)
 	var new_tile: Sprite2D = Sprite2D.new()
 	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
 	new_tile.texture = tile.tile_sprites[randi_range(0, tile.tile_sprites.size() - 1)]
@@ -118,15 +118,16 @@ func place_tree(current_biome: Biome, x: int, y: int) -> void:
 	for i in range(1, tree_height + 1):
 		place_tile(current_biome.tile_atlas.tree_log, x, y + i)
 
-	place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 1)
-	place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 2)
-	place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 3)
+	if current_biome.tile_atlas.tree_leaves:
+		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 1)
+		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 2)
+		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 3)
 
-	place_tile(current_biome.tile_atlas.tree_leaves, x - 1, y + tree_height + 1)
-	place_tile(current_biome.tile_atlas.tree_leaves, x - 1, y + tree_height + 2)
+		place_tile(current_biome.tile_atlas.tree_leaves, x - 1, y + tree_height + 1)
+		place_tile(current_biome.tile_atlas.tree_leaves, x - 1, y + tree_height + 2)
 
-	place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 1)
-	place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 2)
+		place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 1)
+		place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 2)
 
 func draw_noise_image(noise: PerlinNoise, size: int, threshold: float) -> Image:
 	var image: Image = Image.create_empty(size, size, true, Image.FORMAT_RGBA8)
@@ -155,7 +156,7 @@ func generate_terrain() -> void:
 		for y: int in range(height):
 			current_biome = get_biome(x, y)
 			var current_tile: Tile = current_biome.tile_atlas.stone
-			if y < height - current_biome.dirt_layer_height:
+			if y < height - current_biome.dirt_layer_height and not current_biome.tile_atlas.get_ores().is_empty():
 				if current_biome.tile_atlas.coal.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.coal.max_spawn_height:
 					current_tile = current_biome.tile_atlas.coal
 				if current_biome.tile_atlas.iron.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.iron.max_spawn_height:

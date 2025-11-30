@@ -12,5 +12,5 @@ surface_value = 0.2
 height_multiplier = 15.0
 addon_percent_chance = 5
 max_tree_height = 5
-cave_frequency = 0.04
+cave_frequency = 0.07
 metadata/_custom_type_script = "uid://c12s5rq2s2rnb"
