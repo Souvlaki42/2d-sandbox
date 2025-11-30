@@ -3,7 +3,7 @@ extends Node2D
 class_name TerrainGenerator
 
 var biome_noise: PerlinNoise = null
-
+var biome_lookup: Dictionary = {}
 var world_tiles: Array[Vector2i] = []
 var world_chunks: Array[Node2D] = []
 
@@ -58,17 +58,15 @@ func start_generation() -> void:
 		noise_seed = randi_range(-10000, 10000)
 		seed(noise_seed)
 
+	for biome in biomes:
+		biome_lookup[biome.tint] = biome
+
 	draw_noise_images()
 	create_chunks()
 	generate_terrain()
 
 func get_biome(x: int, y: int) -> Biome:
-	for biome in biomes:
-		if biome.tint == biome_map.get_pixel(x, y):
-			return biome
-
-	printerr("No biome found for (%d, %d)" % [x, y])
-	return null
+	return biome_lookup.get(biome_map.get_pixel(x, y), null)
 
 func create_chunks() -> void:
 	# TODO: Fix out of bounds errors
@@ -85,16 +83,16 @@ func create_chunks() -> void:
 
 func draw_noise_images() -> void:
 	biome_noise = PerlinNoise.new(noise_seed, biome_frequency)
-	biome_map = draw_biome_image(biome_noise, world_size)
+	biome_map = generate_biome_image(biome_noise, world_size)
 
 	for biome in biomes:
 		biome.terrain_noise = PerlinNoise.new(noise_seed, biome.terrain_frequency)
 		biome.cave_noise = PerlinNoise.new(noise_seed, biome.cave_frequency)
-		biome.cave_noise_image = draw_noise_image(biome.cave_noise, world_size, biome.surface_value)
+		biome.cave_noise_image = generate_noise_image(biome.cave_noise, world_size, biome.surface_value)
 
 		for ore in biome.tile_atlas.get_ores():
 			ore.noise = PerlinNoise.new(noise_seed, ore.frequency)
-			ore.spread_image = draw_noise_image(ore.noise, world_size, ore.vein_size)
+			ore.spread_image = generate_noise_image(ore.noise, world_size, ore.vein_size)
 
 	notify_property_list_changed()
 
@@ -129,7 +127,7 @@ func place_tree(current_biome: Biome, x: int, y: int) -> void:
 		place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 1)
 		place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 2)
 
-func draw_noise_image(noise: PerlinNoise, size: int, threshold: float) -> Image:
+func generate_noise_image(noise: PerlinNoise, size: int, threshold: float) -> Image:
 	var image: Image = Image.create_empty(size, size, true, Image.FORMAT_RGBA8)
 	image.fill(Color.BLACK)
 
@@ -139,7 +137,7 @@ func draw_noise_image(noise: PerlinNoise, size: int, threshold: float) -> Image:
 				image.set_pixel(x, y, Color.WHITE)
 	return image
 
-func draw_biome_image(noise: PerlinNoise, size: int) -> Image:
+func generate_biome_image(noise: PerlinNoise, size: int) -> Image:
 	var image: Image = Image.create_empty(size, size, true, Image.FORMAT_RGBA8)
 	image.fill(Color.BLACK)
 
@@ -151,10 +149,10 @@ func draw_biome_image(noise: PerlinNoise, size: int) -> Image:
 
 func generate_terrain() -> void:
 	for x: int in range(world_size):
-		var current_biome: Biome = get_biome(x, 0)
-		var height: float = current_biome.terrain_noise.get_unity_noise(x, 0) * current_biome.height_multiplier + height_addition
-		for y: int in range(height):
-			current_biome = get_biome(x, y)
+		for y: int in range(world_size):
+			var current_biome: Biome = get_biome(x, y)
+			var height: float = current_biome.terrain_noise.get_unity_noise(x, 0) * current_biome.height_multiplier + height_addition
+			if y >= height: break
 			var current_tile: Tile = current_biome.tile_atlas.stone
 			if y < height - current_biome.dirt_layer_height and not current_biome.tile_atlas.get_ores().is_empty():
 				if current_biome.tile_atlas.coal.spread_image.get_pixel(x, y).r > 0.5 and height - y > current_biome.tile_atlas.coal.max_spawn_height:
