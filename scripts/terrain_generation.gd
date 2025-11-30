@@ -51,6 +51,8 @@ func clear_everything() -> void:
 		i.queue_free()
 
 func start_generation() -> void:
+	var start_time: float = Time.get_ticks_msec()
+
 	clear_everything()
 
 	randomize()
@@ -61,9 +63,23 @@ func start_generation() -> void:
 	for biome in biomes:
 		biome_lookup[biome.tint] = biome
 
+	var setup_time: float = Time.get_ticks_msec() - start_time
+	print("Setup finished in %.3f ms" % setup_time)
+
+	start_time = Time.get_ticks_msec()
 	draw_noise_images()
+	var noise_time: float = Time.get_ticks_msec() - start_time
+	print("Noise images generated in %.3f ms" % noise_time)
+
+	start_time = Time.get_ticks_msec()
 	create_chunks()
+	var chunk_time: float = Time.get_ticks_msec() - start_time
+	print("Chunks created in %.3f ms" % chunk_time)
+
+	start_time = Time.get_ticks_msec()
 	generate_terrain()
+	var terrain_time: float = Time.get_ticks_msec() - start_time
+	print("Terrain generated in %.3f ms" % terrain_time)
 
 func draw_noise_images() -> void:
 	biome_noise = PerlinNoise.new(noise_seed, biome_frequency)
