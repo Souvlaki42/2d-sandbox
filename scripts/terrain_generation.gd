@@ -55,8 +55,8 @@ func start_generation() -> void:
 
 	clear_everything()
 
-	randomize()
 	if noise_seed == 0:
+		randomize()
 		noise_seed = randi_range(-10000, 10000)
 		seed(noise_seed)
 
@@ -161,10 +161,10 @@ func place_tile(tile: Tile, x: int, y: int) -> void:
 	if world_tiles.has(Vector2i(x, y)): return
 	if x < 0 or y < 0 or x >= world_size or y >= world_size: return
 
-	var chunk_coord: int = clamp(floori(float(x) / chunk_size), 0, world_chunks.size() - 1)
+	var chunk_coord: int = clamp(floori(x / chunk_size), 0, world_chunks.size() - 1)
 	var new_tile: Sprite2D = Sprite2D.new()
 	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
-	new_tile.texture = tile.tile_sprites[randi_range(0, tile.tile_sprites.size() - 1)]
+	new_tile.texture = tile.tile_sprites.pick_random()
 	new_tile.visible = true
 	new_tile.position = Vector2i(x * tile_size, ground_offset - (y * tile_size))
 	world_chunks[chunk_coord].add_child(new_tile)
