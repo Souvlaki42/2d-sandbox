@@ -12,7 +12,6 @@
 
 [node name="TerrainGenerator" type="Node2D" parent="."]
 script = ExtResource("1_uwrxv")
-world_size = 200
 biome_colors = ExtResource("2_lnu2h")
 biomes = Array[ExtResource("3_0tnpc")]([ExtResource("4_vtaks"), ExtResource("5_kvpfn"), ExtResource("6_dinhu"), ExtResource("7_kvuet")])
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"

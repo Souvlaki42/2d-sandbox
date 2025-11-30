@@ -15,7 +15,7 @@ var world_chunks: Array[Node2D] = []
 @export_category("Terrain Settings")
 @export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
 @export var chunk_size: int = 20
-@export var world_size: int = 100
+@export var world_size: int = 200
 @export var height_addition: int = 50
 @export var ground_offset: int = 600
 @export var tile_size: int = 128
@@ -171,7 +171,7 @@ func generate_terrain() -> void:
 			if current_biome.cave_noise_image.get_pixel(x, y).r > 0.5 or not current_biome.generate_caves:
 				place_tile(current_tile, x, y)
 
-			if y >= int(height - 1):
+			if y > int(height - 1):
 				if randi_range(0, current_biome.tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
 					place_tree(current_biome, x, y)
 				elif current_biome.tile_atlas.addons != null and randi_range(0, current_biome.addon_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
