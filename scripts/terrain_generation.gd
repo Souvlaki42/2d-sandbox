@@ -3,8 +3,8 @@ extends Node2D
 class_name TerrainGenerator
 
 var biome_noise: PerlinNoise = null
-var biome_lookup: Dictionary = {}
 var world_tiles: Array[Vector2i] = []
+var biome_lookup: Dictionary[int, Biome] = {}
 var world_chunks: Array[Node2D] = []
 
 @export_category("Actions")
@@ -61,7 +61,7 @@ func start_generation() -> void:
 		seed(noise_seed)
 
 	for biome in biomes:
-		biome_lookup[biome.tint] = biome
+		biome_lookup[biome.tint.to_rgba32()] = biome
 
 	var setup_time: float = Time.get_ticks_msec() - start_time
 	print("Setup finished in %.3f ms" % setup_time)
@@ -109,7 +109,7 @@ func create_chunks() -> void:
 			new_chunk.owner = get_tree().edited_scene_root
 
 func get_biome(x: int, y: int) -> Biome:
-	return biome_lookup.get(biome_map.get_pixel(x, y), null)
+	return biome_lookup.get(biome_map.get_pixel(x, y).to_rgba32(), null)
 
 func generate_terrain() -> void:
 	for x: int in range(world_size):
