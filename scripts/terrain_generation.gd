@@ -3,8 +3,8 @@ extends Node2D
 class_name TerrainGenerator
 
 var biome_noise: PerlinNoise = null
-var world_tiles: Array[Vector2i] = []
 var biome_lookup: Dictionary[int, Biome] = {}
+var world_tiles: Dictionary[Vector2i, bool] = {}
 var world_chunks: Array[Node2D] = []
 
 @export_category("Actions")
@@ -168,7 +168,7 @@ func place_tile(tile: Tile, x: int, y: int) -> void:
 	new_tile.visible = true
 	new_tile.position = Vector2i(x * tile_size, ground_offset - (y * tile_size))
 	world_chunks[chunk_coord].add_child(new_tile)
-	world_tiles.push_back(Vector2i(x, y))
+	world_tiles.set(Vector2i(x, y), true)
 	if Engine.is_editor_hint():
 		new_tile.owner = get_tree().edited_scene_root
 
