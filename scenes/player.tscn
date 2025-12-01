@@ -1,0 +1,56 @@
+[gd_scene load_steps=7 format=3 uid="uid://t3uselj70c5n"]
+
+[ext_resource type="Script" uid="uid://b1uvu2m6kvefm" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Texture2D" uid="uid://lwbhpq36oxh7" path="res://assets/characters/player male/male_arm.png" id="2_qlg0r"]
+[ext_resource type="Texture2D" uid="uid://ci25pbu80unqr" path="res://assets/characters/player male/male_body.png" id="3_tuyoq"]
+[ext_resource type="Texture2D" uid="uid://dmjbe6tvnsfqk" path="res://assets/characters/player male/male_head.png" id="4_fjrip"]
+[ext_resource type="Texture2D" uid="uid://cx0n20uon3iry" path="res://assets/characters/player male/male_leg.png" id="5_smehm"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qlg0r"]
+radius = 21.0
+height = 180.0
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite_root")]
+script = ExtResource("1_g2els")
+sprite_root = NodePath("Root")
+
+[node name="Root" type="Sprite2D" parent="."]
+position = Vector2(0, -29.5)
+scale = Vector2(-1, 1)
+texture = ExtResource("3_tuyoq")
+metadata/_edit_group_ = true
+
+[node name="Head" type="Sprite2D" parent="Root"]
+z_index = 1
+position = Vector2(0, -29.5)
+texture = ExtResource("4_fjrip")
+offset = Vector2(0, -32)
+
+[node name="LeftLeg" type="Sprite2D" parent="Root"]
+z_index = 1
+position = Vector2(0, 29.5)
+texture = ExtResource("5_smehm")
+offset = Vector2(0, 28)
+
+[node name="LeftArm" type="Sprite2D" parent="Root"]
+z_index = 1
+position = Vector2(0, -29.5)
+texture = ExtResource("2_qlg0r")
+offset = Vector2(0, 33)
+
+[node name="RightLeg" type="Sprite2D" parent="Root"]
+z_index = -1
+position = Vector2(0, 29.5)
+texture = ExtResource("5_smehm")
+offset = Vector2(0, 28)
+
+[node name="RightArm" type="Sprite2D" parent="Root"]
+z_index = -1
+position = Vector2(0, -29.5)
+texture = ExtResource("2_qlg0r")
+offset = Vector2(0, 33)
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+z_index = 2
+position = Vector2(0, -33)
+shape = SubResource("CapsuleShape2D_qlg0r")
