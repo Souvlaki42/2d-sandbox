@@ -3,8 +3,8 @@ extends Node2D
 class_name TerrainGenerator
 
 var biome_noise: PerlinNoise = null
-var biome_lookup: Dictionary = {}
-var world_tiles: Array[Vector2i] = []
+var biome_lookup: Dictionary[int, Biome] = {}
+var world_tiles: Dictionary[Vector2i, bool] = {}
 var world_chunks: Array[Node2D] = []
 
 @export_category("Actions")
@@ -51,19 +51,35 @@ func clear_everything() -> void:
 		i.queue_free()
 
 func start_generation() -> void:
+	var start_time: float = Time.get_ticks_msec()
+
 	clear_everything()
 
-	randomize()
 	if noise_seed == 0:
+		randomize()
 		noise_seed = randi_range(-10000, 10000)
 		seed(noise_seed)
 
 	for biome in biomes:
-		biome_lookup[biome.tint] = biome
+		biome_lookup[biome.tint.to_rgba32()] = biome
 
+	var setup_time: float = Time.get_ticks_msec() - start_time
+	print("Setup finished in %.3f ms" % setup_time)
+
+	start_time = Time.get_ticks_msec()
 	draw_noise_images()
+	var noise_time: float = Time.get_ticks_msec() - start_time
+	print("Noise images generated in %.3f ms" % noise_time)
+
+	start_time = Time.get_ticks_msec()
 	create_chunks()
+	var chunk_time: float = Time.get_ticks_msec() - start_time
+	print("Chunks created in %.3f ms" % chunk_time)
+
+	start_time = Time.get_ticks_msec()
 	generate_terrain()
+	var terrain_time: float = Time.get_ticks_msec() - start_time
+	print("Terrain generated in %.3f ms" % terrain_time)
 
 func draw_noise_images() -> void:
 	biome_noise = PerlinNoise.new(noise_seed, biome_frequency)
@@ -93,7 +109,7 @@ func create_chunks() -> void:
 			new_chunk.owner = get_tree().edited_scene_root
 
 func get_biome(x: int, y: int) -> Biome:
-	return biome_lookup.get(biome_map.get_pixel(x, y), null)
+	return biome_lookup.get(biome_map.get_pixel(x, y).to_rgba32(), null)
 
 func generate_terrain() -> void:
 	for x: int in range(world_size):
@@ -145,14 +161,14 @@ func place_tile(tile: Tile, x: int, y: int) -> void:
 	if world_tiles.has(Vector2i(x, y)): return
 	if x < 0 or y < 0 or x >= world_size or y >= world_size: return
 
-	var chunk_coord: int = clamp(floori(float(x) / chunk_size), 0, world_chunks.size() - 1)
+	var chunk_coord: int = clamp(floori(x / chunk_size), 0, world_chunks.size() - 1)
 	var new_tile: Sprite2D = Sprite2D.new()
 	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
-	new_tile.texture = tile.tile_sprites[randi_range(0, tile.tile_sprites.size() - 1)]
+	new_tile.texture = tile.tile_sprites.pick_random()
 	new_tile.visible = true
 	new_tile.position = Vector2i(x * tile_size, ground_offset - (y * tile_size))
 	world_chunks[chunk_coord].add_child(new_tile)
-	world_tiles.push_back(Vector2i(x, y))
+	world_tiles.set(Vector2i(x, y), true)
 	if Engine.is_editor_hint():
 		new_tile.owner = get_tree().edited_scene_root
 
