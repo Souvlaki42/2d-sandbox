@@ -11,6 +11,7 @@ A 2D sandbox game like Terraria, made with Godot 4.5+.
 - Chunk splitting.
 - Ore generation.
 - Biomes.
+- Player.
 
 ## Resources
 

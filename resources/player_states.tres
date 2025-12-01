@@ -1,0 +1,26 @@
+[gd_resource type="AnimationNodeStateMachine" load_steps=6 format=3 uid="uid://lnp1b7yp6dom"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tuyoq"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fjrip"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_smehm"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ur7pv"]
+advance_mode = 2
+advance_expression = "abs(velocity.x) > 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tuyoq"]
+advance_mode = 2
+advance_expression = "abs(velocity.x) < 0.1"
+
+[resource]
+states/End/position = Vector2(913, 100)
+states/Idle/node = SubResource("AnimationNodeAnimation_tuyoq")
+states/Idle/position = Vector2(312, 100)
+states/Walk/node = SubResource("AnimationNodeAnimation_fjrip")
+states/Walk/position = Vector2(417, 100)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_smehm"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_ur7pv"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_tuyoq")]
