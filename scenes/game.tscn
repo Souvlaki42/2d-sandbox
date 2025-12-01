@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=9 format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_uwrxv"]
 [ext_resource type="Gradient" uid="uid://6brd2gugvfoo" path="res://resources/biome_colors.tres" id="2_lnu2h"]
@@ -7,11 +7,7 @@
 [ext_resource type="Resource" uid="uid://ct1waa40kouyw" path="res://resources/biomes/forest.tres" id="5_kvpfn"]
 [ext_resource type="Resource" uid="uid://b4t71amptw1a1" path="res://resources/biomes/desert.tres" id="6_dinhu"]
 [ext_resource type="Resource" uid="uid://rid1l5kympi0" path="res://resources/biomes/snow.tres" id="7_kvuet"]
-[ext_resource type="Texture2D" uid="uid://c347oyka37nhq" path="res://assets/tiles/dirt_grass.png" id="8_gee14"]
 [ext_resource type="PackedScene" uid="uid://t3uselj70c5n" path="res://scenes/player.tscn" id="9_0tnpc"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0tnpc"]
-size = Vector2(9025, 122)
 
 [node name="Game" type="Node2D"]
 
@@ -21,18 +17,5 @@ biome_colors = ExtResource("2_lnu2h")
 biomes = Array[ExtResource("3_0tnpc")]([ExtResource("4_vtaks"), ExtResource("5_kvpfn"), ExtResource("6_dinhu"), ExtResource("7_kvuet")])
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"
 
-[node name="Ground" type="StaticBody2D" parent="." groups=["Ground"]]
-position = Vector2(3029, 327)
-metadata/_edit_group_ = true
-
-[node name="Visual" type="Sprite2D" parent="Ground"]
-position = Vector2(-614.00024, 122)
-scale = Vector2(70.828125, 1)
-texture = ExtResource("8_gee14")
-
-[node name="Shape" type="CollisionShape2D" parent="Ground"]
-position = Vector2(-599.5, 124)
-shape = SubResource("RectangleShape2D_0tnpc")
-
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("9_0tnpc")]
-position = Vector2(807, 260)
+position = Vector2(100, 300)
