@@ -1,12 +1,9 @@
-[gd_resource type="Resource" script_class="Tile" load_steps=5 format=3 uid="uid://bbk0e4gc7aatm"]
+[gd_resource type="Resource" script_class="Tile" load_steps=2 format=3 uid="uid://bbk0e4gc7aatm"]
 
 [ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_xosen"]
-[ext_resource type="Texture2D" uid="uid://bdt2ol6auikbb" path="res://assets/tiles/grass_brown.png" id="2_aamty"]
-[ext_resource type="Texture2D" uid="uid://b0ynba2qq3axg" path="res://assets/tiles/grass_tan.png" id="3_63wla"]
-[ext_resource type="Texture2D" uid="uid://c61pay82adoe1" path="res://assets/tiles/mushroom_tan.png" id="4_3ms7t"]
 
 [resource]
 script = ExtResource("1_xosen")
 tile_name = &"Dead addons"
-tile_sprites = Array[Texture2D]([ExtResource("2_aamty"), ExtResource("3_63wla"), ExtResource("4_3ms7t")])
+atlas_coords = Array[Vector2i]([Vector2i(6, 3), Vector2i(6, 2), Vector2i(4, 5)])
 metadata/_custom_type_script = "uid://u8f786gwmld3"

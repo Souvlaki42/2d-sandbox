@@ -1,11 +1,9 @@
 @tool
-extends Node2D
-class_name TerrainGenerator
+class_name TerrainGenerator extends TileMapLayer
 
 var biome_noise: PerlinNoise = null
 var biome_lookup: Dictionary[int, Biome] = {}
 var world_tiles: Dictionary[Vector2i, bool] = {}
-var world_chunks: Array[Node2D] = []
 
 @export_category("Actions")
 @export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
@@ -14,10 +12,9 @@ var world_chunks: Array[Node2D] = []
 
 @export_category("Terrain Settings")
 @export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
-@export var chunk_size: int = 20
 @export var world_size: int = 200
 @export var height_addition: int = 50
-@export var ground_offset: int = 600
+@export var ground_offset: int = 5
 @export var tile_size: int = 128
 
 @export_category("Biome Settings")
@@ -34,7 +31,7 @@ func clear_everything() -> void:
 	assert(not biomes.is_empty(), "Biomes should be here!")
 
 	world_tiles.clear()
-	world_chunks.clear()
+	self.clear()
 
 	biome_map = null
 	for biome in biomes:
@@ -46,9 +43,6 @@ func clear_everything() -> void:
 	noise_seed = 0
 
 	notify_property_list_changed()
-
-	for i: Node2D in get_children():
-		i.queue_free()
 
 func start_generation() -> void:
 	var start_time: float = Time.get_ticks_msec()
@@ -72,11 +66,6 @@ func start_generation() -> void:
 	print("Noise images generated in %.3f ms" % noise_time)
 
 	start_time = Time.get_ticks_msec()
-	create_chunks()
-	var chunk_time: float = Time.get_ticks_msec() - start_time
-	print("Chunks created in %.3f ms" % chunk_time)
-
-	start_time = Time.get_ticks_msec()
 	generate_terrain()
 	var terrain_time: float = Time.get_ticks_msec() - start_time
 	print("Terrain generated in %.3f ms" % terrain_time)
@@ -95,18 +84,6 @@ func draw_noise_images() -> void:
 			ore.spread_image = generate_noise_image(ore.noise, world_size, ore.vein_size)
 
 	notify_property_list_changed()
-
-func create_chunks() -> void:
-	var num_of_chunks: int = roundi(world_size / chunk_size)
-	world_chunks.resize(num_of_chunks)
-
-	for i: int in range(num_of_chunks):
-		var new_chunk: Node2D = Node2D.new()
-		new_chunk.name = "Chunk #%d" % i
-		world_chunks[i] = new_chunk
-		add_child(new_chunk)
-		if Engine.is_editor_hint():
-			new_chunk.owner = get_tree().edited_scene_root
 
 func get_biome(x: int, y: int) -> Biome:
 	return biome_lookup.get(biome_map.get_pixel(x, y).to_rgba32(), null)
@@ -160,17 +137,12 @@ func generate_noise_image(noise: PerlinNoise, size: int, threshold: float = -1) 
 func place_tile(tile: Tile, x: int, y: int) -> void:
 	if world_tiles.has(Vector2i(x, y)): return
 	if x < 0 or y < 0 or x >= world_size or y >= world_size: return
+	if not tile: return
 
-	var chunk_coord: int = clamp(floori(x / chunk_size), 0, world_chunks.size() - 1)
-	var new_tile: Sprite2D = Sprite2D.new()
-	new_tile.name = "%s (%d, %d)" % [tile.tile_name, x, y]
-	new_tile.texture = tile.tile_sprites.pick_random()
-	new_tile.visible = true
-	new_tile.position = Vector2i(x * tile_size, ground_offset - (y * tile_size))
-	world_chunks[chunk_coord].add_child(new_tile)
+	var tile_pos: Vector2i = Vector2i(x, ground_offset - y)
+	var coord_choice = tile.atlas_coords.pick_random()
+	self.set_cell(tile_pos, tile.source_id, coord_choice)
 	world_tiles.set(Vector2i(x, y), true)
-	if Engine.is_editor_hint():
-		new_tile.owner = get_tree().edited_scene_root
 
 func place_tree(current_biome: Biome, x: int, y: int) -> void:
 	var tree_height: int = randi_range(current_biome.min_tree_height, current_biome.max_tree_height)

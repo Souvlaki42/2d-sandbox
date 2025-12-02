@@ -1,15 +1,9 @@
-[gd_resource type="Resource" script_class="Tile" load_steps=8 format=3 uid="uid://blcw8w30c034u"]
+[gd_resource type="Resource" script_class="Tile" load_steps=2 format=3 uid="uid://blcw8w30c034u"]
 
 [ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_qoqtg"]
-[ext_resource type="Texture2D" uid="uid://rn4sp0tmsfui" path="res://assets/tiles/grass1.png" id="2_jr2ln"]
-[ext_resource type="Texture2D" uid="uid://gbjiephsqch0" path="res://assets/tiles/grass2.png" id="3_resli"]
-[ext_resource type="Texture2D" uid="uid://ckoam81o64b2h" path="res://assets/tiles/grass3.png" id="4_0t4ej"]
-[ext_resource type="Texture2D" uid="uid://dyh2n53ttdkk6" path="res://assets/tiles/grass4.png" id="5_k4yq8"]
-[ext_resource type="Texture2D" uid="uid://deoaedqv2hxq4" path="res://assets/tiles/mushroom_red.png" id="6_ln7ej"]
-[ext_resource type="Texture2D" uid="uid://r6qjtjsm2fq2" path="res://assets/tiles/mushroom_brown.png" id="8_okk3m"]
 
 [resource]
 script = ExtResource("1_qoqtg")
 tile_name = &"Addons"
-tile_sprites = Array[Texture2D]([ExtResource("2_jr2ln"), ExtResource("3_resli"), ExtResource("4_0t4ej"), ExtResource("5_k4yq8"), ExtResource("6_ln7ej"), ExtResource("8_okk3m")])
+atlas_coords = Array[Vector2i]([Vector2i(6, 7), Vector2i(6, 6), Vector2i(6, 5), Vector2i(6, 4), Vector2i(4, 7), Vector2i(4, 6)])
 metadata/_custom_type_script = "uid://u8f786gwmld3"

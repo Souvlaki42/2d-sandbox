@@ -1,10 +1,9 @@
-[gd_resource type="Resource" script_class="Tile" load_steps=3 format=3 uid="uid://cb8y3ulu3xbki"]
+[gd_resource type="Resource" script_class="Tile" load_steps=2 format=3 uid="uid://cb8y3ulu3xbki"]
 
 [ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_0kx2j"]
-[ext_resource type="Texture2D" uid="uid://c347oyka37nhq" path="res://assets/tiles/dirt_grass.png" id="2_h7812"]
 
 [resource]
 script = ExtResource("1_0kx2j")
 tile_name = &"Grass"
-tile_sprites = Array[Texture2D]([ExtResource("2_h7812")])
+atlas_coords = Array[Vector2i]([Vector2i(7, 4)])
 metadata/_custom_type_script = "uid://u8f786gwmld3"

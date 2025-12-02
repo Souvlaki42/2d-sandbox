@@ -1,8 +1,6 @@
-[gd_resource type="Resource" script_class="Ore" load_steps=4 format=3 uid="uid://cugjt1xx7gmby"]
+[gd_resource type="Resource" script_class="Ore" load_steps=2 format=3 uid="uid://cugjt1xx7gmby"]
 
 [ext_resource type="Script" uid="uid://dpymexds7swdt" path="res://scripts/ore_class.gd" id="1_21c68"]
-[ext_resource type="Texture2D" uid="uid://cqrawgqjw2dqu" path="res://assets/tiles/stone_gold_alt.png" id="2_21c68"]
-[ext_resource type="Texture2D" uid="uid://bf2vc7cxk2h7x" path="res://assets/tiles/stone_gold.png" id="2_h3x20"]
 
 [resource]
 script = ExtResource("1_21c68")
@@ -10,5 +8,5 @@ frequency = 0.07
 vein_size = 0.86
 max_spawn_height = 20
 tile_name = &"Gold"
-tile_sprites = Array[Texture2D]([ExtResource("2_h3x20"), ExtResource("2_21c68")])
+atlas_coords = Array[Vector2i]([Vector2i(2, 6), Vector2i(2, 5)])
 metadata/_custom_type_script = "uid://dpymexds7swdt"

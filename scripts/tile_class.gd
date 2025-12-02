@@ -1,5 +1,5 @@
-extends Resource
-class_name Tile
+class_name Tile extends Resource
 
 @export var tile_name: StringName
-@export var tile_sprites: Array[Texture2D]
+@export var source_id: int = 1
+@export var atlas_coords: Array[Vector2i] = [Vector2i.ZERO]

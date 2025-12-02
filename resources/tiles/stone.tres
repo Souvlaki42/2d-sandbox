@@ -1,11 +1,9 @@
-[gd_resource type="Resource" script_class="Tile" load_steps=4 format=3 uid="uid://xiobbgfvvuyk"]
+[gd_resource type="Resource" script_class="Tile" load_steps=2 format=3 uid="uid://xiobbgfvvuyk"]
 
 [ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_djx2r"]
-[ext_resource type="Texture2D" uid="uid://dt16g01huyj85" path="res://assets/tiles/stone.png" id="2_31y08"]
-[ext_resource type="Texture2D" uid="uid://ps72r5xtjdk2" path="res://assets/tiles/gravel_stone.png" id="3_6ev3r"]
 
 [resource]
 script = ExtResource("1_djx2r")
 tile_name = &"Stone"
-tile_sprites = Array[Texture2D]([ExtResource("2_31y08"), ExtResource("3_6ev3r")])
+atlas_coords = Array[Vector2i]([Vector2i(5, 8), Vector2i(5, 9)])
 metadata/_custom_type_script = "uid://u8f786gwmld3"

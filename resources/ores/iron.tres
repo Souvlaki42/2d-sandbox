@@ -1,8 +1,6 @@
-[gd_resource type="Resource" script_class="Ore" load_steps=4 format=3 uid="uid://snd2te27ofb8"]
+[gd_resource type="Resource" script_class="Ore" load_steps=2 format=3 uid="uid://snd2te27ofb8"]
 
 [ext_resource type="Script" uid="uid://dpymexds7swdt" path="res://scripts/ore_class.gd" id="1_qky80"]
-[ext_resource type="Texture2D" uid="uid://i5nouiuhq0jp" path="res://assets/tiles/stone_browniron_alt.png" id="2_qky80"]
-[ext_resource type="Texture2D" uid="uid://chvks5nl3kp36" path="res://assets/tiles/stone_browniron.png" id="2_ujyb7"]
 
 [resource]
 script = ExtResource("1_qky80")
@@ -10,5 +8,5 @@ frequency = 0.08
 vein_size = 0.8
 max_spawn_height = 10
 tile_name = &"Iron"
-tile_sprites = Array[Texture2D]([ExtResource("2_ujyb7"), ExtResource("2_qky80")])
+atlas_coords = Array[Vector2i]([Vector2i(3, 3), Vector2i(3, 2)])
 metadata/_custom_type_script = "uid://dpymexds7swdt"

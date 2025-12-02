@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=10 format=3 uid="uid://cwa6mv2eb5g1c"]
 
+[ext_resource type="TileSet" uid="uid://bbj6r7e08dc0j" path="res://resources/tile_set.tres" id="1_0tnpc"]
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_uwrxv"]
 [ext_resource type="Gradient" uid="uid://6brd2gugvfoo" path="res://resources/biome_colors.tres" id="2_lnu2h"]
 [ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome_class.gd" id="3_0tnpc"]
@@ -11,7 +12,8 @@
 
 [node name="Game" type="Node2D"]
 
-[node name="TerrainGenerator" type="Node2D" parent="."]
+[node name="TerrainGenerator" type="TileMapLayer" parent="."]
+tile_set = ExtResource("1_0tnpc")
 script = ExtResource("1_uwrxv")
 biome_colors = ExtResource("2_lnu2h")
 biomes = Array[ExtResource("3_0tnpc")]([ExtResource("4_vtaks"), ExtResource("5_kvpfn"), ExtResource("6_dinhu"), ExtResource("7_kvuet")])

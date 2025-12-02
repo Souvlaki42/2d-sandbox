@@ -1,10 +1,9 @@
-[gd_resource type="Resource" script_class="Tile" load_steps=3 format=3 uid="uid://ck80f6kwqi1pg"]
+[gd_resource type="Resource" script_class="Tile" load_steps=2 format=3 uid="uid://ck80f6kwqi1pg"]
 
 [ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_3fsat"]
-[ext_resource type="Texture2D" uid="uid://ca35ly0h053g6" path="res://assets/tiles/sand.png" id="2_5pyge"]
 
 [resource]
 script = ExtResource("1_3fsat")
 tile_name = &"Sand"
-tile_sprites = Array[Texture2D]([ExtResource("2_5pyge")])
+atlas_coords = Array[Vector2i]([Vector2i(7, 6)])
 metadata/_custom_type_script = "uid://u8f786gwmld3"

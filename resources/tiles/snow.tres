@@ -1,10 +1,9 @@
-[gd_resource type="Resource" script_class="Tile" load_steps=3 format=3 uid="uid://kijjahq4mk8t"]
+[gd_resource type="Resource" script_class="Tile" load_steps=2 format=3 uid="uid://kijjahq4mk8t"]
 
 [ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_i18vg"]
-[ext_resource type="Texture2D" uid="uid://bpfv6pqf7vb3w" path="res://assets/tiles/snow.png" id="2_i18vg"]
 
 [resource]
 script = ExtResource("1_i18vg")
 tile_name = &"Snow"
-tile_sprites = Array[Texture2D]([ExtResource("2_i18vg")])
+atlas_coords = Array[Vector2i]([Vector2i(3, 5)])
 metadata/_custom_type_script = "uid://u8f786gwmld3"
