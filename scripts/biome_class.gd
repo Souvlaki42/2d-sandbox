@@ -21,6 +21,6 @@ var terrain_noise: PerlinNoise = null
 @export var max_tree_height: int = 6
 
 @export_category("Noise Settings")
-@export var cave_noise_image: Image = null
+@export var cave_noise_texture: NoiseTexture2D = null
 @export var terrain_frequency: float = 0.04
 @export var cave_frequency: float = 0.08
