@@ -5,5 +5,5 @@
 [resource]
 script = ExtResource("1_3fsat")
 tile_name = &"Sand"
-atlas_coords = Array[Vector2i]([Vector2i(7, 6)])
+atlas_coords = Array[Vector2i]([Vector2i(3, 6)])
 metadata/_custom_type_script = "uid://u8f786gwmld3"

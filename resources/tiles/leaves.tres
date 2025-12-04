@@ -6,4 +6,5 @@
 script = ExtResource("1_lljcw")
 tile_name = &"Leaves"
 atlas_coords = Array[Vector2i]([Vector2i(4, 8)])
+is_background = true
 metadata/_custom_type_script = "uid://u8f786gwmld3"
