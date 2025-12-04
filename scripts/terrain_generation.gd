@@ -1,9 +1,10 @@
 @tool
-class_name TerrainGenerator extends TileMapLayer
+extends Node2D
 
 var biome_noise: PerlinNoise = null
 var biome_lookup: Dictionary[int, Biome] = {}
 var world_tiles: Dictionary[Vector2i, bool] = {}
+var spawn_position: Vector2
 
 @export_category("Actions")
 @export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
@@ -14,7 +15,7 @@ var world_tiles: Dictionary[Vector2i, bool] = {}
 @export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
 @export var world_size: int = 200
 @export var height_addition: int = 50
-@export var ground_offset: int = 5
+@export var ground_offset: int = 640
 @export var tile_size: int = 128
 
 @export_category("Biome Settings")
@@ -22,6 +23,12 @@ var world_tiles: Dictionary[Vector2i, bool] = {}
 @export var biome_frequency: float = 0.01
 @export var biome_colors: Gradient
 @export var biomes: Array[Biome] = []
+
+@export_category("Node References")
+@export var foreground: TileMapLayer
+@export var background: TileMapLayer
+@export var player: Player
+@export var camera: GameCamera
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
@@ -31,7 +38,8 @@ func clear_everything() -> void:
 	assert(not biomes.is_empty(), "Biomes should be here!")
 
 	world_tiles.clear()
-	self.clear()
+	foreground.clear()
+	background.clear()
 
 	biome_map = null
 	for biome in biomes:
@@ -45,9 +53,8 @@ func clear_everything() -> void:
 	notify_property_list_changed()
 
 func start_generation() -> void:
-	var start_time: float = Time.get_ticks_msec()
-
-	clear_everything()
+	if Engine.is_editor_hint():
+		clear_everything()
 
 	if noise_seed == 0:
 		randomize()
@@ -57,18 +64,18 @@ func start_generation() -> void:
 	for biome in biomes:
 		biome_lookup[biome.tint.to_rgba32()] = biome
 
-	var setup_time: float = Time.get_ticks_msec() - start_time
-	print("Setup finished in %.3f ms" % setup_time)
-
-	start_time = Time.get_ticks_msec()
 	draw_noise_images()
-	var noise_time: float = Time.get_ticks_msec() - start_time
-	print("Noise images generated in %.3f ms" % noise_time)
-
-	start_time = Time.get_ticks_msec()
 	generate_terrain()
-	var terrain_time: float = Time.get_ticks_msec() - start_time
-	print("Terrain generated in %.3f ms" % terrain_time)
+
+	player.spawn(spawn_position)
+	camera.spawn(spawn_position)
+	limit_camera_position()
+
+func limit_camera_position() -> void:
+	camera.set_limit(SIDE_LEFT, 0)
+	camera.set_limit(SIDE_RIGHT, int(world_size * tile_size * scale.x))
+	camera.set_limit(SIDE_BOTTOM, int(((ground_offset / tile_size) + 1) * tile_size * scale.y))
+	camera.set_limit(SIDE_TOP, int(((ground_offset / tile_size) - world_size) * tile_size * scale.y))
 
 func draw_noise_images() -> void:
 	biome_noise = PerlinNoise.new(noise_seed, biome_frequency)
@@ -88,12 +95,24 @@ func draw_noise_images() -> void:
 func get_biome(x: int, y: int) -> Biome:
 	return biome_lookup.get(biome_colors.sample(biome_noise.get_unity_noise(x, y)).to_rgba32(), null)
 
+func get_world_position(grid_x: float, logic_height: float) -> Vector2:
+	var origin_y_in_tiles: int = ground_offset / tile_size
+	var tile_map_y: float = origin_y_in_tiles - logic_height
+
+	var pixel_x = grid_x * tile_size + (tile_size / 2.0)
+	var pixel_y = tile_map_y * tile_size + (tile_size / 2.0)
+
+	return Vector2(pixel_x, pixel_y) * scale
+
 func generate_terrain() -> void:
 	for x: int in range(world_size):
 		for y: int in range(world_size):
 			var current_biome: Biome = get_biome(x, y)
 			var tiles: TileAtlas = current_biome.tile_atlas
 			var height: float = current_biome.terrain_noise.get_unity_noise(x, 0) * current_biome.height_multiplier + height_addition
+			if x == world_size / 2:
+				spawn_position = get_world_position(x, height + 2)
+
 			if y >= height: break
 			var current_tile: Tile = tiles.stone
 			if y < height - current_biome.dirt_layer_height and not tiles.get_ores().is_empty():
@@ -119,14 +138,21 @@ func generate_terrain() -> void:
 				elif tiles.addons != null and randi_range(0, current_biome.addon_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
 					place_tile(tiles.addons, x, y + 1)
 
-func place_tile(tile: Tile, x: int, y: int) -> void:
+func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 	if world_tiles.has(Vector2i(x, y)): return
 	if x < 0 or y < 0 or x >= world_size or y >= world_size: return
 	if not tile: return
 
-	var tile_pos: Vector2i = Vector2i(x, ground_offset - y)
+	var chosen_layer: TileMapLayer = foreground
+	if layer:
+		chosen_layer = layer
+	elif tile.is_background:
+		chosen_layer = background
+
+	var tile_pos: Vector2i = Vector2i(x, (ground_offset / tile_size) - y)
 	var coord_choice = tile.atlas_coords.pick_random()
-	self.set_cell(tile_pos, tile.source_id, coord_choice)
+
+	chosen_layer.set_cell(tile_pos, tile.source_id, coord_choice)
 	world_tiles.set(Vector2i(x, y), true)
 
 func place_tree(current_biome: Biome, x: int, y: int) -> void:

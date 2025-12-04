@@ -1,11 +1,14 @@
 class_name Player extends CharacterBody2D
 
 @export var move_speed: float = 300.0
-@export var jump_velocity: float = -400.0
+@export var jump_velocity: float = -450.0
 @export var sprite_root: Sprite2D
-@export var animations: AnimationPlayer
 
-@onready var direction: float = 0
+var direction: float
+
+func spawn(spawn_pos: Vector2) -> void:
+	direction = 0
+	position = spawn_pos
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():

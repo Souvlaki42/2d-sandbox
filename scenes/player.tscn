@@ -1,11 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://t3uselj70c5n"]
+[gd_scene load_steps=12 format=3 uid="uid://t3uselj70c5n"]
 
 [ext_resource type="Script" uid="uid://b1uvu2m6kvefm" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://lwbhpq36oxh7" path="res://assets/characters/player male/male_arm.png" id="2_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://ci25pbu80unqr" path="res://assets/characters/player male/male_body.png" id="3_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://dmjbe6tvnsfqk" path="res://assets/characters/player male/male_head.png" id="4_fjrip"]
 [ext_resource type="Texture2D" uid="uid://cx0n20uon3iry" path="res://assets/characters/player male/male_leg.png" id="5_smehm"]
-[ext_resource type="Script" uid="uid://dvtyn7htqfw1e" path="res://scripts/camera.gd" id="6_tuyoq"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://lnp1b7yp6dom" path="res://resources/player_states.tres" id="7_fjrip"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qlg0r"]
@@ -174,10 +173,9 @@ _data = {
 &"Walk": SubResource("Animation_fjrip")
 }
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite_root", "animations")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite_root")]
 script = ExtResource("1_g2els")
 sprite_root = NodePath("Root")
-animations = NodePath("Animations")
 
 [node name="Root" type="Sprite2D" parent="."]
 position = Vector2(0, -29.5)
@@ -224,12 +222,6 @@ offset = Vector2(0, 33)
 z_index = 2
 position = Vector2(0, -33)
 shape = SubResource("CapsuleShape2D_qlg0r")
-
-[node name="PlayerCamera" type="Camera2D" parent="." node_paths=PackedStringArray("player_transform")]
-script = ExtResource("6_tuyoq")
-smooth_time = 0.1
-player_transform = NodePath("../Root")
-metadata/_custom_type_script = "uid://dvtyn7htqfw1e"
 
 [node name="Animations" type="AnimationPlayer" parent="."]
 libraries = {

@@ -1,23 +1,22 @@
-[gd_scene load_steps=10 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=4 format=3 uid="uid://cwa6mv2eb5g1c"]
 
-[ext_resource type="TileSet" uid="uid://bbj6r7e08dc0j" path="res://resources/tile_set.tres" id="1_0tnpc"]
-[ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_uwrxv"]
-[ext_resource type="Gradient" uid="uid://6brd2gugvfoo" path="res://resources/biome_colors.tres" id="2_lnu2h"]
-[ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome_class.gd" id="3_0tnpc"]
-[ext_resource type="Resource" uid="uid://d3bxxfgjtguq3" path="res://resources/biomes/grassland.tres" id="4_vtaks"]
-[ext_resource type="Resource" uid="uid://ct1waa40kouyw" path="res://resources/biomes/forest.tres" id="5_kvpfn"]
-[ext_resource type="Resource" uid="uid://b4t71amptw1a1" path="res://resources/biomes/desert.tres" id="6_dinhu"]
-[ext_resource type="Resource" uid="uid://rid1l5kympi0" path="res://resources/biomes/snow.tres" id="7_kvuet"]
+[ext_resource type="Script" uid="uid://dvtyn7htqfw1e" path="res://scripts/camera.gd" id="2_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://mji5yu0gyhvb" path="res://scenes/world.tscn" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://t3uselj70c5n" path="res://scenes/player.tscn" id="9_0tnpc"]
 
 [node name="Game" type="Node2D"]
 
-[node name="TerrainGenerator" type="TileMapLayer" parent="."]
-tile_set = ExtResource("1_0tnpc")
-script = ExtResource("1_uwrxv")
-biome_colors = ExtResource("2_lnu2h")
-biomes = Array[ExtResource("3_0tnpc")]([ExtResource("4_vtaks"), ExtResource("5_kvpfn"), ExtResource("6_dinhu"), ExtResource("7_kvuet")])
-metadata/_custom_type_script = "uid://mdkjre3hbp0l"
+[node name="World" parent="." node_paths=PackedStringArray("player", "camera") instance=ExtResource("2_yqjtg")]
+player = NodePath("../Player")
+camera = NodePath("../GameCamera")
+
+[node name="GameCamera" type="Camera2D" parent="." node_paths=PackedStringArray("player_transform")]
+position = Vector2(7334, -8081)
+zoom = Vector2(0.5, 0.5)
+limit_smoothed = true
+script = ExtResource("2_lnu2h")
+smooth_time = 0.1
+player_transform = NodePath("../Player")
+metadata/_custom_type_script = "uid://dvtyn7htqfw1e"
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("9_0tnpc")]
-position = Vector2(1000, -10000)
