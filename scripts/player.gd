@@ -5,6 +5,7 @@ class_name Player extends CharacterBody2D
 @export var sprite_root: Sprite2D
 
 var direction: float
+var hit: bool
 
 func spawn(spawn_pos: Vector2) -> void:
 	direction = 0
@@ -16,6 +17,8 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
+
+	hit = Input.is_action_pressed("hit")
 
 	direction = Input.get_axis("move_left", "move_right")
 	if direction:

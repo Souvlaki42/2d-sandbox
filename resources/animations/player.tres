@@ -1,0 +1,70 @@
+[gd_resource type="AnimationNodeBlendTree" load_steps=14 format=3 uid="uid://c7dwq3l05bqvj"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xpxq2"]
+animation = &"Blank"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_u5vhk"]
+animation = &"Hit"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2c3l5"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tsjra"]
+advance_mode = 2
+advance_expression = "hit"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ceqst"]
+advance_mode = 2
+advance_expression = "not hit"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_2c3l5"]
+states/Blank/node = SubResource("AnimationNodeAnimation_xpxq2")
+states/Blank/position = Vector2(256, 76)
+states/Hit/node = SubResource("AnimationNodeAnimation_u5vhk")
+states/Hit/position = Vector2(356, 76)
+states/Start/position = Vector2(140, 84)
+transitions = ["Start", "Blank", SubResource("AnimationNodeStateMachineTransition_2c3l5"), "Blank", "Hit", SubResource("AnimationNodeStateMachineTransition_tsjra"), "Hit", "Blank", SubResource("AnimationNodeStateMachineTransition_ceqst")]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tuyoq"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4pvdu"]
+animation = &"Walk"
+use_custom_timeline = true
+timeline_length = 1.5
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u5vhk"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ur7pv"]
+advance_mode = 2
+advance_expression = "abs(velocity.x) > 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tuyoq"]
+advance_mode = 2
+advance_expression = "abs(velocity.x) < 0.1"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_xpxq2"]
+states/End/position = Vector2(913, 100)
+states/Idle/node = SubResource("AnimationNodeAnimation_tuyoq")
+states/Idle/position = Vector2(312, 100)
+states/Walk/node = SubResource("AnimationNodeAnimation_4pvdu")
+states/Walk/position = Vector2(417, 100)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u5vhk"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_ur7pv"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_tuyoq")]
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_4pvdu"]
+fadeout_time = 0.1
+
+[resource]
+graph_offset = Vector2(-85.4953, 64.51608)
+nodes/output/position = Vector2(700, 400)
+nodes/Locomotion/node = SubResource("AnimationNodeStateMachine_xpxq2")
+nodes/Locomotion/position = Vector2(160, 260)
+nodes/Actions/node = SubResource("AnimationNodeStateMachine_2c3l5")
+nodes/Actions/position = Vector2(160, 460)
+nodes/OneShot/node = SubResource("AnimationNodeOneShot_4pvdu")
+nodes/OneShot/position = Vector2(520, 320)
+node_connections = [&"output", 0, &"OneShot", &"OneShot", 0, &"Locomotion", &"OneShot", 1, &"Actions"]
