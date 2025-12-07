@@ -81,6 +81,7 @@ skeleton = NodePath("Skeleton")
 animator = NodePath("Animator")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
+visible = false
 z_index = 2
 position = Vector2(0, -33)
 shape = SubResource("CapsuleShape2D_qlg0r")
@@ -121,6 +122,41 @@ auto_calculate_length_and_angle = false
 length = 16.0
 bone_angle = 0.0
 
+[node name="LeftLegBone" type="Bone2D" parent="Skeleton/Hip"]
+position = Vector2(0, -2.5)
+rest = Transform2D(1, 0, 0, 1, 0, -2.5)
+
+[node name="LeftLeg" type="Sprite2D" parent="Skeleton/Hip/LeftLegBone"]
+z_index = 1
+texture = ExtResource("5_smehm")
+offset = Vector2(0, 28)
+
+[node name="LeftLegTip" type="Bone2D" parent="Skeleton/Hip/LeftLegBone"]
+visible = false
+position = Vector2(0, 48.5)
+rest = Transform2D(1, 0, 0, 1, 0, 48.5)
+auto_calculate_length_and_angle = false
+length = 16.0
+bone_angle = 0.0
+
+[node name="RightLegBone" type="Bone2D" parent="Skeleton/Hip"]
+position = Vector2(0, -2.5)
+rest = Transform2D(1, 0, 0, 1, 0, -2.5)
+
+[node name="RightLeg" type="Sprite2D" parent="Skeleton/Hip/RightLegBone"]
+modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
+z_index = -1
+texture = ExtResource("5_smehm")
+offset = Vector2(0, 28)
+
+[node name="RightLegTip" type="Bone2D" parent="Skeleton/Hip/RightLegBone"]
+visible = false
+position = Vector2(0, 48.5)
+rest = Transform2D(1, 0, 0, 1, 0, 48.5)
+auto_calculate_length_and_angle = false
+length = 16.0
+bone_angle = 0.0
+
 [node name="LeftArmBone" type="Bone2D" parent="Skeleton/Hip"]
 position = Vector2(0, -59)
 scale = Vector2(0.99999994, 0.99999994)
@@ -154,41 +190,6 @@ offset = Vector2(0, 33)
 visible = false
 position = Vector2(0, 57)
 rest = Transform2D(1, 0, 0, 1, 0, 57)
-auto_calculate_length_and_angle = false
-length = 16.0
-bone_angle = 0.0
-
-[node name="LeftLegBone" type="Bone2D" parent="Skeleton/Hip"]
-position = Vector2(0, -2.5)
-rest = Transform2D(1, 0, 0, 1, 0, -2.5)
-
-[node name="LeftLeg" type="Sprite2D" parent="Skeleton/Hip/LeftLegBone"]
-z_index = 1
-texture = ExtResource("5_smehm")
-offset = Vector2(0, 28)
-
-[node name="LeftLegTip" type="Bone2D" parent="Skeleton/Hip/LeftLegBone"]
-visible = false
-position = Vector2(0, 48.5)
-rest = Transform2D(1, 0, 0, 1, 0, 48.5)
-auto_calculate_length_and_angle = false
-length = 16.0
-bone_angle = 0.0
-
-[node name="RightLegBone" type="Bone2D" parent="Skeleton/Hip"]
-position = Vector2(0, -2.5)
-rest = Transform2D(1, 0, 0, 1, 0, -2.5)
-
-[node name="RightLeg" type="Sprite2D" parent="Skeleton/Hip/RightLegBone"]
-modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
-z_index = -1
-texture = ExtResource("5_smehm")
-offset = Vector2(0, 28)
-
-[node name="RightLegTip" type="Bone2D" parent="Skeleton/Hip/RightLegBone"]
-visible = false
-position = Vector2(0, 48.5)
-rest = Transform2D(1, 0, 0, 1, 0, 48.5)
 auto_calculate_length_and_angle = false
 length = 16.0
 bone_angle = 0.0
