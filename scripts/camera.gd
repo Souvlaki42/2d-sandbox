@@ -6,5 +6,5 @@ class_name GameCamera extends Camera2D
 func spawn(spawn_pos: Vector2) -> void:
 	position = spawn_pos
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	position = lerp(position, player_transform.position, smooth_time)

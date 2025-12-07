@@ -1,234 +1,194 @@
-[gd_scene load_steps=12 format=3 uid="uid://t3uselj70c5n"]
+[gd_scene load_steps=22 format=3 uid="uid://t3uselj70c5n"]
 
-[ext_resource type="Script" uid="uid://b1uvu2m6kvefm" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://o5v0d2r2xqkh" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://lwbhpq36oxh7" path="res://assets/characters/player male/male_arm.png" id="2_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://ci25pbu80unqr" path="res://assets/characters/player male/male_body.png" id="3_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://dmjbe6tvnsfqk" path="res://assets/characters/player male/male_head.png" id="4_fjrip"]
 [ext_resource type="Texture2D" uid="uid://cx0n20uon3iry" path="res://assets/characters/player male/male_leg.png" id="5_smehm"]
-[ext_resource type="AnimationNodeStateMachine" uid="uid://lnp1b7yp6dom" path="res://resources/player_states.tres" id="7_fjrip"]
+[ext_resource type="AnimationLibrary" uid="uid://c7dwq3l05bqvj" path="res://resources/animations/player.tres" id="6_tuyoq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qlg0r"]
 radius = 21.0
-height = 180.0
+height = 172.0
 
-[sub_resource type="Animation" id="Animation_tuyoq"]
-resource_name = "Idle"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Root/LeftLeg:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Root/LeftArm:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Root/RightLeg:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Root/RightArm:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ur7pv"]
+animation = &"Blank"
 
-[sub_resource type="Animation" id="Animation_smehm"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Root/LeftArm:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.87266463]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Root/RightArm:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-0.87266463]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Root/RightLeg:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.87266463]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Root/LeftLeg:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-0.87266463]
-}
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_smehm"]
+animation = &"Hit"
 
-[sub_resource type="Animation" id="Animation_fjrip"]
-resource_name = "Walk"
-length = 1.5
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Root/LeftArm:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.75, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.87266463, -0.87266463, 0.87266463]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Root/RightArm:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.75, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [-0.87266463, 0.87266463, -0.87266463]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Root/RightLeg:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.75, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.87266463, -0.87266463, 0.87266463]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Root/LeftLeg:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.75, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [-0.87266463, 0.87266463, -0.87266463]
-}
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_d2wvv"]
+advance_mode = 2
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_fjrip"]
-_data = {
-&"Idle": SubResource("Animation_tuyoq"),
-&"RESET": SubResource("Animation_smehm"),
-&"Walk": SubResource("Animation_fjrip")
-}
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3v2ag"]
+advance_mode = 2
+advance_expression = "hit"
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite_root")]
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tuyoq"]
+advance_mode = 2
+advance_expression = "!hit"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_tuyoq"]
+states/Blank/node = SubResource("AnimationNodeAnimation_ur7pv")
+states/Blank/position = Vector2(304, 100)
+states/Hit/node = SubResource("AnimationNodeAnimation_smehm")
+states/Hit/position = Vector2(377, 98)
+transitions = ["Start", "Blank", SubResource("AnimationNodeStateMachineTransition_d2wvv"), "Blank", "Hit", SubResource("AnimationNodeStateMachineTransition_3v2ag"), "Hit", "Blank", SubResource("AnimationNodeStateMachineTransition_tuyoq")]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_tuyoq"]
+filter_enabled = true
+filters = ["Skeleton/Hip/LeftArmBone:rotation"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tuyoq"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fjrip"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_smehm"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ur7pv"]
+advance_mode = 2
+advance_expression = "abs(velocity.x) > 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_y4r1p"]
+advance_mode = 2
+advance_expression = "abs(velocity.x) < 0.1"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_smehm"]
+states/End/position = Vector2(883, 107)
+states/Idle/node = SubResource("AnimationNodeAnimation_tuyoq")
+states/Idle/position = Vector2(302, 95)
+states/Start/position = Vector2(192, 88)
+states/Walk/node = SubResource("AnimationNodeAnimation_fjrip")
+states/Walk/position = Vector2(440, 95)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_smehm"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_ur7pv"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_y4r1p")]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_ur7pv"]
+nodes/output/position = Vector2(660, 160)
+nodes/Movement/node = SubResource("AnimationNodeStateMachine_smehm")
+nodes/Movement/position = Vector2(140, 60)
+nodes/Actions/node = SubResource("AnimationNodeStateMachine_tuyoq")
+nodes/Actions/position = Vector2(140, 260)
+nodes/HitFilter/node = SubResource("AnimationNodeBlend2_tuyoq")
+nodes/HitFilter/position = Vector2(400, 120)
+node_connections = [&"output", 0, &"HitFilter", &"HitFilter", 0, &"Movement", &"HitFilter", 1, &"Actions"]
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("skeleton", "animator")]
 script = ExtResource("1_g2els")
-sprite_root = NodePath("Root")
-
-[node name="Root" type="Sprite2D" parent="."]
-position = Vector2(0, -29.5)
-texture = ExtResource("3_tuyoq")
-metadata/_edit_group_ = true
-
-[node name="Head" type="Sprite2D" parent="Root"]
-z_index = 1
-position = Vector2(0, -29.5)
-texture = ExtResource("4_fjrip")
-offset = Vector2(0, -32)
-
-[node name="LeftLeg" type="Sprite2D" parent="Root"]
-z_index = 1
-position = Vector2(0, 27)
-rotation = -0.87266463
-texture = ExtResource("5_smehm")
-offset = Vector2(0, 28)
-
-[node name="LeftArm" type="Sprite2D" parent="Root"]
-z_index = 1
-position = Vector2(0, -29.5)
-rotation = 0.87266463
-texture = ExtResource("2_qlg0r")
-offset = Vector2(0, 33)
-
-[node name="RightLeg" type="Sprite2D" parent="Root"]
-modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
-z_index = -1
-position = Vector2(0, 27)
-rotation = 0.87266463
-texture = ExtResource("5_smehm")
-offset = Vector2(0, 28)
-
-[node name="RightArm" type="Sprite2D" parent="Root"]
-modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
-z_index = -1
-position = Vector2(0, -29.5)
-rotation = -0.87266463
-texture = ExtResource("2_qlg0r")
-offset = Vector2(0, 33)
+skeleton = NodePath("Skeleton")
+animator = NodePath("Animator")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 z_index = 2
 position = Vector2(0, -33)
 shape = SubResource("CapsuleShape2D_qlg0r")
 
-[node name="Animations" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_fjrip")
-}
-
 [node name="Animator" type="AnimationTree" parent="."]
-tree_root = ExtResource("7_fjrip")
+tree_root = SubResource("AnimationNodeBlendTree_ur7pv")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../Animations")
+parameters/HitFilter/blend_amount = 1.0
+
+[node name="Animations" type="AnimationPlayer" parent="."]
+libraries = {
+&"": ExtResource("6_tuyoq")
+}
+
+[node name="Skeleton" type="Skeleton2D" parent="."]
+
+[node name="Hip" type="Bone2D" parent="Skeleton"]
+rest = Transform2D(1, 0, 0, 1, 0, 0)
+
+[node name="Body" type="Sprite2D" parent="Skeleton/Hip"]
+position = Vector2(0, -29.5)
+texture = ExtResource("3_tuyoq")
+
+[node name="Skull" type="Bone2D" parent="Skeleton/Hip"]
+position = Vector2(0, -59)
+rest = Transform2D(1, 0, 0, 1, 0, -59)
+
+[node name="Head" type="Sprite2D" parent="Skeleton/Hip/Skull"]
+texture = ExtResource("4_fjrip")
+offset = Vector2(0, -32)
+
+[node name="HeadTip" type="Bone2D" parent="Skeleton/Hip/Skull"]
+visible = false
+position = Vector2(0, -56)
+rest = Transform2D(1, 0, 0, 1, 0, -56)
+auto_calculate_length_and_angle = false
+length = 16.0
+bone_angle = 0.0
+
+[node name="LeftArmBone" type="Bone2D" parent="Skeleton/Hip"]
+position = Vector2(0, -59)
+scale = Vector2(0.99999994, 0.99999994)
+rest = Transform2D(1, 0, 0, 1, 0, -59)
+
+[node name="LeftArm" type="Sprite2D" parent="Skeleton/Hip/LeftArmBone"]
+z_index = 1
+texture = ExtResource("2_qlg0r")
+offset = Vector2(0, 33)
+
+[node name="LeftArmTip" type="Bone2D" parent="Skeleton/Hip/LeftArmBone"]
+visible = false
+position = Vector2(0, 57)
+rest = Transform2D(1, 0, 0, 1, 0, 57)
+auto_calculate_length_and_angle = false
+length = 16.0
+bone_angle = 0.0
+
+[node name="RightArmBone" type="Bone2D" parent="Skeleton/Hip"]
+position = Vector2(0, -59)
+scale = Vector2(0.99999994, 0.99999994)
+rest = Transform2D(1, 0, 0, 1, 0, -59)
+
+[node name="RightArm" type="Sprite2D" parent="Skeleton/Hip/RightArmBone"]
+modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
+z_index = -1
+texture = ExtResource("2_qlg0r")
+offset = Vector2(0, 33)
+
+[node name="RightArmTip" type="Bone2D" parent="Skeleton/Hip/RightArmBone"]
+visible = false
+position = Vector2(0, 57)
+rest = Transform2D(1, 0, 0, 1, 0, 57)
+auto_calculate_length_and_angle = false
+length = 16.0
+bone_angle = 0.0
+
+[node name="LeftLegBone" type="Bone2D" parent="Skeleton/Hip"]
+position = Vector2(0, -2.5)
+rest = Transform2D(1, 0, 0, 1, 0, -2.5)
+
+[node name="LeftLeg" type="Sprite2D" parent="Skeleton/Hip/LeftLegBone"]
+z_index = 1
+texture = ExtResource("5_smehm")
+offset = Vector2(0, 28)
+
+[node name="LeftLegTip" type="Bone2D" parent="Skeleton/Hip/LeftLegBone"]
+visible = false
+position = Vector2(0, 48.5)
+rest = Transform2D(1, 0, 0, 1, 0, 48.5)
+auto_calculate_length_and_angle = false
+length = 16.0
+bone_angle = 0.0
+
+[node name="RightLegBone" type="Bone2D" parent="Skeleton/Hip"]
+position = Vector2(0, -2.5)
+rest = Transform2D(1, 0, 0, 1, 0, -2.5)
+
+[node name="RightLeg" type="Sprite2D" parent="Skeleton/Hip/RightLegBone"]
+modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
+z_index = -1
+texture = ExtResource("5_smehm")
+offset = Vector2(0, 28)
+
+[node name="RightLegTip" type="Bone2D" parent="Skeleton/Hip/RightLegBone"]
+visible = false
+position = Vector2(0, 48.5)
+rest = Transform2D(1, 0, 0, 1, 0, 48.5)
+auto_calculate_length_and_angle = false
+length = 16.0
+bone_angle = 0.0
