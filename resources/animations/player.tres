@@ -1,70 +1,185 @@
-[gd_resource type="AnimationNodeBlendTree" load_steps=14 format=3 uid="uid://c7dwq3l05bqvj"]
+[gd_resource type="AnimationLibrary" load_steps=6 format=3 uid="uid://c7dwq3l05bqvj"]
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xpxq2"]
-animation = &"Blank"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_u5vhk"]
-animation = &"Hit"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2c3l5"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tsjra"]
-advance_mode = 2
-advance_expression = "hit"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ceqst"]
-advance_mode = 2
-advance_expression = "not hit"
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_2c3l5"]
-states/Blank/node = SubResource("AnimationNodeAnimation_xpxq2")
-states/Blank/position = Vector2(256, 76)
-states/Hit/node = SubResource("AnimationNodeAnimation_u5vhk")
-states/Hit/position = Vector2(356, 76)
-states/Start/position = Vector2(140, 84)
-transitions = ["Start", "Blank", SubResource("AnimationNodeStateMachineTransition_2c3l5"), "Blank", "Hit", SubResource("AnimationNodeStateMachineTransition_tsjra"), "Hit", "Blank", SubResource("AnimationNodeStateMachineTransition_ceqst")]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tuyoq"]
-animation = &"Idle"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4pvdu"]
-animation = &"Walk"
-use_custom_timeline = true
-timeline_length = 1.5
-stretch_time_scale = true
-start_offset = 0.0
+[sub_resource type="Animation" id="Animation_u5vhk"]
+resource_name = "Blank"
 loop_mode = 1
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u5vhk"]
-advance_mode = 2
+[sub_resource type="Animation" id="Animation_ur7pv"]
+resource_name = "Hit"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton/Hip/LeftArmBone:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [3.4906585, 0.34906584]
+}
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ur7pv"]
-advance_mode = 2
-advance_expression = "abs(velocity.x) > 0.1"
+[sub_resource type="Animation" id="Animation_smehm"]
+resource_name = "Idle"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton/Hip/LeftArmBone:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0009999999),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton/Hip/RightArmBone:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0009999999),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton/Hip/LeftLegBone:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton/Hip/RightLegBone:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tuyoq"]
-advance_mode = 2
-advance_expression = "abs(velocity.x) < 0.1"
+[sub_resource type="Animation" id="Animation_4pvdu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton/Hip/LeftArmBone:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton/Hip/RightArmBone:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton/Hip/LeftLegBone:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton/Hip/RightLegBone:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_xpxq2"]
-states/End/position = Vector2(913, 100)
-states/Idle/node = SubResource("AnimationNodeAnimation_tuyoq")
-states/Idle/position = Vector2(312, 100)
-states/Walk/node = SubResource("AnimationNodeAnimation_4pvdu")
-states/Walk/position = Vector2(417, 100)
-transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u5vhk"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_ur7pv"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_tuyoq")]
-
-[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_4pvdu"]
-fadeout_time = 0.1
+[sub_resource type="Animation" id="Animation_fjrip"]
+resource_name = "Walk"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton/Hip/LeftArmBone:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.49999997, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.87266463, -0.87266463, 0.87266463]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton/Hip/RightArmBone:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [-0.8726646259971648, 0.8726646259971648, -0.8726646259971648]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton/Hip/LeftLegBone:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [-0.8726646259971648, 0.8726646259971648, -0.8726646259971648]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton/Hip/RightLegBone:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.87266463, -0.87266463, 0.87266463]
+}
 
 [resource]
-graph_offset = Vector2(-85.4953, 64.51608)
-nodes/output/position = Vector2(700, 400)
-nodes/Locomotion/node = SubResource("AnimationNodeStateMachine_xpxq2")
-nodes/Locomotion/position = Vector2(160, 260)
-nodes/Actions/node = SubResource("AnimationNodeStateMachine_2c3l5")
-nodes/Actions/position = Vector2(160, 460)
-nodes/OneShot/node = SubResource("AnimationNodeOneShot_4pvdu")
-nodes/OneShot/position = Vector2(520, 320)
-node_connections = [&"output", 0, &"OneShot", &"OneShot", 0, &"Locomotion", &"OneShot", 1, &"Actions"]
+_data = {
+&"Blank": SubResource("Animation_u5vhk"),
+&"Hit": SubResource("Animation_ur7pv"),
+&"Idle": SubResource("Animation_smehm"),
+&"RESET": SubResource("Animation_4pvdu"),
+&"Walk": SubResource("Animation_fjrip")
+}

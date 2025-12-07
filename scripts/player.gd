@@ -2,7 +2,8 @@ class_name Player extends CharacterBody2D
 
 @export var move_speed: float = 300.0
 @export var jump_velocity: float = -450.0
-@export var sprite_root: Sprite2D
+@export var skeleton: Skeleton2D
+@export var animator: AnimationTree
 
 var direction: float
 var hit: bool
@@ -20,13 +21,18 @@ func _physics_process(delta: float) -> void:
 
 	hit = Input.is_action_pressed("hit")
 
+	if hit:
+		animator["parameters/HitFilter/blend_amount"] = 1.0
+	else:
+		animator["parameters/HitFilter/blend_amount"] = 0.0
+
 	direction = Input.get_axis("move_left", "move_right")
 	if direction:
 		velocity.x = direction * move_speed
 		if direction > 0:
-			sprite_root.scale.x = -1
+			skeleton.scale.x = -1
 		if direction < 0:
-			sprite_root.scale.x = 1
+			skeleton.scale.x = 1
 	else:
 		velocity.x = move_toward(velocity.x, 0, move_speed)
 

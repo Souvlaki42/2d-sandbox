@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cwa6mv2eb5g1c"]
 
-[ext_resource type="Script" uid="uid://dvtyn7htqfw1e" path="res://scripts/camera.gd" id="2_lnu2h"]
+[ext_resource type="Script" uid="uid://d2hundexsem8q" path="res://scripts/camera.gd" id="2_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://mji5yu0gyhvb" path="res://scenes/world.tscn" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://t3uselj70c5n" path="res://scenes/player.tscn" id="9_0tnpc"]
 
@@ -11,13 +11,12 @@ player = NodePath("../Player")
 camera = NodePath("../GameCamera")
 
 [node name="GameCamera" type="Camera2D" parent="." node_paths=PackedStringArray("player_transform")]
-position = Vector2(7334, -8081)
 zoom = Vector2(0.5, 0.5)
 process_callback = 0
 limit_smoothed = true
 script = ExtResource("2_lnu2h")
 smooth_time = 0.1
 player_transform = NodePath("../Player")
-metadata/_custom_type_script = "uid://dvtyn7htqfw1e"
+metadata/_custom_type_script = "uid://d2hundexsem8q"
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("9_0tnpc")]
