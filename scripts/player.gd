@@ -4,9 +4,11 @@ class_name Player extends CharacterBody2D
 @export var jump_velocity: float = -450.0
 @export var skeleton: Skeleton2D
 @export var animator: AnimationTree
+@export var world: TerrainGenerator
 
 var direction: float
 var hit: bool
+var mouse_pos: Vector2i
 
 func spawn(spawn_pos: Vector2) -> void:
 	direction = 0
@@ -20,9 +22,12 @@ func _physics_process(delta: float) -> void:
 		velocity.y = jump_velocity
 
 	hit = Input.is_action_pressed("hit")
+	mouse_pos = get_global_mouse_position()
 
 	if hit:
 		animator["parameters/HitFilter/blend_amount"] = 1.0
+		var tile_pos: Vector2i = world.get_coordinates_from_mouse(mouse_pos)
+		world.remove_tile(tile_pos.x, tile_pos.y)
 	else:
 		animator["parameters/HitFilter/blend_amount"] = 0.0
 

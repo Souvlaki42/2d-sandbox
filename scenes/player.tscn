@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://t3uselj70c5n"]
+[gd_scene load_steps=24 format=3 uid="uid://t3uselj70c5n"]
 
 [ext_resource type="Script" uid="uid://o5v0d2r2xqkh" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://lwbhpq36oxh7" path="res://assets/characters/player male/male_arm.png" id="2_qlg0r"]
@@ -65,15 +65,24 @@ states/Walk/node = SubResource("AnimationNodeAnimation_fjrip")
 states/Walk/position = Vector2(440, 95)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_smehm"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_ur7pv"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_y4r1p")]
 
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_fjrip"]
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_tuyoq"]
+
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_ur7pv"]
+graph_offset = Vector2(-305.48767, -16.432549)
 nodes/output/position = Vector2(660, 160)
 nodes/Movement/node = SubResource("AnimationNodeStateMachine_smehm")
-nodes/Movement/position = Vector2(140, 60)
+nodes/Movement/position = Vector2(-120, 60)
 nodes/Actions/node = SubResource("AnimationNodeStateMachine_tuyoq")
-nodes/Actions/position = Vector2(140, 260)
+nodes/Actions/position = Vector2(-40, 280)
 nodes/HitFilter/node = SubResource("AnimationNodeBlend2_tuyoq")
 nodes/HitFilter/position = Vector2(400, 120)
-node_connections = [&"output", 0, &"HitFilter", &"HitFilter", 0, &"Movement", &"HitFilter", 1, &"Actions"]
+nodes/ThreeScale/node = SubResource("AnimationNodeTimeScale_tuyoq")
+nodes/ThreeScale/position = Vector2(200, 280)
+nodes/OneNHalfScale/node = SubResource("AnimationNodeTimeScale_fjrip")
+nodes/OneNHalfScale/position = Vector2(120, 60)
+node_connections = [&"output", 0, &"HitFilter", &"HitFilter", 0, &"OneNHalfScale", &"HitFilter", 1, &"ThreeScale", &"ThreeScale", 0, &"Actions", &"OneNHalfScale", 0, &"Movement"]
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("skeleton", "animator")]
 script = ExtResource("1_g2els")
@@ -91,6 +100,8 @@ tree_root = SubResource("AnimationNodeBlendTree_ur7pv")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../Animations")
 parameters/HitFilter/blend_amount = 1.0
+parameters/ThreeScale/scale = 3.0
+parameters/OneNHalfScale/scale = 1.5
 
 [node name="Animations" type="AnimationPlayer" parent="."]
 libraries = {

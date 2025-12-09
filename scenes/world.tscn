@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_4mrxx"]
 [ext_resource type="Gradient" uid="uid://6brd2gugvfoo" path="res://resources/biome_colors.tres" id="2_7r4gi"]
-[ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome_class.gd" id="3_w7kh3"]
+[ext_resource type="Script" path="res://scripts/biome_class.gd" id="3_w7kh3"]
 [ext_resource type="Resource" uid="uid://d3bxxfgjtguq3" path="res://resources/biomes/grassland.tres" id="4_e3hyu"]
 [ext_resource type="Resource" uid="uid://ct1waa40kouyw" path="res://resources/biomes/forest.tres" id="5_q5onr"]
 [ext_resource type="Resource" uid="uid://b4t71amptw1a1" path="res://resources/biomes/desert.tres" id="6_jhx03"]
@@ -16,6 +16,7 @@ biome_colors = ExtResource("2_7r4gi")
 biomes = Array[ExtResource("3_w7kh3")]([ExtResource("4_e3hyu"), ExtResource("5_q5onr"), ExtResource("6_jhx03"), ExtResource("7_o8fc1")])
 foreground = NodePath("Foreground")
 background = NodePath("Background")
+metadata/_custom_type_script = "uid://mdkjre3hbp0l"
 
 [node name="Foreground" type="TileMapLayer" parent="."]
 tile_set = ExtResource("8_xo05s")

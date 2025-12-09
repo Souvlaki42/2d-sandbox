@@ -19,4 +19,5 @@ smooth_time = 0.1
 player_transform = NodePath("../Player")
 metadata/_custom_type_script = "uid://d2hundexsem8q"
 
-[node name="Player" parent="." groups=["Player"] instance=ExtResource("9_0tnpc")]
+[node name="Player" parent="." node_paths=PackedStringArray("world") groups=["Player"] instance=ExtResource("9_0tnpc")]
+world = NodePath("../World")
