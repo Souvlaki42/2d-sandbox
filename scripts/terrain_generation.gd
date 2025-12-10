@@ -36,7 +36,6 @@ class WorldTile:
 @export var foreground: TileMapLayer
 @export var background: TileMapLayer
 @export var player: Player
-@export var camera: GameCamera
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
@@ -76,10 +75,8 @@ func start_generation() -> void:
 	generate_terrain()
 
 	player.spawn(spawn_position)
-	camera.spawn(spawn_position)
-	limit_camera_position()
 
-func limit_camera_position() -> void:
+func limit_camera_position(camera: Camera2D) -> void:
 	camera.set_limit(SIDE_LEFT, 0)
 	camera.set_limit(SIDE_RIGHT, int(world_size * tile_size * scale.x))
 	camera.set_limit(SIDE_BOTTOM, int(((ground_offset / tile_size) + 1) * tile_size * scale.y))

@@ -3,8 +3,10 @@ class_name Player extends CharacterBody2D
 @export var action_range: int
 @export var move_speed: float = 300.0
 @export var jump_velocity: float = -450.0
+@export var smooth_time: float = 0.1
 @export var skeleton: Skeleton2D
 @export var animator: AnimationTree
+@export var camera: Camera2D
 @export var world: TerrainGenerator
 @export var selected_tile: Tile
 
@@ -19,8 +21,11 @@ var coords: Vector2i
 func spawn(spawn_pos: Vector2) -> void:
 	direction = 0
 	position = spawn_pos
+	world.limit_camera_position(camera)
 
 func _physics_process(delta: float) -> void:
+	camera.global_position = lerp(camera.global_position, global_position, smooth_time)
+
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
