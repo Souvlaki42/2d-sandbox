@@ -19,9 +19,12 @@ background = NodePath("Background")
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"
 
 [node name="Foreground" type="TileMapLayer" parent="."]
+z_index = -5
 tile_set = ExtResource("8_xo05s")
+physics_quadrant_size = 20
 
 [node name="Background" type="TileMapLayer" parent="."]
-z_index = -1
+z_index = -10
 tile_set = ExtResource("8_xo05s")
 collision_enabled = false
+physics_quadrant_size = 20

@@ -11,6 +11,10 @@
 radius = 21.0
 height = 172.0
 
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_tuyoq"]
+filter_enabled = true
+filters = ["Skeleton/Hip/LeftArmBone:rotation"]
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ur7pv"]
 animation = &"Blank"
 
@@ -22,22 +26,18 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3v2ag"]
 advance_mode = 2
-advance_expression = "hit"
+advance_expression = "hit or place"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tuyoq"]
 advance_mode = 2
-advance_expression = "!hit"
+advance_expression = "not hit and not place"
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_tuyoq"]
 states/Blank/node = SubResource("AnimationNodeAnimation_ur7pv")
 states/Blank/position = Vector2(304, 100)
 states/Hit/node = SubResource("AnimationNodeAnimation_smehm")
-states/Hit/position = Vector2(377, 98)
+states/Hit/position = Vector2(422, 100)
 transitions = ["Start", "Blank", SubResource("AnimationNodeStateMachineTransition_d2wvv"), "Blank", "Hit", SubResource("AnimationNodeStateMachineTransition_3v2ag"), "Hit", "Blank", SubResource("AnimationNodeStateMachineTransition_tuyoq")]
-
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_tuyoq"]
-filter_enabled = true
-filters = ["Skeleton/Hip/LeftArmBone:rotation"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tuyoq"]
 animation = &"Idle"
@@ -70,19 +70,19 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_tuyoq"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_ur7pv"]
-graph_offset = Vector2(-305.48767, -16.432549)
+graph_offset = Vector2(-373.90042, -36.176926)
 nodes/output/position = Vector2(660, 160)
 nodes/Movement/node = SubResource("AnimationNodeStateMachine_smehm")
 nodes/Movement/position = Vector2(-120, 60)
 nodes/Actions/node = SubResource("AnimationNodeStateMachine_tuyoq")
 nodes/Actions/position = Vector2(-40, 280)
-nodes/HitFilter/node = SubResource("AnimationNodeBlend2_tuyoq")
-nodes/HitFilter/position = Vector2(400, 120)
+nodes/ActionFilter/node = SubResource("AnimationNodeBlend2_tuyoq")
+nodes/ActionFilter/position = Vector2(400, 120)
 nodes/ThreeScale/node = SubResource("AnimationNodeTimeScale_tuyoq")
 nodes/ThreeScale/position = Vector2(200, 280)
 nodes/OneNHalfScale/node = SubResource("AnimationNodeTimeScale_fjrip")
 nodes/OneNHalfScale/position = Vector2(120, 60)
-node_connections = [&"output", 0, &"HitFilter", &"HitFilter", 0, &"OneNHalfScale", &"HitFilter", 1, &"ThreeScale", &"ThreeScale", 0, &"Actions", &"OneNHalfScale", 0, &"Movement"]
+node_connections = [&"output", 0, &"ActionFilter", &"ActionFilter", 0, &"OneNHalfScale", &"ActionFilter", 1, &"ThreeScale", &"ThreeScale", 0, &"Actions", &"OneNHalfScale", 0, &"Movement"]
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("skeleton", "animator")]
 script = ExtResource("1_g2els")
@@ -99,7 +99,7 @@ shape = SubResource("CapsuleShape2D_qlg0r")
 tree_root = SubResource("AnimationNodeBlendTree_ur7pv")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../Animations")
-parameters/HitFilter/blend_amount = 1.0
+parameters/ActionFilter/blend_amount = 1.0
 parameters/ThreeScale/scale = 3.0
 parameters/OneNHalfScale/scale = 1.5
 

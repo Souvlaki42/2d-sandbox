@@ -15,7 +15,6 @@ A 2D sandbox game like Terraria, made with Godot 4.5+.
 ## Resources
 
 - [2D Sandbox Tutorial Series for Unity](https://www.youtube.com/playlist?list=PLn1X2QyVjFVDE9syarF1HoUFwB_3K7z2y)
-- [Reset variables API in Godot and GDScript](https://www.reddit.com/r/godot/comments/1p47ds3/reset_variables_api_in_godot_and_gdscript/)
 - [2D Voxel Asset Pack by Kenney](https://www.kenney.nl/assets/voxel-pack)
 - [Crosshair Pack by Kenney](https://www.kenney.nl/assets/crosshair-pack)
 

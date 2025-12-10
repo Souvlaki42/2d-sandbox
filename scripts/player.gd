@@ -1,14 +1,20 @@
 class_name Player extends CharacterBody2D
 
+@export var action_range: int
 @export var move_speed: float = 300.0
 @export var jump_velocity: float = -450.0
 @export var skeleton: Skeleton2D
 @export var animator: AnimationTree
 @export var world: TerrainGenerator
+@export var selected_tile: Tile
 
 var direction: float
+
 var hit: bool
-var mouse_pos: Vector2i
+var place: bool
+
+var mouse_coords: Vector2i
+var coords: Vector2i
 
 func spawn(spawn_pos: Vector2) -> void:
 	direction = 0
@@ -21,15 +27,21 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
 
-	hit = Input.is_action_pressed("hit")
-	mouse_pos = get_global_mouse_position()
+	coords = world.get_coordinates_from_position(global_position)
+	mouse_coords = world.get_coordinates_from_position(get_global_mouse_position())
 
-	if hit:
-		animator["parameters/HitFilter/blend_amount"] = 1.0
-		var tile_pos: Vector2i = world.get_coordinates_from_mouse(mouse_pos)
-		world.remove_tile(tile_pos.x, tile_pos.y)
-	else:
-		animator["parameters/HitFilter/blend_amount"] = 0.0
+	if mouse_coords != coords and mouse_coords != Vector2i(coords.x, coords.y + 1) and coords.distance_to(mouse_coords) <= action_range:
+		hit = Input.is_action_pressed("hit")
+		place = Input.is_action_pressed("place")
+
+		if hit:
+			animator["parameters/ActionFilter/blend_amount"] = 1.0
+			world.remove_tile(mouse_coords.x, mouse_coords.y)
+		elif place:
+			animator["parameters/ActionFilter/blend_amount"] = 1.0
+			world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
+		else:
+			animator["parameters/ActionFilter/blend_amount"] = 0.0
 
 	direction = Input.get_axis("move_left", "move_right")
 	if direction:

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=5 format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="Script" uid="uid://d2hundexsem8q" path="res://scripts/camera.gd" id="2_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://mji5yu0gyhvb" path="res://scenes/world.tscn" id="2_yqjtg"]
+[ext_resource type="Resource" uid="uid://k7qsvwfcl1r7" path="res://resources/tiles/dirt.tres" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://t3uselj70c5n" path="res://scenes/player.tscn" id="9_0tnpc"]
 
 [node name="Game" type="Node2D"]
@@ -20,4 +21,6 @@ player_transform = NodePath("../Player")
 metadata/_custom_type_script = "uid://d2hundexsem8q"
 
 [node name="Player" parent="." node_paths=PackedStringArray("world") groups=["Player"] instance=ExtResource("9_0tnpc")]
+action_range = 5
 world = NodePath("../World")
+selected_tile = ExtResource("4_lbhrr")
