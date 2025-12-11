@@ -36,10 +36,12 @@ class WorldTile:
 @export var foreground: TileMapLayer
 @export var background: TileMapLayer
 @export var player: Player
+@export var moon: Sprite2D
+@export var sun: Sprite2D
 
 func _ready() -> void:
-	if not Engine.is_editor_hint():
-		start_generation()
+	if Engine.is_editor_hint(): return
+	start_generation()
 
 func clear_everything() -> void:
 	assert(not biomes.is_empty(), "Biomes should be here!")

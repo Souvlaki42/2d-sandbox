@@ -1,16 +1,62 @@
-[gd_scene load_steps=4 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene load_steps=8 format=3 uid="uid://cwa6mv2eb5g1c"]
 
+[ext_resource type="Script" uid="uid://dstjg4fgwpqoj" path="res://scripts/game.gd" id="1_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://mji5yu0gyhvb" path="res://scenes/world.tscn" id="2_yqjtg"]
 [ext_resource type="Resource" uid="uid://k7qsvwfcl1r7" path="res://resources/tiles/dirt.tres" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://t3uselj70c5n" path="res://scenes/player.tscn" id="9_0tnpc"]
 
-[node name="Game" type="Node2D"]
+[sub_resource type="Animation" id="Animation_lbhrr"]
+resource_name = "DayNight"
+length = 24.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SkyModulation:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3, 5, 10, 14, 18, 21),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(0.12156863, 0.13333334, 0.2, 1), Color(0.6308337, 0.8024055, 0.7577245, 1), Color(0.64416933, 0.7624552, 0.9703533, 1), Color(0.81079733, 0.9434298, 0.9899271, 1), Color(0.45614713, 0.47821468, 0.5718347, 1), Color(0.28681844, 0.30367178, 0.38365078, 1), Color(0.12156862, 0.13333333, 0.19999999, 1)]
+}
 
-[node name="World" parent="." node_paths=PackedStringArray("player", "camera") instance=ExtResource("2_yqjtg")]
+[sub_resource type="Animation" id="Animation_iywne"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_iywne"]
+_data = {
+&"DayNight": SubResource("Animation_lbhrr"),
+&"RESET": SubResource("Animation_iywne")
+}
+
+[node name="Game" type="Node2D" node_paths=PackedStringArray("world")]
+script = ExtResource("1_lbhrr")
+day_length_seconds = 600.0
+world = NodePath("World")
+
+[node name="World" parent="." node_paths=PackedStringArray("player") instance=ExtResource("2_yqjtg")]
 player = NodePath("../Player")
-camera = NodePath("")
 
-[node name="Player" parent="." node_paths=PackedStringArray("world") groups=["Player"] instance=ExtResource("9_0tnpc")]
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(9004.8, -4838.4)
+zoom = Vector2(0.3, 0.3)
+process_callback = 0
+
+[node name="Player" parent="." node_paths=PackedStringArray("world", "camera") groups=["Player"] instance=ExtResource("9_0tnpc")]
+position = Vector2(9004.8, -4838.4)
 action_range = 5
 world = NodePath("../World")
 selected_tile = ExtResource("4_lbhrr")
+camera = NodePath("../Camera")
+
+[node name="SkyModulation" type="CanvasModulate" parent="."]
+color = Color(0.12156863, 0.13333334, 0.2, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_iywne")
+}
+autoplay = "DayNight"
+speed_scale = 0.04

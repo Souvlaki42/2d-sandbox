@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://mji5yu0gyhvb"]
+[gd_scene load_steps=12 format=3 uid="uid://mji5yu0gyhvb"]
 
 [ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_4mrxx"]
 [ext_resource type="Gradient" uid="uid://6brd2gugvfoo" path="res://resources/biome_colors.tres" id="2_7r4gi"]
@@ -8,18 +8,41 @@
 [ext_resource type="Resource" uid="uid://b4t71amptw1a1" path="res://resources/biomes/desert.tres" id="6_jhx03"]
 [ext_resource type="Resource" uid="uid://rid1l5kympi0" path="res://resources/biomes/snow.tres" id="7_o8fc1"]
 [ext_resource type="TileSet" uid="uid://bbj6r7e08dc0j" path="res://resources/tile_set.tres" id="8_xo05s"]
+[ext_resource type="Texture2D" uid="uid://l2t7bxh8qnfq" path="res://assets/other/skybox_bottom.png" id="9_7r4gi"]
+[ext_resource type="Texture2D" uid="uid://c66gynwsdsnx3" path="res://assets/other/moon.png" id="10_e3hyu"]
+[ext_resource type="Texture2D" uid="uid://x5jmhk45p64b" path="res://assets/other/sun.png" id="11_q5onr"]
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("foreground", "background")]
+[node name="World" type="Node2D" node_paths=PackedStringArray("foreground", "background", "moon", "sun")]
 scale = Vector2(0.7, 0.7)
 script = ExtResource("1_4mrxx")
 biome_colors = ExtResource("2_7r4gi")
 biomes = Array[ExtResource("3_w7kh3")]([ExtResource("4_e3hyu"), ExtResource("5_q5onr"), ExtResource("6_jhx03"), ExtResource("7_o8fc1")])
 foreground = NodePath("Foreground")
 background = NodePath("Background")
+moon = NodePath("Moon")
+sun = NodePath("Sun")
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"
+
+[node name="Sky" type="Sprite2D" parent="."]
+z_index = -30
+scale = Vector2(99.999985, 99.999985)
+texture = ExtResource("9_7r4gi")
+
+[node name="Sun" type="Sprite2D" parent="."]
+z_index = -20
+position = Vector2(9011.999, -5596.9985)
+scale = Vector2(1.9999996, 1.9999996)
+texture = ExtResource("11_q5onr")
+
+[node name="Moon" type="Sprite2D" parent="."]
+z_index = -20
+position = Vector2(9011.999, -5596.9985)
+scale = Vector2(1.9999996, 1.9999996)
+texture = ExtResource("10_e3hyu")
 
 [node name="Foreground" type="TileMapLayer" parent="."]
 z_index = -5
+scale = Vector2(0.9999998, 0.9999998)
 tile_set = ExtResource("8_xo05s")
 physics_quadrant_size = 20
 

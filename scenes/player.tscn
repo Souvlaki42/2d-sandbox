@@ -84,14 +84,12 @@ nodes/OneNHalfScale/node = SubResource("AnimationNodeTimeScale_fjrip")
 nodes/OneNHalfScale/position = Vector2(120, 60)
 node_connections = [&"output", 0, &"ActionFilter", &"ActionFilter", 0, &"OneNHalfScale", &"ActionFilter", 1, &"ThreeScale", &"ThreeScale", 0, &"Actions", &"OneNHalfScale", 0, &"Movement"]
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("skeleton", "animator", "camera")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("skeleton", "animator")]
 script = ExtResource("1_g2els")
 skeleton = NodePath("Skeleton")
 animator = NodePath("Animator")
-camera = NodePath("Eyes")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
-visible = false
 z_index = 2
 position = Vector2(0, -33)
 shape = SubResource("CapsuleShape2D_qlg0r")
@@ -205,7 +203,3 @@ rest = Transform2D(1, 0, 0, 1, 0, 57)
 auto_calculate_length_and_angle = false
 length = 16.0
 bone_angle = 0.0
-
-[node name="Eyes" type="Camera2D" parent="."]
-zoom = Vector2(0.5, 0.5)
-process_callback = 0
