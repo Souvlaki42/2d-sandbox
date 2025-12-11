@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Biome" load_steps=3 format=3 uid="uid://ct1waa40kouyw"]
 
 [ext_resource type="Resource" uid="uid://b2n4n8adys6or" path="res://resources/atlas/forest.tres" id="2_wtp1g"]
-[ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome_class.gd" id="6_sadjo"]
+[ext_resource type="Script" path="res://scripts/biome_class.gd" id="6_sadjo"]
 
 [resource]
 script = ExtResource("6_sadjo")

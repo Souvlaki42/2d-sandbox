@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="Ore" load_steps=2 format=3 uid="uid://bocd008hwo6tl"]
 
-[ext_resource type="Script" uid="uid://dpymexds7swdt" path="res://scripts/ore_class.gd" id="1_skn1u"]
+[ext_resource type="Script" path="res://scripts/ore_class.gd" id="1_skn1u"]
 
 [resource]
 script = ExtResource("1_skn1u")

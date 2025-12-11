@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="Biome" load_steps=3 format=3 uid="uid://d3bxxfgjtguq3"]
 
-[ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome_class.gd" id="1_qe5ij"]
+[ext_resource type="Script" path="res://scripts/biome_class.gd" id="1_qe5ij"]
 [ext_resource type="Resource" uid="uid://bac1p2h1hd4vr" path="res://resources/atlas/grassland.tres" id="2_2cfo4"]
 
 [resource]
