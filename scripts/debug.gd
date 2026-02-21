@@ -4,7 +4,7 @@ class_name Debug
 
 var properties: Array[StringName] = []
 
-@onready var container = $PanelContainer/VBoxContainer
+@export var container: VBoxContainer
 
 
 func _ready() -> void:
