@@ -91,7 +91,6 @@ animator = NodePath("Animator")
 camera = NodePath("Eyes")
 
 [node name="Shape" type="CollisionShape2D" parent="." unique_id=1862751975]
-visible = false
 z_index = 2
 position = Vector2(0, -33)
 shape = SubResource("CapsuleShape2D_qlg0r")
