@@ -19,19 +19,13 @@ var select: bool
 
 var mouse_coords: Vector2i
 var coords: Vector2i
+var current_tile: TerrainGenerator.WorldTile
 
 
 func spawn(spawn_pos: Vector2) -> void:
 	direction = 0
 	position = spawn_pos
 	world.limit_camera_position(camera)
-
-
-func set_selected_tile(x: int, y: int) -> void:
-	var world_tile: TerrainGenerator.WorldTile = world.world_tiles.get(Vector2i(x, y))
-	if world_tile:
-		if world_tile.chosen_layer == world.foreground:
-			selected_tile = world_tile.chosen_tile
 
 
 func _physics_process(delta: float) -> void:
@@ -45,11 +39,15 @@ func _physics_process(delta: float) -> void:
 
 	coords = world.get_coordinates_from_position(global_position)
 	mouse_coords = world.get_coordinates_from_position(get_global_mouse_position())
+	current_tile = world.world_tiles.get(mouse_coords)
+
+	select = Input.is_action_pressed("select")
+	if select and current_tile and current_tile.chosen_layer == world.foreground:
+		selected_tile = current_tile.chosen_tile
 
 	if mouse_coords != coords and mouse_coords != Vector2i(coords.x, coords.y + 1) and coords.distance_to(mouse_coords) <= action_range:
 		hit = Input.is_action_pressed("hit")
 		place = Input.is_action_pressed("place")
-		select = Input.is_action_pressed("select")
 
 		if hit:
 			animator["parameters/ActionFilter/blend_amount"] = 1.0
@@ -57,8 +55,6 @@ func _physics_process(delta: float) -> void:
 		elif place:
 			animator["parameters/ActionFilter/blend_amount"] = 1.0
 			world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
-		elif select:
-			set_selected_tile(mouse_coords.x, mouse_coords.y)
 		else:
 			animator["parameters/ActionFilter/blend_amount"] = 0.0
 
