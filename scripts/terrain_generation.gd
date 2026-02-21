@@ -39,6 +39,7 @@ class WorldTile:
 @export var foreground: TileMapLayer
 @export var background: TileMapLayer
 @export var player: Player
+@export var debug: Debug
 
 
 func _ready() -> void:
