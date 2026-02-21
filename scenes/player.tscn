@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://t3uselj70c5n"]
+[gd_scene format=3 uid="uid://t3uselj70c5n"]
 
 [ext_resource type="Script" uid="uid://o5v0d2r2xqkh" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://lwbhpq36oxh7" path="res://assets/characters/player male/male_arm.png" id="2_qlg0r"]
@@ -84,19 +84,19 @@ nodes/OneNHalfScale/node = SubResource("AnimationNodeTimeScale_fjrip")
 nodes/OneNHalfScale/position = Vector2(120, 60)
 node_connections = [&"output", 0, &"ActionFilter", &"ActionFilter", 0, &"OneNHalfScale", &"ActionFilter", 1, &"ThreeScale", &"ThreeScale", 0, &"Actions", &"OneNHalfScale", 0, &"Movement"]
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("skeleton", "animator", "camera")]
+[node name="Player" type="CharacterBody2D" unique_id=1716267208 node_paths=PackedStringArray("skeleton", "animator", "camera")]
 script = ExtResource("1_g2els")
 skeleton = NodePath("Skeleton")
 animator = NodePath("Animator")
 camera = NodePath("Eyes")
 
-[node name="Shape" type="CollisionShape2D" parent="."]
+[node name="Shape" type="CollisionShape2D" parent="." unique_id=1862751975]
 visible = false
 z_index = 2
 position = Vector2(0, -33)
 shape = SubResource("CapsuleShape2D_qlg0r")
 
-[node name="Animator" type="AnimationTree" parent="."]
+[node name="Animator" type="AnimationTree" parent="." unique_id=1306848555]
 tree_root = SubResource("AnimationNodeBlendTree_ur7pv")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../Animations")
@@ -104,29 +104,27 @@ parameters/ActionFilter/blend_amount = 1.0
 parameters/ThreeScale/scale = 3.0
 parameters/OneNHalfScale/scale = 1.5
 
-[node name="Animations" type="AnimationPlayer" parent="."]
-libraries = {
-&"": ExtResource("6_tuyoq")
-}
+[node name="Animations" type="AnimationPlayer" parent="." unique_id=1877453197]
+libraries/ = ExtResource("6_tuyoq")
 
-[node name="Skeleton" type="Skeleton2D" parent="."]
+[node name="Skeleton" type="Skeleton2D" parent="." unique_id=978800808]
 
-[node name="Hip" type="Bone2D" parent="Skeleton"]
+[node name="Hip" type="Bone2D" parent="Skeleton" unique_id=81304905]
 rest = Transform2D(1, 0, 0, 1, 0, 0)
 
-[node name="Body" type="Sprite2D" parent="Skeleton/Hip"]
+[node name="Body" type="Sprite2D" parent="Skeleton/Hip" unique_id=1812420186]
 position = Vector2(0, -29.5)
 texture = ExtResource("3_tuyoq")
 
-[node name="Skull" type="Bone2D" parent="Skeleton/Hip"]
+[node name="Skull" type="Bone2D" parent="Skeleton/Hip" unique_id=1424538457]
 position = Vector2(0, -59)
 rest = Transform2D(1, 0, 0, 1, 0, -59)
 
-[node name="Head" type="Sprite2D" parent="Skeleton/Hip/Skull"]
+[node name="Head" type="Sprite2D" parent="Skeleton/Hip/Skull" unique_id=2058509249]
 texture = ExtResource("4_fjrip")
 offset = Vector2(0, -32)
 
-[node name="HeadTip" type="Bone2D" parent="Skeleton/Hip/Skull"]
+[node name="HeadTip" type="Bone2D" parent="Skeleton/Hip/Skull" unique_id=1079811140]
 visible = false
 position = Vector2(0, -56)
 rest = Transform2D(1, 0, 0, 1, 0, -56)
@@ -134,16 +132,16 @@ auto_calculate_length_and_angle = false
 length = 16.0
 bone_angle = 0.0
 
-[node name="LeftLegBone" type="Bone2D" parent="Skeleton/Hip"]
+[node name="LeftLegBone" type="Bone2D" parent="Skeleton/Hip" unique_id=1260020315]
 position = Vector2(0, -2.5)
 rest = Transform2D(1, 0, 0, 1, 0, -2.5)
 
-[node name="LeftLeg" type="Sprite2D" parent="Skeleton/Hip/LeftLegBone"]
+[node name="LeftLeg" type="Sprite2D" parent="Skeleton/Hip/LeftLegBone" unique_id=2019206134]
 z_index = 1
 texture = ExtResource("5_smehm")
 offset = Vector2(0, 28)
 
-[node name="LeftLegTip" type="Bone2D" parent="Skeleton/Hip/LeftLegBone"]
+[node name="LeftLegTip" type="Bone2D" parent="Skeleton/Hip/LeftLegBone" unique_id=811041991]
 visible = false
 position = Vector2(0, 48.5)
 rest = Transform2D(1, 0, 0, 1, 0, 48.5)
@@ -151,17 +149,17 @@ auto_calculate_length_and_angle = false
 length = 16.0
 bone_angle = 0.0
 
-[node name="RightLegBone" type="Bone2D" parent="Skeleton/Hip"]
+[node name="RightLegBone" type="Bone2D" parent="Skeleton/Hip" unique_id=1174590281]
 position = Vector2(0, -2.5)
 rest = Transform2D(1, 0, 0, 1, 0, -2.5)
 
-[node name="RightLeg" type="Sprite2D" parent="Skeleton/Hip/RightLegBone"]
+[node name="RightLeg" type="Sprite2D" parent="Skeleton/Hip/RightLegBone" unique_id=1373325310]
 modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
 z_index = -1
 texture = ExtResource("5_smehm")
 offset = Vector2(0, 28)
 
-[node name="RightLegTip" type="Bone2D" parent="Skeleton/Hip/RightLegBone"]
+[node name="RightLegTip" type="Bone2D" parent="Skeleton/Hip/RightLegBone" unique_id=765181083]
 visible = false
 position = Vector2(0, 48.5)
 rest = Transform2D(1, 0, 0, 1, 0, 48.5)
@@ -169,17 +167,17 @@ auto_calculate_length_and_angle = false
 length = 16.0
 bone_angle = 0.0
 
-[node name="LeftArmBone" type="Bone2D" parent="Skeleton/Hip"]
+[node name="LeftArmBone" type="Bone2D" parent="Skeleton/Hip" unique_id=744047330]
 position = Vector2(0, -59)
 scale = Vector2(0.99999994, 0.99999994)
 rest = Transform2D(1, 0, 0, 1, 0, -59)
 
-[node name="LeftArm" type="Sprite2D" parent="Skeleton/Hip/LeftArmBone"]
+[node name="LeftArm" type="Sprite2D" parent="Skeleton/Hip/LeftArmBone" unique_id=1475922360]
 z_index = 1
 texture = ExtResource("2_qlg0r")
 offset = Vector2(0, 33)
 
-[node name="LeftArmTip" type="Bone2D" parent="Skeleton/Hip/LeftArmBone"]
+[node name="LeftArmTip" type="Bone2D" parent="Skeleton/Hip/LeftArmBone" unique_id=2093674342]
 visible = false
 position = Vector2(0, 57)
 rest = Transform2D(1, 0, 0, 1, 0, 57)
@@ -187,18 +185,18 @@ auto_calculate_length_and_angle = false
 length = 16.0
 bone_angle = 0.0
 
-[node name="RightArmBone" type="Bone2D" parent="Skeleton/Hip"]
+[node name="RightArmBone" type="Bone2D" parent="Skeleton/Hip" unique_id=1486153065]
 position = Vector2(0, -59)
 scale = Vector2(0.99999994, 0.99999994)
 rest = Transform2D(1, 0, 0, 1, 0, -59)
 
-[node name="RightArm" type="Sprite2D" parent="Skeleton/Hip/RightArmBone"]
+[node name="RightArm" type="Sprite2D" parent="Skeleton/Hip/RightArmBone" unique_id=1081424871]
 modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
 z_index = -1
 texture = ExtResource("2_qlg0r")
 offset = Vector2(0, 33)
 
-[node name="RightArmTip" type="Bone2D" parent="Skeleton/Hip/RightArmBone"]
+[node name="RightArmTip" type="Bone2D" parent="Skeleton/Hip/RightArmBone" unique_id=2091982274]
 visible = false
 position = Vector2(0, 57)
 rest = Transform2D(1, 0, 0, 1, 0, 57)
@@ -206,6 +204,6 @@ auto_calculate_length_and_angle = false
 length = 16.0
 bone_angle = 0.0
 
-[node name="Eyes" type="Camera2D" parent="."]
+[node name="Eyes" type="Camera2D" parent="." unique_id=1473644967]
 zoom = Vector2(0.5, 0.5)
 process_callback = 0
