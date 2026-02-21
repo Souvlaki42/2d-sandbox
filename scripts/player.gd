@@ -50,6 +50,7 @@ func _physics_process(delta: float) -> void:
 		world.debug.add_debug_property("Mouse Coordinates", mouse_coords)
 		world.debug.add_debug_property("Selected Tile", selected_tile_name)
 		world.debug.add_debug_property("Current Tile", current_tile_name)
+		world.debug.add_debug_property("Seed", world.noise_seed)
 
 	select = Input.is_action_pressed("select")
 	if select and current_tile and current_tile.chosen_layer == world.foreground:
