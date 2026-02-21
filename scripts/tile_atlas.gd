@@ -1,5 +1,6 @@
 @tool
-class_name TileAtlas extends Resource
+class_name TileAtlas
+extends Resource
 
 @export_category("Environment")
 @export var grass: Tile
@@ -16,6 +17,7 @@ class_name TileAtlas extends Resource
 @export var iron: Ore
 @export var gold: Ore
 @export var diamond: Ore
+
 
 func get_ores() -> Array[Ore]:
 	var ores: Array[Ore] = []

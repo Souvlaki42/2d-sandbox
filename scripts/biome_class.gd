@@ -1,5 +1,6 @@
 @tool
-class_name Biome extends Resource
+class_name Biome
+extends Resource
 
 var cave_noise: PerlinNoise = null
 var terrain_noise: PerlinNoise = null

@@ -1,5 +1,6 @@
 @tool
 extends FastNoiseLite
+
 class_name PerlinNoise
 
 func _init(noise_seed: int, noise_frequency: float) -> void:
@@ -8,8 +9,10 @@ func _init(noise_seed: int, noise_frequency: float) -> void:
 	noise_type = FastNoiseLite.TYPE_PERLIN
 	fractal_type = FastNoiseLite.FRACTAL_NONE
 
+
 func get_unity_noise(x: int, y: int) -> float:
 	return clamp((get_noise_2d(x, y) + 1.0) / 2.0, 0.0, 1.0)
+
 
 ## Generates a [NoiseTexture2D] using this noise instance.
 ## Parameter [size]: Accepts [int], [float] (square), or [Vector2], [Vector2i] (rectangular).

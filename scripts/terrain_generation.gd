@@ -1,14 +1,17 @@
 @tool
-class_name TerrainGenerator extends Node2D
+class_name TerrainGenerator
+extends Node2D
 
 var biome_noise: PerlinNoise = null
-var biome_lookup: Dictionary[int, Biome] = {}
-var world_tiles: Dictionary[Vector2i, WorldTile] = {}
+var biome_lookup: Dictionary[int, Biome] = { }
+var world_tiles: Dictionary[Vector2i, WorldTile] = { }
 var spawn_position: Vector2
+
 
 class WorldTile:
 	var chosen_tile: Tile
 	var chosen_layer: TileMapLayer
+
 
 	func _init(tile: Tile, layer: TileMapLayer) -> void:
 		self.chosen_tile = tile
@@ -37,9 +40,11 @@ class WorldTile:
 @export var background: TileMapLayer
 @export var player: Player
 
+
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		start_generation()
+
 
 func clear_everything() -> void:
 	assert(not biomes.is_empty(), "Biomes should be here!")
@@ -59,6 +64,7 @@ func clear_everything() -> void:
 
 	notify_property_list_changed()
 
+
 func start_generation() -> void:
 	if Engine.is_editor_hint():
 		clear_everything()
@@ -76,11 +82,13 @@ func start_generation() -> void:
 
 	player.spawn(spawn_position)
 
+
 func limit_camera_position(camera: Camera2D) -> void:
 	camera.set_limit(SIDE_LEFT, 0)
 	camera.set_limit(SIDE_RIGHT, int(world_size * tile_size * scale.x))
 	camera.set_limit(SIDE_BOTTOM, int(((ground_offset / tile_size) + 1) * tile_size * scale.y))
 	camera.set_limit(SIDE_TOP, int(((ground_offset / tile_size) - world_size) * tile_size * scale.y))
+
 
 func draw_noise_images() -> void:
 	biome_noise = PerlinNoise.new(noise_seed, biome_frequency)
@@ -97,8 +105,10 @@ func draw_noise_images() -> void:
 
 	notify_property_list_changed()
 
+
 func get_biome(x: int, y: int) -> Biome:
 	return biome_lookup.get(biome_colors.sample(biome_noise.get_unity_noise(x, y)).to_rgba32(), null)
+
 
 func get_world_position(grid_x: float, logic_height: float) -> Vector2:
 	var origin_y_in_tiles: int = ground_offset / tile_size
@@ -109,6 +119,7 @@ func get_world_position(grid_x: float, logic_height: float) -> Vector2:
 
 	return Vector2(pixel_x, pixel_y) * scale
 
+
 func generate_terrain() -> void:
 	for x: int in range(world_size):
 		for y: int in range(world_size):
@@ -118,7 +129,8 @@ func generate_terrain() -> void:
 			if x == world_size / 2:
 				spawn_position = get_world_position(x, height + 2)
 
-			if y >= height: break
+			if y >= height:
+				break
 			var current_tile: Tile = tiles.stone
 			if y < height - current_biome.dirt_layer_height and not tiles.get_ores().is_empty():
 				if tiles.coal.noise.get_unity_noise(x, y) > tiles.coal.vein_size and height - y > tiles.coal.max_spawn_height:
@@ -143,13 +155,17 @@ func generate_terrain() -> void:
 				elif tiles.addons != null and randi_range(0, current_biome.addon_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
 					place_tile(tiles.addons, x, y + 1)
 
+
 func get_coordinates_from_position(mouse_pos: Vector2i, layer: TileMapLayer = foreground) -> Vector2i:
 	var grid_pos: Vector2i = layer.local_to_map(layer.to_local(mouse_pos))
 	return Vector2i(grid_pos.x, (ground_offset / tile_size) - grid_pos.y)
 
+
 func remove_tile(x: int, y: int) -> void:
-	if not world_tiles.has(Vector2i(x, y)): return
-	if x < 0 or y < 0 or x >= world_size or y >= world_size: return
+	if not world_tiles.has(Vector2i(x, y)):
+		return
+	if x < 0 or y < 0 or x >= world_size or y >= world_size:
+		return
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 
@@ -157,9 +173,12 @@ func remove_tile(x: int, y: int) -> void:
 	world_tile.chosen_layer.set_cell(tile_pos)
 	world_tiles.erase(Vector2i(x, y))
 
+
 func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
-	if x < 0 or y < 0 or x >= world_size or y >= world_size: return
-	if not tile: return
+	if x < 0 or y < 0 or x >= world_size or y >= world_size:
+		return
+	if not tile:
+		return
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 	if world_tile:
@@ -179,6 +198,7 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 
 	chosen_layer.set_cell(tile_pos, tile.source_id, coord_choice)
 	world_tiles[Vector2i(x, y)] = WorldTile.new(tile, chosen_layer)
+
 
 func place_tree(current_biome: Biome, x: int, y: int) -> void:
 	var tree_height: int = randi_range(current_biome.min_tree_height, current_biome.max_tree_height)

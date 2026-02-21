@@ -1,4 +1,5 @@
-class_name Player extends CharacterBody2D
+class_name Player
+extends CharacterBody2D
 
 @export var action_range: int
 @export var move_speed: float = 300.0
@@ -18,6 +19,7 @@ var select: bool
 
 var mouse_coords: Vector2i
 var coords: Vector2i
+
 
 func spawn(spawn_pos: Vector2) -> void:
 	direction = 0
