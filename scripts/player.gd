@@ -42,14 +42,14 @@ func _physics_process(delta: float) -> void:
 	current_tile = world.world_tiles.get(mouse_coords)
 
 	if world.debug.visible:
-		var selected_tilename: StringName = selected_tile.tile_name if selected_tile else StringName("None")
-		var tile_under_mouse: StringName = current_tile.chosen_tile.tile_name if current_tile else StringName("None")
+		var selected_tile_name: StringName = selected_tile.tile_name if selected_tile else StringName("None")
+		var current_tile_name: StringName = current_tile.chosen_tile.tile_name if current_tile else StringName("None")
 
 		world.debug.add_debug_property("FPS", Engine.get_frames_per_second())
-		world.debug.add_debug_property("Coordinates", coords)
+		world.debug.add_debug_property("Player Coordinates", coords)
 		world.debug.add_debug_property("Mouse Coordinates", mouse_coords)
-		world.debug.add_debug_property("Selected Tile", selected_tilename)
-		world.debug.add_debug_property("Tile under mouse", tile_under_mouse)
+		world.debug.add_debug_property("Selected Tile", selected_tile_name)
+		world.debug.add_debug_property("Current Tile", current_tile_name)
 
 	select = Input.is_action_pressed("select")
 	if select and current_tile and current_tile.chosen_layer == world.foreground:
