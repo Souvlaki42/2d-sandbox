@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://egcn1l6stxpe"]
 
 [ext_resource type="Script" uid="uid://lmfnh0geql3s" path="res://scripts/debug.gd" id="1_lgrwq"]
+[ext_resource type="StyleBox" uid="uid://bl8h01vtoltlo" path="res://resources/debug_styles.tres" id="2_4pmxj"]
 
 [node name="Debug" type="Control" unique_id=2145785517]
 layout_mode = 3
@@ -15,6 +16,7 @@ script = ExtResource("1_lgrwq")
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme_override_styles/panel = ExtResource("2_4pmxj")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=30416713]
 layout_mode = 2
