@@ -25,6 +25,7 @@ gdscript/warnings/integer_division=0
 
 [display]
 
+window/vsync/vsync_mode=0
 mouse_cursor/custom_image="uid://bh8kyw48cnu58"
 mouse_cursor/custom_image_hotspot=Vector2(36, 36)
 
