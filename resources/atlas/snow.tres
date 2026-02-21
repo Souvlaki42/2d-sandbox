@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="TileAtlas" load_steps=7 format=3 uid="uid://cjl17u1t26jgl"]
+[gd_resource type="Resource" script_class="TileAtlas" format=3 uid="uid://cjl17u1t26jgl"]
 
 [ext_resource type="Resource" uid="uid://bvvhkqyhxeq4w" path="res://resources/tiles/snow_addons.tres" id="1_frvuk"]
 [ext_resource type="Resource" uid="uid://kijjahq4mk8t" path="res://resources/tiles/snow.tres" id="2_2an82"]
-[ext_resource type="Script" uid="uid://vi6hct8hqf71" path="res://scripts/tile_atlas.gd" id="3_frvuk"]
+[ext_resource type="Script" path="res://scripts/tile_atlas.gd" id="3_frvuk"]
 [ext_resource type="Resource" uid="uid://ck80f6kwqi1pg" path="res://resources/tiles/sand.tres" id="8_256r2"]
 [ext_resource type="Resource" uid="uid://jqu5fleggnsk" path="res://resources/tiles/leaves.tres" id="12_7us75"]
 [ext_resource type="Resource" uid="uid://ebevcvpfbf50" path="res://resources/tiles/log.tres" id="13_fy07n"]
@@ -17,4 +17,3 @@ tree_log = ExtResource("13_fy07n")
 tree_leaves = ExtResource("12_7us75")
 snow = ExtResource("2_2an82")
 sand = ExtResource("8_256r2")
-metadata/_custom_type_script = "uid://vi6hct8hqf71"

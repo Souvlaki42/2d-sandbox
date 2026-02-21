@@ -1,4 +1,4 @@
-[gd_resource type="AnimationLibrary" load_steps=6 format=3 uid="uid://c7dwq3l05bqvj"]
+[gd_resource type="AnimationLibrary" format=3 uid="uid://c7dwq3l05bqvj"]
 
 [sub_resource type="Animation" id="Animation_u5vhk"]
 resource_name = "Blank"

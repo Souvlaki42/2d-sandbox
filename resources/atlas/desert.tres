@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="TileAtlas" load_steps=6 format=3 uid="uid://caslblhge36p1"]
+[gd_resource type="Resource" script_class="TileAtlas" format=3 uid="uid://caslblhge36p1"]
 
 [ext_resource type="Resource" uid="uid://bbk0e4gc7aatm" path="res://resources/tiles/dead_addons.tres" id="1_afifb"]
 [ext_resource type="Resource" uid="uid://ck80f6kwqi1pg" path="res://resources/tiles/sand.tres" id="2_ytwbr"]
-[ext_resource type="Script" uid="uid://vi6hct8hqf71" path="res://scripts/tile_atlas.gd" id="3_32oln"]
+[ext_resource type="Script" path="res://scripts/tile_atlas.gd" id="3_32oln"]
 [ext_resource type="Resource" uid="uid://btjucj7pl5sf5" path="res://resources/tiles/cactus.tres" id="5_lb787"]
 [ext_resource type="Resource" uid="uid://kijjahq4mk8t" path="res://resources/tiles/snow.tres" id="10_doexu"]
 
@@ -15,4 +15,3 @@ addons = ExtResource("1_afifb")
 tree_log = ExtResource("5_lb787")
 snow = ExtResource("10_doexu")
 sand = ExtResource("2_ytwbr")
-metadata/_custom_type_script = "uid://vi6hct8hqf71"

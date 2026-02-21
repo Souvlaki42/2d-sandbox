@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cwa6mv2eb5g1c"]
+[gd_scene format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="PackedScene" uid="uid://mji5yu0gyhvb" path="res://scenes/world.tscn" id="2_yqjtg"]
 [ext_resource type="Resource" uid="uid://k7qsvwfcl1r7" path="res://resources/tiles/dirt.tres" id="4_lbhrr"]
