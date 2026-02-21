@@ -1,4 +1,5 @@
-class_name Player extends CharacterBody2D
+class_name Player
+extends CharacterBody2D
 
 @export var action_range: int
 @export var move_speed: float = 300.0
@@ -8,20 +9,30 @@ class_name Player extends CharacterBody2D
 @export var animator: AnimationTree
 @export var camera: Camera2D
 @export var world: TerrainGenerator
-@export var selected_tile: Tile
 
+var selected_tile: Tile
 var direction: float
 
 var hit: bool
 var place: bool
+var select: bool
 
 var mouse_coords: Vector2i
 var coords: Vector2i
+
 
 func spawn(spawn_pos: Vector2) -> void:
 	direction = 0
 	position = spawn_pos
 	world.limit_camera_position(camera)
+
+
+func set_selected_tile(x: int, y: int) -> void:
+	var world_tile: TerrainGenerator.WorldTile = world.world_tiles.get(Vector2i(x, y))
+	if world_tile:
+		if world_tile.chosen_layer == world.foreground:
+			selected_tile = world_tile.chosen_tile
+
 
 func _physics_process(delta: float) -> void:
 	camera.global_position = lerp(camera.global_position, global_position, smooth_time)
@@ -38,6 +49,7 @@ func _physics_process(delta: float) -> void:
 	if mouse_coords != coords and mouse_coords != Vector2i(coords.x, coords.y + 1) and coords.distance_to(mouse_coords) <= action_range:
 		hit = Input.is_action_pressed("hit")
 		place = Input.is_action_pressed("place")
+		select = Input.is_action_pressed("select")
 
 		if hit:
 			animator["parameters/ActionFilter/blend_amount"] = 1.0
@@ -45,6 +57,8 @@ func _physics_process(delta: float) -> void:
 		elif place:
 			animator["parameters/ActionFilter/blend_amount"] = 1.0
 			world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
+		elif select:
+			set_selected_tile(mouse_coords.x, mouse_coords.y)
 		else:
 			animator["parameters/ActionFilter/blend_amount"] = 0.0
 
