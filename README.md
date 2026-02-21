@@ -1,6 +1,6 @@
 # 2D Sandbox
 
-A 2D sandbox game like Terraria, made with Godot 4.5+.
+A 2D sandbox game like Terraria, made with Godot 4.6+.
 
 ![Preview screenshot](screenshots/preview.png)
 

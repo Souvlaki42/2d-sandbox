@@ -28,7 +28,7 @@ func spawn(spawn_pos: Vector2) -> void:
 
 
 func set_selected_tile(x: int, y: int) -> void:
-	var world_tile = world.world_tiles.get(Vector2i(x, y))
+	var world_tile: TerrainGenerator.WorldTile = world.world_tiles.get(Vector2i(x, y))
 	if world_tile:
 		if world_tile.chosen_layer == world.foreground:
 			selected_tile = world_tile.chosen_tile
