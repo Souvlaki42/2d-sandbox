@@ -1,16 +1,19 @@
 [gd_scene format=3 uid="uid://cwa6mv2eb5g1c"]
 
 [ext_resource type="PackedScene" uid="uid://mji5yu0gyhvb" path="res://scenes/world.tscn" id="2_yqjtg"]
-[ext_resource type="Resource" uid="uid://k7qsvwfcl1r7" path="res://resources/tiles/dirt.tres" id="4_lbhrr"]
+[ext_resource type="PackedScene" uid="uid://egcn1l6stxpe" path="res://scenes/debug.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://t3uselj70c5n" path="res://scenes/player.tscn" id="9_0tnpc"]
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" unique_id=559969113]
 
-[node name="World" parent="." node_paths=PackedStringArray("player", "camera") instance=ExtResource("2_yqjtg")]
+[node name="World" parent="." unique_id=985865127 node_paths=PackedStringArray("player", "debug") instance=ExtResource("2_yqjtg")]
 player = NodePath("../Player")
-camera = NodePath("")
+debug = NodePath("../Control/Debug")
 
-[node name="Player" parent="." node_paths=PackedStringArray("world") groups=["Player"] instance=ExtResource("9_0tnpc")]
+[node name="Player" parent="." unique_id=1414045290 node_paths=PackedStringArray("world") groups=["Player"] instance=ExtResource("9_0tnpc")]
 action_range = 5
 world = NodePath("../World")
-selected_tile = ExtResource("4_lbhrr")
+
+[node name="Control" type="CanvasLayer" parent="." unique_id=2146189326]
+
+[node name="Debug" parent="Control" unique_id=2145785517 instance=ExtResource("3_lnu2h")]
