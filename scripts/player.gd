@@ -4,7 +4,7 @@ extends CharacterBody2D
 @export_category("Movement")
 @export var action_range: int
 @export var move_speed: float = 300.0
-@export var jump_velocity: float = -450.0
+@export var jump_height: float = 1.2
 
 @export_category("Animation")
 @export var skeleton: Skeleton2D
@@ -23,6 +23,8 @@ extends CharacterBody2D
 @export var left_leg: Sprite2D
 @export var right_leg: Sprite2D
 
+var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
+
 var selected_tile: Tile
 var direction: float
 
@@ -33,6 +35,7 @@ var select: bool
 var mouse_coords: Vector2i
 var coords: Vector2i
 var current_tile: Terrain.WorldTile
+var jump_velocity: float
 
 
 func _ready() -> void:
@@ -47,12 +50,13 @@ func _ready() -> void:
 func spawn(spawn_pos: Vector2) -> void:
 	direction = 0
 	position = spawn_pos
+	jump_velocity = -sqrt(2 * jump_height * world.tile_size * gravity)
 	world.set_limits(camera)
 
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		velocity.y += gravity * delta
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
