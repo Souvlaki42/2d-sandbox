@@ -7,7 +7,7 @@ extends CharacterBody2D
 @export var skeleton: Skeleton2D
 @export var animator: AnimationTree
 @export var camera: Camera2D
-@export var world: TerrainGenerator
+@export var world: Terrain
 
 var selected_tile: Tile
 var direction: float
@@ -18,7 +18,7 @@ var select: bool
 
 var mouse_coords: Vector2i
 var coords: Vector2i
-var current_tile: TerrainGenerator.WorldTile
+var current_tile: Terrain.WorldTile
 
 
 func spawn(spawn_pos: Vector2) -> void:

@@ -1,5 +1,5 @@
 @tool
-class_name TerrainGenerator
+class_name Terrain
 extends Node2D
 
 var biome_noise: PerlinNoise = null
