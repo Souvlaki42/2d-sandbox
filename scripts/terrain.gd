@@ -88,9 +88,9 @@ func start_generation() -> void:
 
 func set_limits(camera: Camera2D) -> void:
 	camera.set_limit(SIDE_LEFT, 0)
-	camera.set_limit(SIDE_RIGHT, int(world_size * tile_size * scale.x))
-	camera.set_limit(SIDE_BOTTOM, int((ground_offset + tile_size) * scale.y))
-	camera.set_limit(SIDE_TOP, int((ground_offset - world_size * tile_size) * scale.y))
+	camera.set_limit(SIDE_RIGHT, world_size * tile_size)
+	camera.set_limit(SIDE_BOTTOM, ground_offset + tile_size)
+	camera.set_limit(SIDE_TOP, ground_offset - world_size * tile_size)
 
 	left_wall.position.x = camera.limit_left
 	right_wall.position.x = camera.limit_right
@@ -123,7 +123,7 @@ func get_world_position(grid_x: float, logic_height: float) -> Vector2:
 	var pixel_x = grid_x * tile_size + (tile_size / 2.0)
 	var pixel_y = tile_map_y * tile_size + (tile_size / 2.0)
 
-	return Vector2(pixel_x, pixel_y) * scale
+	return Vector2(pixel_x, pixel_y)
 
 
 func generate_terrain() -> void:
