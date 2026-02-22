@@ -6,6 +6,7 @@ var biome_noise: PerlinNoise = null
 var biome_lookup: Dictionary[int, Biome] = { }
 var world_tiles: Dictionary[Vector2i, WorldTile] = { }
 var spawn_position: Vector2
+var noise_seed: int = 0
 
 
 class WorldTile:
@@ -23,7 +24,6 @@ class WorldTile:
 @export_tool_button("Clear Everything") var reset_generation_btn: Callable = clear_everything
 
 @export_category("Terrain Settings")
-@export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
 @export var world_size: int = 200
 @export var height_addition: int = 50
 @export var ground_offset: int = 640
@@ -40,6 +40,8 @@ class WorldTile:
 @export var background: TileMapLayer
 @export var player: Player
 @export var debug: Debug
+@export var left_wall: CollisionShape2D
+@export var right_wall: CollisionShape2D
 
 
 func _ready() -> void:
@@ -84,11 +86,16 @@ func start_generation() -> void:
 	player.spawn(spawn_position)
 
 
-func limit_camera_position(camera: Camera2D) -> void:
+func set_limits(camera: Camera2D) -> void:
 	camera.set_limit(SIDE_LEFT, 0)
 	camera.set_limit(SIDE_RIGHT, int(world_size * tile_size * scale.x))
-	camera.set_limit(SIDE_BOTTOM, int(((ground_offset / tile_size) + 1) * tile_size * scale.y))
-	camera.set_limit(SIDE_TOP, int(((ground_offset / tile_size) - world_size) * tile_size * scale.y))
+	camera.set_limit(SIDE_BOTTOM, int((ground_offset + tile_size) * scale.y))
+	camera.set_limit(SIDE_TOP, int((ground_offset - world_size * tile_size) * scale.y))
+
+	print_debug(camera.limit_right)
+
+	left_wall.position.x = camera.limit_left
+	right_wall.position.x = camera.limit_right
 
 
 func draw_noise_images() -> void:
