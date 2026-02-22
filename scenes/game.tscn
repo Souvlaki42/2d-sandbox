@@ -1,21 +1,19 @@
 [gd_scene format=3 uid="uid://cwa6mv2eb5g1c"]
 
-[ext_resource type="Script" uid="uid://dstjg4fgwpqoj" path="res://scripts/game.gd" id="1_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://mji5yu0gyhvb" path="res://scenes/world.tscn" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://egcn1l6stxpe" path="res://scenes/debug.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://t3uselj70c5n" path="res://scenes/player.tscn" id="9_0tnpc"]
 
 [node name="Game" type="Node2D" unique_id=559969113]
-script = ExtResource("1_lbhrr")
 
 [node name="World" parent="." unique_id=985865127 node_paths=PackedStringArray("player", "debug") instance=ExtResource("2_yqjtg")]
 player = NodePath("../Player")
-debug = NodePath("../Control/Debug")
+debug = NodePath("../UI/Debug")
 
 [node name="Player" parent="." unique_id=1414045290 node_paths=PackedStringArray("world") groups=["Player"] instance=ExtResource("9_0tnpc")]
 action_range = 5
 world = NodePath("../World")
 
-[node name="Control" type="CanvasLayer" parent="." unique_id=2146189326]
+[node name="UI" type="CanvasLayer" parent="." unique_id=2146189326]
 
-[node name="Debug" parent="Control" unique_id=2145785517 instance=ExtResource("3_lnu2h")]
+[node name="Debug" parent="UI" unique_id=2145785517 instance=ExtResource("3_lnu2h")]
