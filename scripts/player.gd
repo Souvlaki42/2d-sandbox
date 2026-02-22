@@ -39,19 +39,16 @@ var jump_velocity: float
 
 
 func _ready() -> void:
+	direction = 0
+	jump_velocity = -sqrt(2 * jump_height * world.tile_size * gravity)
+	world.set_limits()
+
 	head.texture = skin.head
 	body.texture = skin.body
 	left_arm.texture = skin.arms
 	right_arm.texture = skin.arms
 	left_leg.texture = skin.legs
 	right_leg.texture = skin.legs
-
-
-func spawn(spawn_pos: Vector2) -> void:
-	direction = 0
-	position = spawn_pos
-	jump_velocity = -sqrt(2 * jump_height * world.tile_size * gravity)
-	world.set_limits(camera)
 
 
 func _physics_process(delta: float) -> void:
