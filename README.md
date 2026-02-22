@@ -6,11 +6,12 @@ A 2D sandbox game like Terraria, made with Godot 4.6+.
 
 ## Features
 
-- Terrain generation.
-- Tree generation.
-- Ore generation.
-- Biomes.
-- Player.
+- Terrain generation
+- Tree generation
+- Ore generation
+- Biomes
+- Skins
+- Player
 
 ## Resources
 
@@ -20,7 +21,7 @@ A 2D sandbox game like Terraria, made with Godot 4.6+.
 
 ## How to run
 
-Import the godot project file, inside Godot 4.5+.
+Import the godot project file, inside Godot 4.6+.
 
 ## Contributions
 
