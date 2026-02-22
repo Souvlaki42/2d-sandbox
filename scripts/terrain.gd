@@ -92,8 +92,6 @@ func set_limits(camera: Camera2D) -> void:
 	camera.set_limit(SIDE_BOTTOM, int((ground_offset + tile_size) * scale.y))
 	camera.set_limit(SIDE_TOP, int((ground_offset - world_size * tile_size) * scale.y))
 
-	print_debug(camera.limit_right)
-
 	left_wall.position.x = camera.limit_left
 	right_wall.position.x = camera.limit_right
 
