@@ -84,11 +84,17 @@ nodes/OneNHalfScale/node = SubResource("AnimationNodeTimeScale_fjrip")
 nodes/OneNHalfScale/position = Vector2(120, 60)
 node_connections = [&"output", 0, &"ActionFilter", &"ActionFilter", 0, &"OneNHalfScale", &"ActionFilter", 1, &"ThreeScale", &"ThreeScale", 0, &"Actions", &"OneNHalfScale", 0, &"Movement"]
 
-[node name="Player" type="CharacterBody2D" unique_id=1716267208 node_paths=PackedStringArray("skeleton", "animator", "camera")]
+[node name="Player" type="CharacterBody2D" unique_id=1716267208 node_paths=PackedStringArray("skeleton", "animator", "camera", "head", "body", "left_arm", "right_arm", "left_leg", "right_leg")]
 script = ExtResource("1_g2els")
 skeleton = NodePath("Skeleton")
 animator = NodePath("Animator")
 camera = NodePath("Eyes")
+head = NodePath("Skeleton/Hip/Skull/Head")
+body = NodePath("Skeleton/Hip/Body")
+left_arm = NodePath("Skeleton/Hip/LeftArmBone/LeftArm")
+right_arm = NodePath("Skeleton/Hip/RightArmBone/RightArm")
+left_leg = NodePath("Skeleton/Hip/LeftLegBone/LeftLeg")
+right_leg = NodePath("Skeleton/Hip/RightLegBone/RightLeg")
 
 [node name="Shape" type="CollisionShape2D" parent="." unique_id=1862751975]
 z_index = 2

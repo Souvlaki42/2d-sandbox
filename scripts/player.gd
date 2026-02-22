@@ -1,13 +1,27 @@
 class_name Player
 extends CharacterBody2D
 
+@export_category("Movement")
 @export var action_range: int
 @export var move_speed: float = 300.0
 @export var jump_velocity: float = -450.0
+
+@export_category("Animation")
 @export var skeleton: Skeleton2D
 @export var animator: AnimationTree
+
+@export_category("View")
 @export var camera: Camera2D
 @export var world: Terrain
+
+@export_category("Skin")
+@export var skin: CharacterSkin
+@export var head: Sprite2D
+@export var body: Sprite2D
+@export var left_arm: Sprite2D
+@export var right_arm: Sprite2D
+@export var left_leg: Sprite2D
+@export var right_leg: Sprite2D
 
 var selected_tile: Tile
 var direction: float
@@ -19,6 +33,15 @@ var select: bool
 var mouse_coords: Vector2i
 var coords: Vector2i
 var current_tile: Terrain.WorldTile
+
+
+func _ready() -> void:
+	head.texture = skin.head
+	body.texture = skin.body
+	left_arm.texture = skin.arms
+	right_arm.texture = skin.arms
+	left_leg.texture = skin.legs
+	right_leg.texture = skin.legs
 
 
 func spawn(spawn_pos: Vector2) -> void:
