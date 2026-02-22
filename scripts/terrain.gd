@@ -180,7 +180,7 @@ func remove_tile(x: int, y: int) -> void:
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 
 	var tile_pos: Vector2i = Vector2i(x, (ground_offset / tile_size) - y)
-	world_tile.chosen_layer.set_cell(tile_pos)
+	world_tile.chosen_layer.set_cell(tile_pos, -1)
 	world_tiles.erase(Vector2i(x, y))
 
 
@@ -188,6 +188,10 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 	if x < 0 or y < 0 or x >= world_size or y >= world_size:
 		return
 	if not tile:
+		return
+
+	var player_tile: Vector2i = get_coordinates_from_position(player.global_position)
+	if Vector2i(x, y) == player_tile:
 		return
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
