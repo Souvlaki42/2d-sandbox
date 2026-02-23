@@ -16,12 +16,13 @@ normal = Vector2(1, 0)
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_7r4gi"]
 normal = Vector2(-1, 0)
 
-[node name="World" type="Node2D" unique_id=1680769113 node_paths=PackedStringArray("foreground", "background", "left_wall", "right_wall") groups=["Ground"]]
+[node name="World" type="Node2D" unique_id=1680769113 node_paths=PackedStringArray("foreground", "background", "desaturated", "left_wall", "right_wall") groups=["Ground"]]
 script = ExtResource("1_4mrxx")
 biome_colors = ExtResource("2_7r4gi")
 biomes = Array[ExtResource("3_w7kh3")]([ExtResource("4_e3hyu"), ExtResource("5_q5onr"), ExtResource("6_jhx03"), ExtResource("7_o8fc1")])
 foreground = NodePath("Foreground")
 background = NodePath("Background")
+desaturated = NodePath("Desaturated")
 left_wall = NodePath("Boundaries/LeftWall")
 right_wall = NodePath("Boundaries/RightWall")
 tile_drop = ExtResource("8_7r4gi")
@@ -33,6 +34,13 @@ tile_set = ExtResource("8_xo05s")
 physics_quadrant_size = 20
 
 [node name="Background" type="TileMapLayer" parent="." unique_id=909593451]
+z_index = -10
+tile_set = ExtResource("8_xo05s")
+collision_enabled = false
+physics_quadrant_size = 20
+
+[node name="Desaturated" type="TileMapLayer" parent="." unique_id=863840614]
+modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
 z_index = -10
 tile_set = ExtResource("8_xo05s")
 collision_enabled = false

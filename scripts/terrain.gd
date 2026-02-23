@@ -1,5 +1,4 @@
 @icon("res://assets/icons/color/icon_map_2.png")
-@tool
 class_name Terrain
 extends Node2D
 
@@ -7,6 +6,7 @@ var biome_noise: PerlinNoise = null
 var biome_lookup: Dictionary[int, Biome] = { }
 var world_tiles: Dictionary[Vector2i, WorldTile] = { }
 var noise_seed: int = 0
+var biome_map: NoiseTexture2D = null
 
 
 class WorldTile:
@@ -18,11 +18,6 @@ class WorldTile:
 		self.chosen_tile = tile
 		self.chosen_layer = layer
 
-@export_category("Actions")
-@export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
-@export_tool_button("Draw Noise Images") var draw_noise_images_btn: Callable = draw_noise_images
-@export_tool_button("Clear Everything") var reset_generation_btn: Callable = clear_everything
-
 @export_category("Terrain Settings")
 @export var world_size: int = 200
 @export var height_addition: int = 50
@@ -30,14 +25,16 @@ class WorldTile:
 @export var tile_size: int = 128
 
 @export_category("Biome Settings")
-@export var biome_map: NoiseTexture2D = null
 @export var biome_frequency: float = 0.01
 @export var biome_colors: Gradient
 @export var biomes: Array[Biome] = []
 
-@export_category("Node References")
+@export_category("Layers")
 @export var foreground: TileMapLayer
 @export var background: TileMapLayer
+@export var desaturated: TileMapLayer
+
+@export_category("Node References")
 @export var player: Player
 @export var debug: Debug
 @export var left_wall: CollisionShape2D
@@ -46,33 +43,6 @@ class WorldTile:
 
 
 func _ready() -> void:
-	if not Engine.is_editor_hint():
-		start_generation()
-
-
-func clear_everything() -> void:
-	assert(not biomes.is_empty(), "Biomes should be here!")
-
-	world_tiles.clear()
-	foreground.clear()
-	background.clear()
-
-	biome_map = null
-	for biome in biomes:
-		biome.cave_noise_texture = null
-		var ores: Array[Ore] = biome.tile_atlas.get_ores()
-		for ore in ores:
-			ore.spread_texture = null
-
-	noise_seed = 0
-
-	notify_property_list_changed()
-
-
-func start_generation() -> void:
-	if Engine.is_editor_hint():
-		clear_everything()
-
 	if noise_seed == 0:
 		randomize()
 		noise_seed = randi_range(-10000, 10000)
@@ -158,8 +128,15 @@ func generate_terrain() -> void:
 			else:
 				current_tile = tiles.grass
 
-			if current_biome.cave_noise.get_unity_noise(x, y) > current_biome.surface_value or not current_biome.generate_caves:
+			var cave_noise: float = current_biome.cave_noise.get_unity_noise(x, y)
+
+			if not current_biome.generate_caves or cave_noise > current_biome.surface_value:
 				place_tile(current_tile, x, y)
+
+			if current_biome.generate_caves and cave_noise <= current_biome.surface_value:
+				if current_tile.wall_variant:
+					current_tile = current_tile.wall_variant
+				place_tile(current_tile, x, y, desaturated)
 
 			if y > int(height - 1):
 				if randi_range(0, current_biome.tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
@@ -215,7 +192,7 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 	if world_tile:
-		if world_tile.chosen_layer == background:
+		if world_tile.chosen_layer != foreground:
 			remove_tile(x, y)
 		else:
 			return

@@ -1,4 +1,3 @@
-@tool
 class_name TileAtlas
 extends Resource
 
