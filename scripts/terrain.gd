@@ -83,7 +83,9 @@ func start_generation() -> void:
 
 	draw_noise_images()
 	generate_terrain()
-	player.global_position = find_spawn_position()
+
+	if not Engine.is_editor_hint():
+		player.global_position = find_spawn_position()
 
 
 func set_limits() -> void:
@@ -209,9 +211,10 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 	if not tile:
 		return
 
-	var player_tile: Vector2i = get_coordinates_from_position(player.global_position)
-	if Vector2i(x, y) == player_tile:
-		return
+	if not Engine.is_editor_hint():
+		var player_tile: Vector2i = get_coordinates_from_position(player.global_position)
+		if Vector2i(x, y) == player_tile:
+			return
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 	if world_tile:
