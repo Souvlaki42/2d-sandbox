@@ -1,5 +1,4 @@
 @icon("res://assets/icons/color/icon_map_2.png")
-@tool
 class_name Terrain
 extends Node2D
 
@@ -7,6 +6,7 @@ var biome_noise: PerlinNoise = null
 var biome_lookup: Dictionary[int, Biome] = { }
 var world_tiles: Dictionary[Vector2i, WorldTile] = { }
 var noise_seed: int = 0
+var biome_map: NoiseTexture2D = null
 
 
 class WorldTile:
@@ -18,11 +18,6 @@ class WorldTile:
 		self.chosen_tile = tile
 		self.chosen_layer = layer
 
-@export_category("Actions")
-@export_tool_button("Generate Terrrain") var generate_terrain_btn: Callable = start_generation
-@export_tool_button("Draw Noise Images") var draw_noise_images_btn: Callable = draw_noise_images
-@export_tool_button("Clear Everything") var reset_generation_btn: Callable = clear_everything
-
 @export_category("Terrain Settings")
 @export var world_size: int = 200
 @export var height_addition: int = 50
@@ -30,7 +25,6 @@ class WorldTile:
 @export var tile_size: int = 128
 
 @export_category("Biome Settings")
-@export var biome_map: NoiseTexture2D = null
 @export var biome_frequency: float = 0.01
 @export var biome_colors: Gradient
 @export var biomes: Array[Biome] = []
@@ -49,37 +43,6 @@ class WorldTile:
 
 
 func _ready() -> void:
-	if not Engine.is_editor_hint():
-		start_generation()
-
-
-func clear_everything() -> void:
-	assert(not biomes.is_empty(), "Biomes should be here!")
-
-	world_tiles.clear()
-	foreground.clear()
-	background.clear()
-	desaturated.clear()
-
-	biome_map = null
-	for biome in biomes:
-		biome.cave_noise_texture = null
-		biome.terrain_noise = null
-		biome.cave_noise = null
-		var ores: Array[Ore] = biome.tile_atlas.get_ores()
-		for ore in ores:
-			ore.spread_texture = null
-			ore.noise = null
-
-	noise_seed = 0
-
-	notify_property_list_changed()
-
-
-func start_generation() -> void:
-	if Engine.is_editor_hint():
-		clear_everything()
-
 	if noise_seed == 0:
 		randomize()
 		noise_seed = randi_range(-10000, 10000)
@@ -90,9 +53,7 @@ func start_generation() -> void:
 
 	draw_noise_images()
 	generate_terrain()
-
-	if not Engine.is_editor_hint():
-		player.global_position = find_spawn_position()
+	player.global_position = find_spawn_position()
 
 
 func set_limits() -> void:
@@ -225,10 +186,9 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 	if not tile:
 		return
 
-	if not Engine.is_editor_hint():
-		var player_tile: Vector2i = get_coordinates_from_position(player.global_position)
-		if Vector2i(x, y) == player_tile:
-			return
+	var player_tile: Vector2i = get_coordinates_from_position(player.global_position)
+	if Vector2i(x, y) == player_tile:
+		return
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 	if world_tile:

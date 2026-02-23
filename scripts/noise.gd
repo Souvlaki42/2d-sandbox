@@ -1,4 +1,3 @@
-@tool
 extends FastNoiseLite
 
 class_name PerlinNoise
