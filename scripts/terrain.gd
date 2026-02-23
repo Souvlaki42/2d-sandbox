@@ -59,13 +59,17 @@ func clear_everything() -> void:
 	world_tiles.clear()
 	foreground.clear()
 	background.clear()
+	desaturated.clear()
 
 	biome_map = null
 	for biome in biomes:
 		biome.cave_noise_texture = null
+		biome.terrain_noise = null
+		biome.cave_noise = null
 		var ores: Array[Ore] = biome.tile_atlas.get_ores()
 		for ore in ores:
 			ore.spread_texture = null
+			ore.noise = null
 
 	noise_seed = 0
 
