@@ -35,9 +35,12 @@ class WorldTile:
 @export var biome_colors: Gradient
 @export var biomes: Array[Biome] = []
 
-@export_category("Node References")
+@export_category("Layers")
 @export var foreground: TileMapLayer
 @export var background: TileMapLayer
+@export var desaturated: TileMapLayer
+
+@export_category("Node References")
 @export var player: Player
 @export var debug: Debug
 @export var left_wall: CollisionShape2D
@@ -160,8 +163,15 @@ func generate_terrain() -> void:
 			else:
 				current_tile = tiles.grass
 
-			if current_biome.cave_noise.get_unity_noise(x, y) > current_biome.surface_value or not current_biome.generate_caves:
+			var cave_noise: float = current_biome.cave_noise.get_unity_noise(x, y)
+
+			if not current_biome.generate_caves or cave_noise > current_biome.surface_value:
 				place_tile(current_tile, x, y)
+
+			if current_biome.generate_caves and cave_noise <= current_biome.surface_value:
+				if current_tile.wall_variant:
+					current_tile = current_tile.wall_variant
+				place_tile(current_tile, x, y, desaturated)
 
 			if y > int(height - 1):
 				if randi_range(0, current_biome.tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
@@ -218,7 +228,7 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 	if world_tile:
-		if world_tile.chosen_layer == background:
+		if world_tile.chosen_layer != foreground:
 			remove_tile(x, y)
 		else:
 			return
