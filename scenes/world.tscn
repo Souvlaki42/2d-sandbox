@@ -1,30 +1,45 @@
-[gd_scene load_steps=9 format=3 uid="uid://mji5yu0gyhvb"]
+[gd_scene format=3 uid="uid://mji5yu0gyhvb"]
 
-[ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain_generation.gd" id="1_4mrxx"]
+[ext_resource type="Script" uid="uid://mdkjre3hbp0l" path="res://scripts/terrain.gd" id="1_4mrxx"]
 [ext_resource type="Gradient" uid="uid://6brd2gugvfoo" path="res://resources/biome_colors.tres" id="2_7r4gi"]
-[ext_resource type="Script" path="res://scripts/biome_class.gd" id="3_w7kh3"]
+[ext_resource type="Script" uid="uid://c12s5rq2s2rnb" path="res://scripts/biome.gd" id="3_w7kh3"]
 [ext_resource type="Resource" uid="uid://d3bxxfgjtguq3" path="res://resources/biomes/grassland.tres" id="4_e3hyu"]
 [ext_resource type="Resource" uid="uid://ct1waa40kouyw" path="res://resources/biomes/forest.tres" id="5_q5onr"]
 [ext_resource type="Resource" uid="uid://b4t71amptw1a1" path="res://resources/biomes/desert.tres" id="6_jhx03"]
 [ext_resource type="Resource" uid="uid://rid1l5kympi0" path="res://resources/biomes/snow.tres" id="7_o8fc1"]
 [ext_resource type="TileSet" uid="uid://bbj6r7e08dc0j" path="res://resources/tile_set.tres" id="8_xo05s"]
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("foreground", "background")]
-scale = Vector2(0.7, 0.7)
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_4mrxx"]
+normal = Vector2(1, 0)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_7r4gi"]
+normal = Vector2(-1, 0)
+
+[node name="World" type="Node2D" unique_id=1680769113 node_paths=PackedStringArray("foreground", "background", "left_wall", "right_wall")]
 script = ExtResource("1_4mrxx")
 biome_colors = ExtResource("2_7r4gi")
 biomes = Array[ExtResource("3_w7kh3")]([ExtResource("4_e3hyu"), ExtResource("5_q5onr"), ExtResource("6_jhx03"), ExtResource("7_o8fc1")])
 foreground = NodePath("Foreground")
 background = NodePath("Background")
+left_wall = NodePath("Boundaries/LeftWall")
+right_wall = NodePath("Boundaries/RightWall")
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"
 
-[node name="Foreground" type="TileMapLayer" parent="."]
+[node name="Foreground" type="TileMapLayer" parent="." unique_id=1676670108]
 z_index = -5
 tile_set = ExtResource("8_xo05s")
 physics_quadrant_size = 20
 
-[node name="Background" type="TileMapLayer" parent="."]
+[node name="Background" type="TileMapLayer" parent="." unique_id=909593451]
 z_index = -10
 tile_set = ExtResource("8_xo05s")
 collision_enabled = false
 physics_quadrant_size = 20
+
+[node name="Boundaries" type="StaticBody2D" parent="." unique_id=2129710955]
+
+[node name="LeftWall" type="CollisionShape2D" parent="Boundaries" unique_id=572571602]
+shape = SubResource("WorldBoundaryShape2D_4mrxx")
+
+[node name="RightWall" type="CollisionShape2D" parent="Boundaries" unique_id=810064144]
+shape = SubResource("WorldBoundaryShape2D_7r4gi")

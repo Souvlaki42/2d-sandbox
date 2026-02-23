@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="Tile" load_steps=2 format=3 uid="uid://btjucj7pl5sf5"]
+[gd_resource type="Resource" script_class="Tile" format=3 uid="uid://btjucj7pl5sf5"]
 
-[ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile_class.gd" id="1_m1jss"]
+[ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile.gd" id="1_m1jss"]
 
 [resource]
 script = ExtResource("1_m1jss")

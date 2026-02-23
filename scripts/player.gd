@@ -1,14 +1,29 @@
 class_name Player
 extends CharacterBody2D
 
+@export_category("Movement")
 @export var action_range: int
 @export var move_speed: float = 300.0
-@export var jump_velocity: float = -450.0
-@export var smooth_time: float = 0.1
+@export var jump_height: float = 1.2
+
+@export_category("Animation")
 @export var skeleton: Skeleton2D
 @export var animator: AnimationTree
+
+@export_category("View")
 @export var camera: Camera2D
-@export var world: TerrainGenerator
+@export var world: Terrain
+
+@export_category("Skin")
+@export var skin: CharacterSkin
+@export var head: Sprite2D
+@export var body: Sprite2D
+@export var left_arm: Sprite2D
+@export var right_arm: Sprite2D
+@export var left_leg: Sprite2D
+@export var right_leg: Sprite2D
+
+var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 var selected_tile: Tile
 var direction: float
@@ -19,20 +34,26 @@ var select: bool
 
 var mouse_coords: Vector2i
 var coords: Vector2i
-var current_tile: TerrainGenerator.WorldTile
+var current_tile: Terrain.WorldTile
+var jump_velocity: float
 
 
-func spawn(spawn_pos: Vector2) -> void:
+func _ready() -> void:
 	direction = 0
-	position = spawn_pos
-	world.limit_camera_position(camera)
+	jump_velocity = -sqrt(2 * jump_height * world.tile_size * gravity)
+	world.set_limits()
+
+	head.texture = skin.head
+	body.texture = skin.body
+	left_arm.texture = skin.arms
+	right_arm.texture = skin.arms
+	left_leg.texture = skin.legs
+	right_leg.texture = skin.legs
 
 
 func _physics_process(delta: float) -> void:
-	camera.global_position = lerp(camera.global_position, global_position, smooth_time)
-
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		velocity.y += gravity * delta
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity

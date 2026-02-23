@@ -1,11 +1,11 @@
 @tool
-class_name TerrainGenerator
+class_name Terrain
 extends Node2D
 
 var biome_noise: PerlinNoise = null
 var biome_lookup: Dictionary[int, Biome] = { }
 var world_tiles: Dictionary[Vector2i, WorldTile] = { }
-var spawn_position: Vector2
+var noise_seed: int = 0
 
 
 class WorldTile:
@@ -23,7 +23,6 @@ class WorldTile:
 @export_tool_button("Clear Everything") var reset_generation_btn: Callable = clear_everything
 
 @export_category("Terrain Settings")
-@export_custom(PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY) var noise_seed: int = 0
 @export var world_size: int = 200
 @export var height_addition: int = 50
 @export var ground_offset: int = 640
@@ -40,6 +39,8 @@ class WorldTile:
 @export var background: TileMapLayer
 @export var player: Player
 @export var debug: Debug
+@export var left_wall: CollisionShape2D
+@export var right_wall: CollisionShape2D
 
 
 func _ready() -> void:
@@ -80,15 +81,26 @@ func start_generation() -> void:
 
 	draw_noise_images()
 	generate_terrain()
+	player.global_position = find_spawn_position()
 
-	player.spawn(spawn_position)
+
+func set_limits() -> void:
+	player.camera.set_limit(SIDE_LEFT, 0)
+	player.camera.set_limit(SIDE_RIGHT, world_size * tile_size)
+	player.camera.set_limit(SIDE_BOTTOM, ground_offset + tile_size)
+	player.camera.set_limit(SIDE_TOP, ground_offset - world_size * tile_size)
+
+	left_wall.position.x = player.camera.limit_left
+	right_wall.position.x = player.camera.limit_right
 
 
-func limit_camera_position(camera: Camera2D) -> void:
-	camera.set_limit(SIDE_LEFT, 0)
-	camera.set_limit(SIDE_RIGHT, int(world_size * tile_size * scale.x))
-	camera.set_limit(SIDE_BOTTOM, int(((ground_offset / tile_size) + 1) * tile_size * scale.y))
-	camera.set_limit(SIDE_TOP, int(((ground_offset / tile_size) - world_size) * tile_size * scale.y))
+func find_spawn_position() -> Vector2:
+	var x: int = world_size / 2
+	for y: int in range(world_size - 1, -1, -1):
+		var current_tile = world_tiles.get(Vector2i(x, y))
+		if current_tile and not current_tile.chosen_tile.is_background:
+			return get_world_position(x, y + 1)
+	return get_world_position(x, world_size / 2)
 
 
 func draw_noise_images() -> void:
@@ -118,7 +130,7 @@ func get_world_position(grid_x: float, logic_height: float) -> Vector2:
 	var pixel_x = grid_x * tile_size + (tile_size / 2.0)
 	var pixel_y = tile_map_y * tile_size + (tile_size / 2.0)
 
-	return Vector2(pixel_x, pixel_y) * scale
+	return Vector2(pixel_x, pixel_y)
 
 
 func generate_terrain() -> void:
@@ -127,9 +139,6 @@ func generate_terrain() -> void:
 			var current_biome: Biome = get_biome(x, y)
 			var tiles: TileAtlas = current_biome.tile_atlas
 			var height: float = current_biome.terrain_noise.get_unity_noise(x, 0) * current_biome.height_multiplier + height_addition
-			if x == world_size / 2:
-				spawn_position = get_world_position(x, height + 2)
-
 			if y >= height:
 				break
 			var current_tile: Tile = tiles.stone
@@ -171,7 +180,7 @@ func remove_tile(x: int, y: int) -> void:
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 
 	var tile_pos: Vector2i = Vector2i(x, (ground_offset / tile_size) - y)
-	world_tile.chosen_layer.set_cell(tile_pos)
+	world_tile.chosen_layer.set_cell(tile_pos, -1)
 	world_tiles.erase(Vector2i(x, y))
 
 
@@ -179,6 +188,10 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 	if x < 0 or y < 0 or x >= world_size or y >= world_size:
 		return
 	if not tile:
+		return
+
+	var player_tile: Vector2i = get_coordinates_from_position(player.global_position)
+	if Vector2i(x, y) == player_tile:
 		return
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
