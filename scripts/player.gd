@@ -77,18 +77,24 @@ func _physics_process(delta: float) -> void:
 	if select and current_tile and current_tile.chosen_layer == world.foreground:
 		selected_tile = current_tile.chosen_tile
 
-	if mouse_coords != coords and mouse_coords != Vector2i(coords.x, coords.y + 1) and coords.distance_to(mouse_coords) <= action_range:
-		hit = Input.is_action_pressed("hit")
-		place = Input.is_action_pressed("place")
+	# These are used for the animations (hit and place: maybe make them explicit parameters later)
+	hit = Input.is_action_pressed("hit")
+	place = Input.is_action_pressed("place")
 
-		if hit:
-			animator["parameters/ActionFilter/blend_amount"] = 1.0
-			world.remove_tile(mouse_coords.x, mouse_coords.y)
-		elif place:
-			animator["parameters/ActionFilter/blend_amount"] = 1.0
-			world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
-		else:
-			animator["parameters/ActionFilter/blend_amount"] = 0.0
+	var in_range: bool = (
+		mouse_coords != coords and
+		mouse_coords != Vector2i(coords.x, coords.y + 1) and
+		coords.distance_to(mouse_coords) <= action_range
+	)
+
+	if in_range and hit:
+		animator["parameters/ActionFilter/blend_amount"] = 1.0
+		world.remove_tile(mouse_coords.x, mouse_coords.y)
+	elif in_range and place:
+		animator["parameters/ActionFilter/blend_amount"] = 1.0
+		world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
+	else:
+		animator["parameters/ActionFilter/blend_amount"] = 0.0
 
 	direction = Input.get_axis("move_left", "move_right")
 	if direction:
