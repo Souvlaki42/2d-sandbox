@@ -18,6 +18,7 @@ A 2D sandbox game like Terraria, made with Godot 4.6+.
 - [2D Sandbox Tutorial Series for Unity](https://www.youtube.com/playlist?list=PLn1X2QyVjFVDE9syarF1HoUFwB_3K7z2y)
 - [2D Voxel Asset Pack by Kenney](https://www.kenney.nl/assets/voxel-pack)
 - [Crosshair Pack by Kenney](https://www.kenney.nl/assets/crosshair-pack)
+- [Icon pack by Pixel boy](https://pixel-boy.itch.io/icon-godot-node)
 
 ## How to run
 

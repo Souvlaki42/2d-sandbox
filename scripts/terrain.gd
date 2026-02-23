@@ -1,3 +1,4 @@
+@icon("res://assets/icons/color/icon_map_2.png")
 @tool
 class_name Terrain
 extends Node2D
