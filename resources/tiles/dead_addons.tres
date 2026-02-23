@@ -7,4 +7,5 @@ script = ExtResource("1_xosen")
 tile_name = &"Dead addons"
 atlas_coords = Array[Vector2i]([Vector2i(6, 3), Vector2i(6, 2), Vector2i(4, 5)])
 is_background = true
+is_droppable = false
 metadata/_custom_type_script = "uid://u8f786gwmld3"

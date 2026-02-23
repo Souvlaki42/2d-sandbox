@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://dgklitk3e11ad"]
+
+[ext_resource type="Texture2D" uid="uid://b5gwjcxacm4hp" path="res://assets/tiles/stone_coal_alt.png" id="1_q7j6g"]
+[ext_resource type="Script" uid="uid://bk0wwm04s673w" path="res://scripts/tile_drop.gd" id="1_t3hbl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q7j6g"]
+size = Vector2(128, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t3hbl"]
+size = Vector2(192, 192)
+
+[node name="TileDrop" type="RigidBody2D" unique_id=1977907532 node_paths=PackedStringArray("sprite") groups=["Drop"]]
+z_index = -2
+gravity_scale = 3.0
+script = ExtResource("1_t3hbl")
+sprite = NodePath("Sprite")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=459757143]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_q7j6g")
+
+[node name="Shape" type="CollisionShape2D" parent="." unique_id=2139016604]
+scale = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_q7j6g")
+
+[node name="PickupArea" type="Area2D" parent="." unique_id=2103964381]
+scale = Vector2(0.5, 0.5)
+
+[node name="Shape" type="CollisionShape2D" parent="PickupArea" unique_id=1518984814]
+shape = SubResource("RectangleShape2D_t3hbl")
+
+[connection signal="body_entered" from="PickupArea" to="." method="_on_pickup_area_body_entered"]

@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://ct1waa40kouyw" path="res://resources/biomes/forest.tres" id="5_q5onr"]
 [ext_resource type="Resource" uid="uid://b4t71amptw1a1" path="res://resources/biomes/desert.tres" id="6_jhx03"]
 [ext_resource type="Resource" uid="uid://rid1l5kympi0" path="res://resources/biomes/snow.tres" id="7_o8fc1"]
+[ext_resource type="PackedScene" uid="uid://dgklitk3e11ad" path="res://scenes/tile_drop.tscn" id="8_7r4gi"]
 [ext_resource type="TileSet" uid="uid://bbj6r7e08dc0j" path="res://resources/tile_set.tres" id="8_xo05s"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_4mrxx"]
@@ -23,6 +24,7 @@ foreground = NodePath("Foreground")
 background = NodePath("Background")
 left_wall = NodePath("Boundaries/LeftWall")
 right_wall = NodePath("Boundaries/RightWall")
+tile_drop = ExtResource("8_7r4gi")
 metadata/_custom_type_script = "uid://mdkjre3hbp0l"
 
 [node name="Foreground" type="TileMapLayer" parent="." unique_id=1676670108]

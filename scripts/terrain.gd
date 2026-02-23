@@ -42,6 +42,7 @@ class WorldTile:
 @export var debug: Debug
 @export var left_wall: CollisionShape2D
 @export var right_wall: CollisionShape2D
+@export var tile_drop: PackedScene
 
 
 func _ready() -> void:
@@ -172,6 +173,16 @@ func get_coordinates_from_position(mouse_pos: Vector2i, layer: TileMapLayer = fo
 	return Vector2i(grid_pos.x, (ground_offset / tile_size) - grid_pos.y)
 
 
+func get_texture_from_position(pos: Vector2i, layer: TileMapLayer = foreground) -> Texture2D:
+	var source_id: int = layer.get_cell_source_id(pos)
+	var atlas_coords: Vector2i = layer.get_cell_atlas_coords(pos)
+	var atlas_source: TileSetAtlasSource = layer.tile_set.get_source(source_id)
+	var atlas_texture: AtlasTexture = AtlasTexture.new()
+	atlas_texture.atlas = atlas_source.texture
+	atlas_texture.region = atlas_source.get_tile_texture_region(atlas_coords)
+	return atlas_texture
+
+
 func remove_tile(x: int, y: int) -> void:
 	if not world_tiles.has(Vector2i(x, y)):
 		return
@@ -181,6 +192,13 @@ func remove_tile(x: int, y: int) -> void:
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 
 	var tile_pos: Vector2i = Vector2i(x, (ground_offset / tile_size) - y)
+
+	if world_tile.chosen_tile.is_droppable:
+		var new_tile_drop: TileDrop = tile_drop.instantiate()
+		new_tile_drop.position = get_world_position(x, y + 0.5)
+		new_tile_drop.sprite.texture = get_texture_from_position(tile_pos, world_tile.chosen_layer)
+		add_child(new_tile_drop)
+
 	world_tile.chosen_layer.set_cell(tile_pos, -1)
 	world_tiles.erase(Vector2i(x, y))
 
