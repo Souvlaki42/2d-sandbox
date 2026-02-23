@@ -84,7 +84,7 @@ nodes/OneNHalfScale/node = SubResource("AnimationNodeTimeScale_fjrip")
 nodes/OneNHalfScale/position = Vector2(120, 60)
 node_connections = [&"output", 0, &"ActionFilter", &"ActionFilter", 0, &"OneNHalfScale", &"ActionFilter", 1, &"ThreeScale", &"ThreeScale", 0, &"Actions", &"OneNHalfScale", 0, &"Movement"]
 
-[node name="Player" type="CharacterBody2D" unique_id=1716267208 node_paths=PackedStringArray("skeleton", "animator", "camera", "head", "body", "left_arm", "right_arm", "left_leg", "right_leg")]
+[node name="Player" type="CharacterBody2D" unique_id=1716267208 node_paths=PackedStringArray("skeleton", "animator", "camera", "head", "body", "left_arm", "right_arm", "left_leg", "right_leg") groups=["Player"]]
 script = ExtResource("1_g2els")
 skeleton = NodePath("Skeleton")
 animator = NodePath("Animator")

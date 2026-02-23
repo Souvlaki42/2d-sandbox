@@ -31,8 +31,9 @@ mouse_cursor/custom_image_hotspot=Vector2(36, 36)
 
 [global_group]
 
-Player="The main characters"
-Ground="Where you can an entity stand on"
+Player="Entity you control and play as"
+Ground="Where entities can stand on"
+Drop="Anything player can pickup"
 
 [input]
 

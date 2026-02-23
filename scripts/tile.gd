@@ -5,3 +5,4 @@ extends Resource
 @export var source_id: int = 1
 @export var atlas_coords: Array[Vector2i] = [Vector2i.ZERO]
 @export var is_background: bool = false
+@export var is_droppable: bool = true
