@@ -15,7 +15,7 @@ normal = Vector2(1, 0)
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_7r4gi"]
 normal = Vector2(-1, 0)
 
-[node name="World" type="Node2D" unique_id=1680769113 node_paths=PackedStringArray("foreground", "background", "left_wall", "right_wall")]
+[node name="World" type="Node2D" unique_id=1680769113 node_paths=PackedStringArray("foreground", "background", "left_wall", "right_wall") groups=["Ground"]]
 script = ExtResource("1_4mrxx")
 biome_colors = ExtResource("2_7r4gi")
 biomes = Array[ExtResource("3_w7kh3")]([ExtResource("4_e3hyu"), ExtResource("5_q5onr"), ExtResource("6_jhx03"), ExtResource("7_o8fc1")])
