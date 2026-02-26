@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="Tile" format=3 uid="uid://ck80f6kwqi1pg"]
 
 [ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile.gd" id="1_3fsat"]
+[ext_resource type="Resource" uid="uid://cwvchn4khtoq0" path="res://resources/walls/sand_wall.tres" id="2_5pyge"]
 
 [resource]
 script = ExtResource("1_3fsat")
 tile_name = &"Sand"
+wall_variant = ExtResource("2_5pyge")
 atlas_coords = Array[Vector2i]([Vector2i(3, 6)])
 metadata/_custom_type_script = "uid://u8f786gwmld3"

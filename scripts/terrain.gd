@@ -12,11 +12,13 @@ var biome_map: NoiseTexture2D = null
 class WorldTile:
 	var chosen_tile: Tile
 	var chosen_layer: TileMapLayer
+	var is_natural: bool
 
 
-	func _init(tile: Tile, layer: TileMapLayer) -> void:
+	func _init(tile: Tile, layer: TileMapLayer, natural: bool) -> void:
 		self.chosen_tile = tile
 		self.chosen_layer = layer
+		self.is_natural = natural
 
 @export_category("Terrain Settings")
 @export var world_size: int = 200
@@ -133,10 +135,8 @@ func generate_terrain() -> void:
 			if not current_biome.generate_caves or cave_noise > current_biome.surface_value:
 				place_tile(current_tile, x, y)
 
-			if current_biome.generate_caves and cave_noise <= current_biome.surface_value:
-				if current_tile.wall_variant:
-					current_tile = current_tile.wall_variant
-				place_tile(current_tile, x, y, desaturated)
+			if current_biome.generate_caves and cave_noise <= current_biome.surface_value and current_tile.wall_variant:
+				place_tile(current_tile.wall_variant, x, y, desaturated)
 
 			if y > int(height - 1):
 				if randi_range(0, current_biome.tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
@@ -179,8 +179,11 @@ func remove_tile(x: int, y: int) -> void:
 	world_tile.chosen_layer.set_cell(tile_pos, -1)
 	world_tiles.erase(Vector2i(x, y))
 
+	if world_tile.chosen_tile.wall_variant and world_tile.is_natural:
+		place_tile(world_tile.chosen_tile.wall_variant, x, y, desaturated)
 
-func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
+
+func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null, natural: bool = true) -> void:
 	if x < 0 or y < 0 or x >= world_size or y >= world_size:
 		return
 	if not tile:
@@ -192,9 +195,7 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 
 	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
 	if world_tile:
-		if world_tile.chosen_layer != foreground:
-			remove_tile(x, y)
-		else:
+		if world_tile.chosen_layer == foreground:
 			return
 
 	var chosen_layer: TileMapLayer = foreground
@@ -207,7 +208,7 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null) -> void:
 	var coord_choice = tile.atlas_coords.pick_random()
 
 	chosen_layer.set_cell(tile_pos, tile.source_id, coord_choice)
-	world_tiles[Vector2i(x, y)] = WorldTile.new(tile, chosen_layer)
+	world_tiles[Vector2i(x, y)] = WorldTile.new(tile, chosen_layer, natural)
 
 
 func place_tree(current_biome: Biome, x: int, y: int) -> void:

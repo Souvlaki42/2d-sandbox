@@ -40,7 +40,7 @@ collision_enabled = false
 physics_quadrant_size = 20
 
 [node name="Desaturated" type="TileMapLayer" parent="." unique_id=863840614]
-modulate = Color(0.68235296, 0.68235296, 0.68235296, 1)
+modulate = Color(0.6, 0.6, 0.6, 1)
 z_index = -10
 tile_set = ExtResource("8_xo05s")
 collision_enabled = false
