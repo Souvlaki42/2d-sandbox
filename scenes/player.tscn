@@ -11,33 +11,8 @@
 radius = 21.0
 height = 172.0
 
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_tuyoq"]
-filter_enabled = true
-filters = ["Skeleton/Hip/LeftArmBone:rotation"]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ur7pv"]
-animation = &"Blank"
-
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_smehm"]
 animation = &"Hit"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_d2wvv"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3v2ag"]
-advance_mode = 2
-advance_expression = "hit or place"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tuyoq"]
-advance_mode = 2
-advance_expression = "not hit and not place"
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_tuyoq"]
-states/Blank/node = SubResource("AnimationNodeAnimation_ur7pv")
-states/Blank/position = Vector2(304, 100)
-states/Hit/node = SubResource("AnimationNodeAnimation_smehm")
-states/Hit/position = Vector2(422, 100)
-transitions = ["Start", "Blank", SubResource("AnimationNodeStateMachineTransition_d2wvv"), "Blank", "Hit", SubResource("AnimationNodeStateMachineTransition_3v2ag"), "Hit", "Blank", SubResource("AnimationNodeStateMachineTransition_tuyoq")]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tuyoq"]
 animation = &"Idle"
@@ -67,22 +42,26 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_fjrip"]
 
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_ur7pv"]
+filter_enabled = true
+filters = ["Skeleton/Hip/LeftArmBone:rotation"]
+
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_tuyoq"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_ur7pv"]
-graph_offset = Vector2(-373.90042, -36.176926)
-nodes/output/position = Vector2(660, 160)
+graph_offset = Vector2(-390.8413, -69.217285)
+nodes/output/position = Vector2(540, 180)
 nodes/Movement/node = SubResource("AnimationNodeStateMachine_smehm")
 nodes/Movement/position = Vector2(-120, 60)
-nodes/Actions/node = SubResource("AnimationNodeStateMachine_tuyoq")
-nodes/Actions/position = Vector2(-40, 280)
-nodes/ActionFilter/node = SubResource("AnimationNodeBlend2_tuyoq")
-nodes/ActionFilter/position = Vector2(400, 120)
-nodes/ThreeScale/node = SubResource("AnimationNodeTimeScale_tuyoq")
-nodes/ThreeScale/position = Vector2(200, 280)
+nodes/OneShot/node = SubResource("AnimationNodeOneShot_ur7pv")
+nodes/OneShot/position = Vector2(320, 160)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_smehm")
+nodes/Animation/position = Vector2(-120, 280)
 nodes/OneNHalfScale/node = SubResource("AnimationNodeTimeScale_fjrip")
 nodes/OneNHalfScale/position = Vector2(120, 60)
-node_connections = [&"output", 0, &"ActionFilter", &"ActionFilter", 0, &"OneNHalfScale", &"ActionFilter", 1, &"ThreeScale", &"ThreeScale", 0, &"Actions", &"OneNHalfScale", 0, &"Movement"]
+nodes/ThreeScale/node = SubResource("AnimationNodeTimeScale_tuyoq")
+nodes/ThreeScale/position = Vector2(100, 300)
+node_connections = [&"output", 0, &"OneShot", &"OneShot", 0, &"OneNHalfScale", &"OneShot", 1, &"ThreeScale", &"OneNHalfScale", 0, &"Movement", &"ThreeScale", 0, &"Animation"]
 
 [node name="Player" type="CharacterBody2D" unique_id=1716267208 node_paths=PackedStringArray("skeleton", "animator", "camera", "head", "body", "left_arm", "right_arm", "left_leg", "right_leg") groups=["Player"]]
 script = ExtResource("1_g2els")
@@ -105,9 +84,11 @@ shape = SubResource("CapsuleShape2D_qlg0r")
 tree_root = SubResource("AnimationNodeBlendTree_ur7pv")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../Animations")
-parameters/ActionFilter/blend_amount = 1.0
-parameters/ThreeScale/scale = 3.0
+parameters/OneShot/active = false
+parameters/OneShot/internal_active = false
+parameters/OneShot/request = 0
 parameters/OneNHalfScale/scale = 1.5
+parameters/ThreeScale/scale = 3.0
 
 [node name="Animations" type="AnimationPlayer" parent="." unique_id=1877453197]
 libraries/ = ExtResource("6_tuyoq")

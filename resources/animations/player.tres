@@ -2,11 +2,9 @@
 
 [sub_resource type="Animation" id="Animation_u5vhk"]
 resource_name = "Blank"
-loop_mode = 1
 
 [sub_resource type="Animation" id="Animation_ur7pv"]
 resource_name = "Hit"
-loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true

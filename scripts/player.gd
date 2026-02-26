@@ -29,10 +29,6 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 var selected_tile: Tile
 var direction: float
 
-var hit: bool
-var place: bool
-var select: bool
-
 var mouse_coords: Vector2i
 var coords: Vector2i
 var current_tile: Terrain.WorldTile
@@ -52,13 +48,7 @@ func _ready() -> void:
 	right_leg.texture = skin.legs
 
 
-func _physics_process(delta: float) -> void:
-	if not is_on_floor():
-		velocity.y += gravity * delta
-
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = jump_velocity
-
+func _process(_delta: float) -> void:
 	coords = world.get_coordinates_from_position(global_position)
 	mouse_coords = world.get_coordinates_from_position(get_global_mouse_position())
 	current_tile = world.world_tiles.get(mouse_coords)
@@ -74,13 +64,10 @@ func _physics_process(delta: float) -> void:
 		world.debug.add_debug_property("Current Tile", current_tile_name)
 		world.debug.add_debug_property("Seed", world.noise_seed)
 
-	select = Input.is_action_pressed("select")
-	if select and current_tile and current_tile.chosen_layer == world.foreground:
-		selected_tile = current_tile.chosen_tile
+	direction = Input.get_axis("move_left", "move_right")
 
-	# These are used for the animations (hit and place: maybe make them explicit parameters later)
-	hit = Input.is_action_pressed("hit")
-	place = Input.is_action_pressed("place")
+	if Input.is_action_just_pressed("select") and current_tile and current_tile.chosen_layer == world.foreground:
+		selected_tile = current_tile.chosen_tile
 
 	var in_range: bool = (
 		mouse_coords != coords and
@@ -88,16 +75,23 @@ func _physics_process(delta: float) -> void:
 		coords.distance_to(mouse_coords) <= action_range
 	)
 
-	if in_range and hit:
-		animator["parameters/ActionFilter/blend_amount"] = 1.0
-		world.remove_tile(mouse_coords.x, mouse_coords.y)
-	elif in_range and place:
-		animator["parameters/ActionFilter/blend_amount"] = 1.0
-		world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
-	else:
-		animator["parameters/ActionFilter/blend_amount"] = 0.0
+	var is_hitting: bool = animator.get("parameters/OneShot/active")
 
-	direction = Input.get_axis("move_left", "move_right")
+	if in_range and not is_hitting and Input.is_action_just_pressed("attack"):
+		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+		world.remove_tile(mouse_coords.x, mouse_coords.y)
+	elif in_range and not is_hitting and Input.is_action_just_pressed("place"):
+		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+		world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
+
+
+func _physics_process(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = jump_velocity
+
 	if direction:
 		velocity.x = direction * move_speed
 		if direction > 0:
