@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Tile" format=3 uid="uid://bkj3rneinkkl3"]
+
+[ext_resource type="Script" uid="uid://u8f786gwmld3" path="res://scripts/tile.gd" id="1_nr16w"]
+
+[resource]
+script = ExtResource("1_nr16w")
+tile_name = &"Dirt Wall"
+atlas_coords = Array[Vector2i]([Vector2i(7, 5), Vector2i(6, 0)])
+is_background = true
+metadata/_custom_type_script = "uid://u8f786gwmld3"
