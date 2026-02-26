@@ -52,13 +52,7 @@ func _ready() -> void:
 	right_leg.texture = skin.legs
 
 
-func _physics_process(delta: float) -> void:
-	if not is_on_floor():
-		velocity.y += gravity * delta
-
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = jump_velocity
-
+func _process(_delta: float) -> void:
 	coords = world.get_coordinates_from_position(global_position)
 	mouse_coords = world.get_coordinates_from_position(get_global_mouse_position())
 	current_tile = world.world_tiles.get(mouse_coords)
@@ -74,13 +68,14 @@ func _physics_process(delta: float) -> void:
 		world.debug.add_debug_property("Current Tile", current_tile_name)
 		world.debug.add_debug_property("Seed", world.noise_seed)
 
-	select = Input.is_action_pressed("select")
-	if select and current_tile and current_tile.chosen_layer == world.foreground:
-		selected_tile = current_tile.chosen_tile
-
-	# These are used for the animations (hit and place: maybe make them explicit parameters later)
 	hit = Input.is_action_pressed("hit")
 	place = Input.is_action_pressed("place")
+
+	select = Input.is_action_pressed("select")
+	direction = Input.get_axis("move_left", "move_right")
+
+	if select and current_tile and current_tile.chosen_layer == world.foreground:
+		selected_tile = current_tile.chosen_tile
 
 	var in_range: bool = (
 		mouse_coords != coords and
@@ -97,7 +92,14 @@ func _physics_process(delta: float) -> void:
 	else:
 		animator["parameters/ActionFilter/blend_amount"] = 0.0
 
-	direction = Input.get_axis("move_left", "move_right")
+
+func _physics_process(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = jump_velocity
+
 	if direction:
 		velocity.x = direction * move_speed
 		if direction > 0:
