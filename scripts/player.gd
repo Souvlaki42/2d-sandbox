@@ -29,8 +29,6 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 var selected_tile: Tile
 var direction: float
 
-var is_hitting: bool
-
 var mouse_coords: Vector2i
 var coords: Vector2i
 var current_tile: Terrain.WorldTile
@@ -77,26 +75,17 @@ func _process(_delta: float) -> void:
 		coords.distance_to(mouse_coords) <= action_range
 	)
 
-	if in_range and Input.is_action_just_pressed("attack"):
-		animator["parameters/ActionFilter/blend_amount"] = 1.0
-		is_hitting = true
+	var is_hitting: bool = animator.get("parameters/OneShot/active")
+
+	if in_range and not is_hitting and Input.is_action_just_pressed("attack"):
+		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 		world.remove_tile(mouse_coords.x, mouse_coords.y)
-	elif in_range and Input.is_action_just_pressed("place"):
-		animator["parameters/ActionFilter/blend_amount"] = 1.0
-		is_hitting = true
+	elif in_range and not is_hitting and Input.is_action_just_pressed("place"):
+		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 		world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
 
 
 func _physics_process(delta: float) -> void:
-	var playback = animator.get("parameters/Actions/playback")
-	if playback.get_current_node() == "Hit":
-		var pos = playback.get_current_play_position()
-		var length = playback.get_current_length()
-
-		if length > 0 and pos >= length - 0.05:
-			is_hitting = false
-			animator["parameters/ActionFilter/blend_amount"] = 0.0
-
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
