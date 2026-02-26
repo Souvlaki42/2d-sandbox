@@ -26,11 +26,11 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3v2ag"]
 advance_mode = 2
-advance_expression = "hit or place"
+advance_expression = "is_hitting"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tuyoq"]
 advance_mode = 2
-advance_expression = "not hit and not place"
+advance_expression = "not is_hitting"
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_tuyoq"]
 states/Blank/node = SubResource("AnimationNodeAnimation_ur7pv")
@@ -70,7 +70,7 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_tuyoq"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_ur7pv"]
-graph_offset = Vector2(-373.90042, -36.176926)
+graph_offset = Vector2(-315.15756, -50.0822)
 nodes/output/position = Vector2(660, 160)
 nodes/Movement/node = SubResource("AnimationNodeStateMachine_smehm")
 nodes/Movement/position = Vector2(-120, 60)
@@ -105,7 +105,7 @@ shape = SubResource("CapsuleShape2D_qlg0r")
 tree_root = SubResource("AnimationNodeBlendTree_ur7pv")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../Animations")
-parameters/ActionFilter/blend_amount = 1.0
+parameters/ActionFilter/blend_amount = 0.0
 parameters/ThreeScale/scale = 3.0
 parameters/OneNHalfScale/scale = 1.5
 

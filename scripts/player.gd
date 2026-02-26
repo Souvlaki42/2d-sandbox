@@ -29,9 +29,7 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 var selected_tile: Tile
 var direction: float
 
-var hit: bool
-var place: bool
-var select: bool
+var is_hitting: bool
 
 var mouse_coords: Vector2i
 var coords: Vector2i
@@ -68,13 +66,9 @@ func _process(_delta: float) -> void:
 		world.debug.add_debug_property("Current Tile", current_tile_name)
 		world.debug.add_debug_property("Seed", world.noise_seed)
 
-	hit = Input.is_action_pressed("hit")
-	place = Input.is_action_pressed("place")
-
-	select = Input.is_action_pressed("select")
 	direction = Input.get_axis("move_left", "move_right")
 
-	if select and current_tile and current_tile.chosen_layer == world.foreground:
+	if Input.is_action_just_pressed("select") and current_tile and current_tile.chosen_layer == world.foreground:
 		selected_tile = current_tile.chosen_tile
 
 	var in_range: bool = (
@@ -83,17 +77,26 @@ func _process(_delta: float) -> void:
 		coords.distance_to(mouse_coords) <= action_range
 	)
 
-	if in_range and hit:
+	if in_range and Input.is_action_just_pressed("attack"):
 		animator["parameters/ActionFilter/blend_amount"] = 1.0
+		is_hitting = true
 		world.remove_tile(mouse_coords.x, mouse_coords.y)
-	elif in_range and place:
+	elif in_range and Input.is_action_just_pressed("place"):
 		animator["parameters/ActionFilter/blend_amount"] = 1.0
+		is_hitting = true
 		world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
-	else:
-		animator["parameters/ActionFilter/blend_amount"] = 0.0
 
 
 func _physics_process(delta: float) -> void:
+	var playback = animator.get("parameters/Actions/playback")
+	if playback.get_current_node() == "Hit":
+		var pos = playback.get_current_play_position()
+		var length = playback.get_current_length()
+
+		if length > 0 and pos >= length - 0.05:
+			is_hitting = false
+			animator["parameters/ActionFilter/blend_amount"] = 0.0
+
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
