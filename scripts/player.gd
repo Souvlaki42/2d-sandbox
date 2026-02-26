@@ -66,7 +66,7 @@ func _process(_delta: float) -> void:
 
 	direction = Input.get_axis("move_left", "move_right")
 
-	if Input.is_action_just_pressed("select") and current_tile and current_tile.chosen_layer == world.foreground:
+	if Input.is_action_just_pressed("select") and current_tile:
 		selected_tile = current_tile.chosen_tile
 
 	var in_range: bool = (
@@ -82,7 +82,7 @@ func _process(_delta: float) -> void:
 		world.remove_tile(mouse_coords.x, mouse_coords.y)
 	elif in_range and not is_hitting and Input.is_action_just_pressed("place"):
 		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
-		world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y)
+		world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y, world.foreground, false)
 
 
 func _physics_process(delta: float) -> void:
