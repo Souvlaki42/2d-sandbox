@@ -33,8 +33,8 @@ class WorldTile:
 
 @export_category("Layers")
 @export var foreground: TileMapLayer
+@export var middle_ground: TileMapLayer
 @export var background: TileMapLayer
-@export var desaturated: TileMapLayer
 
 @export_category("Node References")
 @export var player: Player
@@ -136,7 +136,7 @@ func generate_terrain() -> void:
 				place_tile(current_tile, x, y)
 
 			if current_biome.generate_caves and cave_noise <= current_biome.surface_value and current_tile.wall_variant:
-				place_tile(current_tile.wall_variant, x, y, desaturated)
+				place_tile(current_tile.wall_variant, x, y, background)
 
 			if y > int(height - 1):
 				if randi_range(0, current_biome.tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
@@ -180,7 +180,7 @@ func remove_tile(x: int, y: int) -> void:
 	world_tiles.erase(Vector2i(x, y))
 
 	if world_tile.chosen_tile.wall_variant and world_tile.is_natural:
-		place_tile(world_tile.chosen_tile.wall_variant, x, y, desaturated)
+		place_tile(world_tile.chosen_tile.wall_variant, x, y, background)
 
 
 func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null, natural: bool = true) -> void:
@@ -202,7 +202,7 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null, natural:
 	if layer:
 		chosen_layer = layer
 	elif tile.is_background:
-		chosen_layer = background
+		chosen_layer = middle_ground
 
 	var tile_pos: Vector2i = Vector2i(x, (ground_offset / tile_size) - y)
 	var coord_choice = tile.atlas_coords.pick_random()
