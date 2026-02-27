@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dgklitk3e11ad"]
 
 [ext_resource type="Texture2D" uid="uid://b5gwjcxacm4hp" path="res://assets/tiles/stone_coal_alt.png" id="1_q7j6g"]
-[ext_resource type="Script" uid="uid://bk0wwm04s673w" path="res://scripts/tile_drop.gd" id="1_t3hbl"]
+[ext_resource type="Script" uid="uid://bk0wwm04s673w" path="res://scripts/terrain/tile_drop.gd" id="1_t3hbl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q7j6g"]
 size = Vector2(128, 128)

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="Character" format=3 uid="uid://j3pgn0jyr2ne"]
 
-[ext_resource type="Script" uid="uid://c0akslvkvrwry" path="res://scripts/skin.gd" id="1_g43e1"]
+[ext_resource type="Script" uid="uid://c0akslvkvrwry" path="res://scripts/player/skin.gd" id="1_g43e1"]
 [ext_resource type="Texture2D" uid="uid://ciwroc4pdy3ww" path="res://assets/characters/zombie/zombie_arm.png" id="1_q7wrm"]
 [ext_resource type="Texture2D" uid="uid://bdry5jwhiekag" path="res://assets/characters/zombie/zombie_body.png" id="2_xdqcp"]
 [ext_resource type="Texture2D" uid="uid://c6ug74d6jh4kt" path="res://assets/characters/zombie/zombie_head.png" id="3_s2be5"]

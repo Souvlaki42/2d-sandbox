@@ -2,7 +2,7 @@
 
 [ext_resource type="Resource" uid="uid://bbk0e4gc7aatm" path="res://resources/tiles/dead_addons.tres" id="1_afifb"]
 [ext_resource type="Resource" uid="uid://ck80f6kwqi1pg" path="res://resources/tiles/sand.tres" id="2_ytwbr"]
-[ext_resource type="Script" uid="uid://vi6hct8hqf71" path="res://scripts/atlas.gd" id="3_32oln"]
+[ext_resource type="Script" uid="uid://vi6hct8hqf71" path="res://scripts/terrain/atlas.gd" id="3_32oln"]
 [ext_resource type="Resource" uid="uid://btjucj7pl5sf5" path="res://resources/tiles/cactus.tres" id="5_lb787"]
 [ext_resource type="Resource" uid="uid://kijjahq4mk8t" path="res://resources/tiles/snow.tres" id="10_doexu"]
 

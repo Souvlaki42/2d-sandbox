@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ci25pbu80unqr" path="res://assets/characters/player male/male_body.png" id="2_8qleg"]
 [ext_resource type="Texture2D" uid="uid://dmjbe6tvnsfqk" path="res://assets/characters/player male/male_head.png" id="3_vok6v"]
 [ext_resource type="Texture2D" uid="uid://cx0n20uon3iry" path="res://assets/characters/player male/male_leg.png" id="4_77saa"]
-[ext_resource type="Script" uid="uid://c0akslvkvrwry" path="res://scripts/skin.gd" id="5_4yqk7"]
+[ext_resource type="Script" uid="uid://c0akslvkvrwry" path="res://scripts/player/skin.gd" id="5_4yqk7"]
 
 [resource]
 script = ExtResource("5_4yqk7")

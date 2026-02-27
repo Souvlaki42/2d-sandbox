@@ -8,7 +8,7 @@
 [ext_resource type="Resource" uid="uid://cugjt1xx7gmby" path="res://resources/ores/gold.tres" id="5_y56jq"]
 [ext_resource type="Resource" uid="uid://snd2te27ofb8" path="res://resources/ores/iron.tres" id="7_mmr13"]
 [ext_resource type="Resource" uid="uid://ck80f6kwqi1pg" path="res://resources/tiles/sand.tres" id="7_whwny"]
-[ext_resource type="Script" uid="uid://vi6hct8hqf71" path="res://scripts/atlas.gd" id="8_mmr13"]
+[ext_resource type="Script" uid="uid://vi6hct8hqf71" path="res://scripts/terrain/atlas.gd" id="8_mmr13"]
 [ext_resource type="Resource" uid="uid://kijjahq4mk8t" path="res://resources/tiles/snow.tres" id="9_hac00"]
 [ext_resource type="Resource" uid="uid://xiobbgfvvuyk" path="res://resources/tiles/stone.tres" id="10_bl4f7"]
 [ext_resource type="Resource" uid="uid://jqu5fleggnsk" path="res://resources/tiles/leaves.tres" id="12_rewn6"]
