@@ -23,7 +23,6 @@ class WorldTile:
 @export_category("Terrain Settings")
 @export var world_size: int = 200
 @export var height_addition: int = 50
-@export var ground_offset: int = 640
 @export var tile_size: int = 128
 
 @export_category("Biome Settings")
@@ -61,8 +60,8 @@ func _ready() -> void:
 func set_limits() -> void:
 	player.camera.set_limit(SIDE_LEFT, 0)
 	player.camera.set_limit(SIDE_RIGHT, world_size * tile_size)
-	player.camera.set_limit(SIDE_BOTTOM, ground_offset + tile_size)
-	player.camera.set_limit(SIDE_TOP, ground_offset - world_size * tile_size)
+	player.camera.set_limit(SIDE_TOP, 0)
+	player.camera.set_limit(SIDE_BOTTOM, world_size * tile_size)
 
 	left_wall.position.x = player.camera.limit_left
 	right_wall.position.x = player.camera.limit_right
@@ -70,11 +69,20 @@ func set_limits() -> void:
 
 func find_spawn_position() -> Vector2:
 	var x: int = world_size / 2
-	for y: int in range(world_size - 1, -1, -1):
+	for y: int in range(world_size):
 		var current_tile = world_tiles.get(Vector2i(x, y))
-		if current_tile and not current_tile.chosen_tile.is_background:
-			return get_world_position(x, y + 1)
-	return get_world_position(x, world_size / 2)
+		if current_tile and current_tile.chosen_layer == foreground:
+			return foreground.to_global(foreground.map_to_local(Vector2i(x, y + 1)))
+	return foreground.to_global(foreground.map_to_local(Vector2i(x, world_size / 2)))
+
+
+func get_empty_tiles() -> Array[Vector2i]:
+	var empty_tiles: Array[Vector2i] = []
+	for x in range(world_size):
+		for y in range(world_size):
+			if not world_tiles.has(Vector2i(x, y)):
+				empty_tiles.append(Vector2i(x, y))
+	return empty_tiles
 
 
 func draw_noise_images() -> void:
@@ -97,14 +105,8 @@ func get_biome(x: int, y: int) -> Biome:
 	return biome_lookup.get(biome_colors.sample(biome_noise.get_unity_noise(x, y)).to_rgba32(), null)
 
 
-func get_world_position(grid_x: float, logic_height: float) -> Vector2:
-	var origin_y_in_tiles: int = ground_offset / tile_size
-	var tile_map_y: float = origin_y_in_tiles - logic_height
-
-	var pixel_x = grid_x * tile_size + (tile_size / 2.0)
-	var pixel_y = tile_map_y * tile_size + (tile_size / 2.0)
-
-	return Vector2(pixel_x, pixel_y)
+func is_in_bounds(pos: Vector2i) -> bool:
+	return pos.x >= 0 and pos.y >= 0 and pos.x < world_size and pos.y < world_size
 
 
 func generate_terrain() -> void:
@@ -133,21 +135,16 @@ func generate_terrain() -> void:
 			var cave_noise: float = current_biome.cave_noise.get_unity_noise(x, y)
 
 			if not current_biome.generate_caves or cave_noise > current_biome.surface_value:
-				place_tile(current_tile, x, y)
+				place_tile(current_tile, Vector2i(x, y))
 
 			if current_biome.generate_caves and cave_noise <= current_biome.surface_value and current_tile.wall_variant:
-				place_tile(current_tile.wall_variant, x, y, background)
+				place_tile(current_tile.wall_variant, Vector2i(x, y), background)
 
 			if y > int(height - 1):
 				if randi_range(0, current_biome.tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
 					place_tree(current_biome, x, y)
 				elif tiles.addons != null and randi_range(0, current_biome.addon_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
-					place_tile(tiles.addons, x, y + 1)
-
-
-func get_coordinates_from_position(mouse_pos: Vector2i, layer: TileMapLayer = foreground) -> Vector2i:
-	var grid_pos: Vector2i = layer.local_to_map(layer.to_local(mouse_pos))
-	return Vector2i(grid_pos.x, (ground_offset / tile_size) - grid_pos.y)
+					place_tile(tiles.addons, Vector2i(x, y + 1))
 
 
 func get_texture_from_position(pos: Vector2i, layer: TileMapLayer = foreground) -> Texture2D:
@@ -160,43 +157,33 @@ func get_texture_from_position(pos: Vector2i, layer: TileMapLayer = foreground) 
 	return atlas_texture
 
 
-func remove_tile(x: int, y: int) -> void:
-	if not world_tiles.has(Vector2i(x, y)):
-		return
-	if x < 0 or y < 0 or x >= world_size or y >= world_size:
+func remove_tile(pos: Vector2i) -> void:
+	if not is_in_bounds(pos):
 		return
 
-	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
+	var world_tile: WorldTile = world_tiles.get(pos)
 
-	var tile_pos: Vector2i = Vector2i(x, (ground_offset / tile_size) - y)
+	if not world_tile:
+		return
 
 	if world_tile.chosen_tile.is_droppable:
 		var new_tile_drop: TileDrop = tile_drop.instantiate()
-		new_tile_drop.position = get_world_position(x, y + 0.5)
-		new_tile_drop.sprite.texture = get_texture_from_position(tile_pos, world_tile.chosen_layer)
+		new_tile_drop.position = world_tile.chosen_layer.to_global(world_tile.chosen_layer.map_to_local(pos))
+		new_tile_drop.sprite.texture = get_texture_from_position(pos, world_tile.chosen_layer)
 		add_child(new_tile_drop)
 
-	world_tile.chosen_layer.set_cell(tile_pos, -1)
-	world_tiles.erase(Vector2i(x, y))
+	world_tile.chosen_layer.set_cell(pos, -1)
+	world_tiles.erase(pos)
 
 	if world_tile.chosen_tile.wall_variant and world_tile.is_natural:
-		place_tile(world_tile.chosen_tile.wall_variant, x, y, background)
+		place_tile(world_tile.chosen_tile.wall_variant, pos, background)
 
 
-func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null, natural: bool = true) -> void:
-	if x < 0 or y < 0 or x >= world_size or y >= world_size:
+func place_tile(tile: Tile, pos: Vector2i, layer: TileMapLayer = null, natural: bool = true) -> void:
+	if not is_in_bounds(pos):
 		return
 	if not tile:
 		return
-
-	var player_tile: Vector2i = get_coordinates_from_position(player.global_position)
-	if Vector2i(x, y) == player_tile:
-		return
-
-	var world_tile: WorldTile = world_tiles.get(Vector2i(x, y))
-	if world_tile:
-		if world_tile.chosen_layer == foreground:
-			return
 
 	var chosen_layer: TileMapLayer = foreground
 	if layer:
@@ -204,25 +191,33 @@ func place_tile(tile: Tile, x: int, y: int, layer: TileMapLayer = null, natural:
 	elif tile.is_background:
 		chosen_layer = middle_ground
 
-	var tile_pos: Vector2i = Vector2i(x, (ground_offset / tile_size) - y)
+	var player_tile: Vector2i = chosen_layer.local_to_map(chosen_layer.to_local(player.global_position))
+	if pos == player_tile:
+		return
+
+	var world_tile: WorldTile = world_tiles.get(pos)
+	if world_tile:
+		if world_tile.chosen_layer == foreground:
+			return
+
 	var coord_choice = tile.atlas_coords.pick_random()
 
-	chosen_layer.set_cell(tile_pos, tile.source_id, coord_choice)
-	world_tiles[Vector2i(x, y)] = WorldTile.new(tile, chosen_layer, natural)
+	chosen_layer.set_cell(pos, tile.source_id, coord_choice)
+	world_tiles[pos] = WorldTile.new(tile, chosen_layer, natural)
 
 
 func place_tree(current_biome: Biome, x: int, y: int) -> void:
 	var tree_height: int = randi_range(current_biome.min_tree_height, current_biome.max_tree_height)
 	for i in range(1, tree_height + 1):
-		place_tile(current_biome.tile_atlas.tree_log, x, y + i)
+		place_tile(current_biome.tile_atlas.tree_log, Vector2i(x, y + i))
 
 	if current_biome.tile_atlas.tree_leaves:
-		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 1)
-		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 2)
-		place_tile(current_biome.tile_atlas.tree_leaves, x, y + tree_height + 3)
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y + tree_height + 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y + tree_height + 2))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y + tree_height + 3))
 
-		place_tile(current_biome.tile_atlas.tree_leaves, x - 1, y + tree_height + 1)
-		place_tile(current_biome.tile_atlas.tree_leaves, x - 1, y + tree_height + 2)
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y + tree_height + 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y + tree_height + 2))
 
-		place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 1)
-		place_tile(current_biome.tile_atlas.tree_leaves, x + 1, y + tree_height + 2)
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y + tree_height + 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y + tree_height + 2))
