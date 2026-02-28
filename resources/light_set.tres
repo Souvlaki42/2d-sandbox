@@ -1,0 +1,19 @@
+[gd_resource type="TileSet" format=3 uid="uid://baujyn5tv4mei"]
+
+[ext_resource type="Texture2D" uid="uid://s2kh2vh0as1k" path="res://assets/spritesheets/light_levels.png" id="1_6moux"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e3hyu"]
+texture = ExtResource("1_6moux")
+texture_region_size = Vector2i(128, 128)
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+0:0/0 = 0
+
+[resource]
+tile_size = Vector2i(128, 128)
+sources/1 = SubResource("TileSetAtlasSource_e3hyu")
