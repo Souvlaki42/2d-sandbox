@@ -72,7 +72,7 @@ func find_spawn_position() -> Vector2:
 	for y: int in range(world_size):
 		var current_tile = world_tiles.get(Vector2i(x, y))
 		if current_tile and current_tile.chosen_layer == foreground:
-			return foreground.to_global(foreground.map_to_local(Vector2i(x, y + 1)))
+			return foreground.to_global(foreground.map_to_local(Vector2i(x, y - 1)))
 	return foreground.to_global(foreground.map_to_local(Vector2i(x, world_size / 2)))
 
 
@@ -111,26 +111,31 @@ func is_in_bounds(pos: Vector2i) -> bool:
 
 func generate_terrain() -> void:
 	for x: int in range(world_size):
+		var current_biome: Biome = get_biome(x, 0)
+		var surface_y: int = int(world_size - (current_biome.terrain_noise.get_unity_noise(x, 0) * current_biome.height_multiplier + height_addition))
+
 		for y: int in range(world_size):
-			var current_biome: Biome = get_biome(x, y)
+			current_biome = get_biome(x, y)
 			var tiles: TileAtlas = current_biome.tile_atlas
-			var height: float = current_biome.terrain_noise.get_unity_noise(x, 0) * current_biome.height_multiplier + height_addition
-			if y >= height:
-				break
+
+			if y < surface_y:
+				continue
+
 			var current_tile: Tile = tiles.stone
-			if y < height - current_biome.dirt_layer_height and not tiles.get_ores().is_empty():
-				if tiles.coal.noise.get_unity_noise(x, y) > tiles.coal.vein_size and height - y > tiles.coal.max_spawn_height:
-					current_tile = tiles.coal
-				if tiles.iron.noise.get_unity_noise(x, y) > tiles.iron.vein_size and height - y > tiles.iron.max_spawn_height:
-					current_tile = tiles.iron
-					if tiles.gold.noise.get_unity_noise(x, y) > tiles.gold.vein_size and height - y > tiles.gold.max_spawn_height:
-						current_tile = tiles.gold
-						if tiles.diamond.noise.get_unity_noise(x, y) > tiles.diamond.vein_size and height - y > tiles.diamond.max_spawn_height:
-							current_tile = tiles.diamond
-			elif y < int(height - 1):
-				current_tile = tiles.dirt
-			else:
+
+			if y == surface_y:
 				current_tile = tiles.grass
+			elif y < surface_y + current_biome.dirt_layer_height:
+				current_tile = tiles.dirt
+			elif not tiles.get_ores().is_empty():
+				if tiles.coal.noise.get_unity_noise(x, y) > tiles.coal.vein_size and y - surface_y > tiles.coal.max_spawn_height:
+					current_tile = tiles.coal
+				if tiles.iron.noise.get_unity_noise(x, y) > tiles.iron.vein_size and y - surface_y > tiles.iron.max_spawn_height:
+					current_tile = tiles.iron
+					if tiles.gold.noise.get_unity_noise(x, y) > tiles.gold.vein_size and y - surface_y > tiles.gold.max_spawn_height:
+						current_tile = tiles.gold
+						if tiles.diamond.noise.get_unity_noise(x, y) > tiles.diamond.vein_size and y - surface_y > tiles.diamond.max_spawn_height:
+							current_tile = tiles.diamond
 
 			var cave_noise: float = current_biome.cave_noise.get_unity_noise(x, y)
 
@@ -140,11 +145,11 @@ func generate_terrain() -> void:
 			if current_biome.generate_caves and cave_noise <= current_biome.surface_value and current_tile.wall_variant:
 				place_tile(current_tile.wall_variant, Vector2i(x, y), background)
 
-			if y > int(height - 1):
+			if y == surface_y:
 				if randi_range(0, current_biome.tree_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
 					place_tree(current_biome, x, y)
-				elif tiles.addons != null and randi_range(0, current_biome.addon_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
-					place_tile(tiles.addons, Vector2i(x, y + 1))
+				elif tiles.addons and randi_range(0, current_biome.addon_percent_chance) == 1 and world_tiles.has(Vector2i(x, y)):
+					place_tile(tiles.addons, Vector2i(x, y - 1))
 
 
 func get_texture_from_position(pos: Vector2i, layer: TileMapLayer = foreground) -> Texture2D:
@@ -209,15 +214,15 @@ func place_tile(tile: Tile, pos: Vector2i, layer: TileMapLayer = null, natural: 
 func place_tree(current_biome: Biome, x: int, y: int) -> void:
 	var tree_height: int = randi_range(current_biome.min_tree_height, current_biome.max_tree_height)
 	for i in range(1, tree_height + 1):
-		place_tile(current_biome.tile_atlas.tree_log, Vector2i(x, y + i))
+		place_tile(current_biome.tile_atlas.tree_log, Vector2i(x, y - i))
 
 	if current_biome.tile_atlas.tree_leaves:
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y + tree_height + 1))
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y + tree_height + 2))
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y + tree_height + 3))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height + 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height + 2))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height + 3))
 
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y + tree_height + 1))
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y + tree_height + 2))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y - tree_height + 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y - tree_height + 2))
 
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y + tree_height + 1))
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y + tree_height + 2))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y - tree_height + 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y - tree_height + 2))
