@@ -3,7 +3,7 @@ class_name Player
 extends CharacterBody2D
 
 @export_category("Movement")
-@export var action_range: int
+@export var action_range: int = 5
 @export var move_speed: float = 300.0
 @export var jump_height: float = 1.2
 
@@ -71,7 +71,7 @@ func _process(_delta: float) -> void:
 
 	var in_range: bool = (
 		mouse_coords != coords and
-		mouse_coords != Vector2i(coords.x, coords.y + 1) and
+		mouse_coords != Vector2i(coords.x, coords.y - 1) and
 		coords.distance_to(mouse_coords) <= action_range
 	)
 
