@@ -3,7 +3,7 @@ class_name Player
 extends CharacterBody2D
 
 @export_category("Movement")
-@export var action_range: int
+@export var action_range: int = 5
 @export var move_speed: float = 300.0
 @export var jump_height: float = 1.2
 
@@ -49,8 +49,8 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	coords = world.get_coordinates_from_position(global_position)
-	mouse_coords = world.get_coordinates_from_position(get_global_mouse_position())
+	coords = world.foreground.local_to_map(world.foreground.to_local(global_position))
+	mouse_coords = world.foreground.local_to_map(world.foreground.to_local(get_global_mouse_position()))
 	current_tile = world.world_tiles.get(mouse_coords)
 
 	if world.debug.visible:
@@ -71,7 +71,7 @@ func _process(_delta: float) -> void:
 
 	var in_range: bool = (
 		mouse_coords != coords and
-		mouse_coords != Vector2i(coords.x, coords.y + 1) and
+		mouse_coords != Vector2i(coords.x, coords.y - 1) and
 		coords.distance_to(mouse_coords) <= action_range
 	)
 
@@ -79,10 +79,10 @@ func _process(_delta: float) -> void:
 
 	if in_range and not is_hitting and Input.is_action_just_pressed("attack"):
 		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
-		world.remove_tile(mouse_coords.x, mouse_coords.y)
+		world.remove_tile(mouse_coords)
 	elif in_range and not is_hitting and Input.is_action_just_pressed("place"):
 		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
-		world.place_tile(selected_tile, mouse_coords.x, mouse_coords.y, world.foreground, false)
+		world.place_tile(selected_tile, mouse_coords, world.foreground, false)
 
 
 func _physics_process(delta: float) -> void:

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Character" format=3 uid="uid://dxgycp38wa7fa"]
+[gd_resource type="Resource" script_class="CharacterSkin" format=3 uid="uid://dxgycp38wa7fa"]
 
 [ext_resource type="Texture2D" uid="uid://lwbhpq36oxh7" path="res://assets/characters/player male/male_arm.png" id="1_xdnba"]
 [ext_resource type="Texture2D" uid="uid://ci25pbu80unqr" path="res://assets/characters/player male/male_body.png" id="2_8qleg"]
