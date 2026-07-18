@@ -2,28 +2,11 @@
 class_name Terrain
 extends Node2D
 
-var biome_noise: PerlinNoise = null
-var biome_lookup: Dictionary[int, Biome] = { }
-var world_tiles: Dictionary[Vector2i, WorldTile] = { }
-var noise_seed: int = 0
-var biome_map: NoiseTexture2D = null
-
-
-class WorldTile:
-	var chosen_tile: Tile
-	var chosen_layer: TileMapLayer
-	var is_natural: bool
-
-
-	func _init(tile: Tile, layer: TileMapLayer, natural: bool) -> void:
-		self.chosen_tile = tile
-		self.chosen_layer = layer
-		self.is_natural = natural
-
 @export_category("Terrain Settings")
 @export var world_size: int = 200
 @export var height_addition: int = 50
 @export var tile_size: int = 128
+@export var world_seed: String = ""
 
 @export_category("Biome Settings")
 @export var biome_frequency: float = 0.01
@@ -42,12 +25,32 @@ class WorldTile:
 @export var right_wall: CollisionShape2D
 @export var tile_drop: PackedScene
 
+var biome_noise: PerlinNoise = null
+var biome_lookup: Dictionary[int, Biome] = { }
+var world_tiles: Dictionary[Vector2i, WorldTile] = { }
+var noise_seed: int = 0
+var biome_map: NoiseTexture2D = null
+
+
+class WorldTile:
+	var chosen_tile: Tile
+	var chosen_layer: TileMapLayer
+	var is_natural: bool
+
+
+	func _init(tile: Tile, layer: TileMapLayer, natural: bool) -> void:
+		self.chosen_tile = tile
+		self.chosen_layer = layer
+		self.is_natural = natural
+		
 
 func _ready() -> void:
-	if noise_seed == 0:
-		randomize()
-		noise_seed = randi_range(-10000, 10000)
-		seed(noise_seed)
+	randomize()
+	if world_seed == "":
+		noise_seed = randi()
+	else:
+		noise_seed = world_seed.hash()
+	seed(noise_seed)
 
 	for biome in biomes:
 		biome_lookup[biome.tint.to_rgba32()] = biome
