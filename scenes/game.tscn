@@ -12,7 +12,6 @@ player = NodePath("../Player")
 debug = NodePath("../UI/Debug")
 
 [node name="Player" parent="." unique_id=1414045290 node_paths=PackedStringArray("world") instance=ExtResource("9_0tnpc")]
-action_range = 5
 world = NodePath("../World")
 skin = ExtResource("3_lbhrr")
 

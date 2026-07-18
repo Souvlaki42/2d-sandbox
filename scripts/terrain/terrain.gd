@@ -217,12 +217,12 @@ func place_tree(current_biome: Biome, x: int, y: int) -> void:
 		place_tile(current_biome.tile_atlas.tree_log, Vector2i(x, y - i))
 
 	if current_biome.tile_atlas.tree_leaves:
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height + 1))
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height + 2))
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height + 3))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height - 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height - 2))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x, y - tree_height - 3))
 
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y - tree_height + 1))
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y - tree_height + 2))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y - tree_height - 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x - 1, y - tree_height - 2))
 
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y - tree_height + 1))
-		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y - tree_height + 2))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y - tree_height - 1))
+		place_tile(current_biome.tile_atlas.tree_leaves, Vector2i(x + 1, y - tree_height - 2))
