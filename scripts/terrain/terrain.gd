@@ -163,8 +163,7 @@ func get_texture_from_position(pos: Vector2i, layer: TileMapLayer = foreground) 
 	atlas_texture.atlas = atlas_source.texture
 	atlas_texture.region = atlas_source.get_tile_texture_region(atlas_coords)
 	return atlas_texture
-
-
+	
 func remove_tile(pos: Vector2i) -> void:
 	if not is_in_bounds(pos):
 		return

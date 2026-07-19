@@ -63,6 +63,7 @@ func _process(_delta: float) -> void:
 		world.debug.add_debug_property("Selected Tile", selected_tile_name)
 		world.debug.add_debug_property("Current Tile", current_tile_name)
 		world.debug.add_debug_property("Seed", world.noise_seed)
+		world.debug.add_debug_property("Raycast", has_solid_between_world(coords, mouse_coords))
 
 	direction = Input.get_axis("move_left", "move_right")
 
@@ -88,6 +89,18 @@ func _process(_delta: float) -> void:
 		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 		world.place_tile(selected_tile, mouse_coords, world.foreground, false)
 
+func has_solid_between_world(world_a: Vector2i, world_b: Vector2i) -> bool:
+	var space_state := world.foreground.get_world_2d().direct_space_state
+
+	var query := PhysicsRayQueryParameters2D.new()
+	query.from = world_a
+	query.to = world_b
+	query.collide_with_areas = true
+	query.collide_with_bodies = true
+	query.collision_mask = 0xFFFFFFFF
+	
+	var hit := space_state.intersect_ray(query)
+	return hit.size() > 0
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
