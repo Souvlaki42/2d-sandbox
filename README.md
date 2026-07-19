@@ -1,13 +1,13 @@
 # 2D Sandbox
 
-A 2D sandbox game like Terraria, made with Godot 4.6+.
+A 2D sandbox game like Terraria, made with Godot 4.7+.
 
 ![Preview screenshot](screenshots/preview.png)
 
 ## Features
 
 - Terrain generation
-- Tree generation
+- Prop generation (trees, flowers, rocks etc)
 - Ore generation
 - Biomes
 - Skins
@@ -22,15 +22,16 @@ A 2D sandbox game like Terraria, made with Godot 4.6+.
 - [Crosshair Pack by Kenney](https://www.kenney.nl/assets/crosshair-pack)
 - [Icon pack by Pixel boy](https://pixel-boy.itch.io/icon-godot-node)
 
-## How to run
+## Usage
 
-Import the godot project file, inside Godot 4.6+.
+Import the godot project file, inside Godot.
+There are no releases yet.
 
 ## Contributions
 
-- If you encounter any issues, please open an issue.
-- If you wanna fix something, please open a PR.
+If you encounter any issues, please open an issue.
+If you wanna fix something, feel free to open a PR.
 
 ## License
 
-This project is licensed under [The Unlicense](LICENSE)
+This project is licensed under public domain. Please check [the license file](./LICENSE) for more details.
