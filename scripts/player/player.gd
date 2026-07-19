@@ -47,15 +47,13 @@ func _ready() -> void:
 	right_arm.texture = skin.arms
 	left_leg.texture = skin.legs
 	right_leg.texture = skin.legs
-
-func _process(_delta: float) -> void:
-	coords = world.foreground.local_to_map(world.foreground.to_local(global_position))
-	mouse_coords = world.foreground.local_to_map(world.foreground.to_local(get_global_mouse_position()))
-	current_tile = world.world_tiles.get(mouse_coords)
-
-	if world.debug.visible:
+	
+func show_debug() -> void:
 		var selected_tile_name: StringName = selected_tile.tile_name if selected_tile else StringName("None")
 		var current_tile_name: StringName = current_tile.chosen_tile.tile_name if current_tile else StringName("None")
+
+		var ray_coords: Vector2i = world.foreground.local_to_map(world.foreground.to_local(interaction_ray.get_collision_point()))
+		var interaction_blocked: bool = interaction_ray.is_colliding() and ray_coords != coords and ray_coords != mouse_coords
 
 		world.debug.add_debug_property("FPS", Engine.get_frames_per_second())
 		world.debug.add_debug_property("Player Coordinates", coords)
@@ -63,7 +61,14 @@ func _process(_delta: float) -> void:
 		world.debug.add_debug_property("Selected Tile", selected_tile_name)
 		world.debug.add_debug_property("Current Tile", current_tile_name)
 		world.debug.add_debug_property("Seed", world.noise_seed)
-		world.debug.add_debug_property("Raycast", has_solid_between_world(coords, mouse_coords))
+		world.debug.add_debug_property("Interaction Blocked", interaction_blocked)
+
+func _process(_delta: float) -> void:
+	coords = world.foreground.local_to_map(world.foreground.to_local(global_position))
+	mouse_coords = world.foreground.local_to_map(world.foreground.to_local(get_global_mouse_position()))
+	current_tile = world.world_tiles.get(mouse_coords)
+	
+	interaction_ray.target_position = get_local_mouse_position() + (world.tile_size * Vector2(0.5, 0.5))
 
 	direction = Input.get_axis("move_left", "move_right")
 
@@ -76,9 +81,6 @@ func _process(_delta: float) -> void:
 		mouse_coords != Vector2i(coords.x, coords.y - 1) and
 		coords.distance_to(mouse_coords) <= action_range
 	)
-	
-	if interaction_ray.is_colliding():
-		print(world.world_tiles.get(world.foreground.local_to_map(interaction_ray.get_collision_point())).tile_name)
 
 	var is_hitting: bool = animator.get("parameters/OneShot/active")
 	
@@ -88,19 +90,9 @@ func _process(_delta: float) -> void:
 	elif in_range and not is_hitting and Input.is_action_just_pressed("place"):
 		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 		world.place_tile(selected_tile, mouse_coords, world.foreground, false)
-
-func has_solid_between_world(world_a: Vector2i, world_b: Vector2i) -> bool:
-	var space_state := world.foreground.get_world_2d().direct_space_state
-
-	var query := PhysicsRayQueryParameters2D.new()
-	query.from = world_a
-	query.to = world_b
-	query.collide_with_areas = true
-	query.collide_with_bodies = true
-	query.collision_mask = 0xFFFFFFFF
-	
-	var hit := space_state.intersect_ray(query)
-	return hit.size() > 0
+		
+	if world.debug.visible:
+		show_debug()
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
