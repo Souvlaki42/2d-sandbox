@@ -51,9 +51,7 @@ func _ready() -> void:
 func show_debug() -> void:
 		var selected_tile_name: StringName = selected_tile.tile_name if selected_tile else StringName("None")
 		var current_tile_name: StringName = current_tile.chosen_tile.tile_name if current_tile else StringName("None")
-
 		var ray_coords: Vector2i = world.foreground.local_to_map(world.foreground.to_local(interaction_ray.get_collision_point()))
-		var interaction_blocked: bool = interaction_ray.is_colliding() and ray_coords != coords and ray_coords != mouse_coords
 
 		world.debug.add_debug_property("FPS", Engine.get_frames_per_second())
 		world.debug.add_debug_property("Player Coordinates", coords)
@@ -61,14 +59,14 @@ func show_debug() -> void:
 		world.debug.add_debug_property("Selected Tile", selected_tile_name)
 		world.debug.add_debug_property("Current Tile", current_tile_name)
 		world.debug.add_debug_property("Seed", world.noise_seed)
-		world.debug.add_debug_property("Interaction Blocked", interaction_blocked)
+		world.debug.add_debug_property("Reachable", interaction_ray.is_colliding(), ray_coords == mouse_coords)
 
 func _process(_delta: float) -> void:
 	coords = world.foreground.local_to_map(world.foreground.to_local(global_position))
 	mouse_coords = world.foreground.local_to_map(world.foreground.to_local(get_global_mouse_position()))
 	current_tile = world.world_tiles.get(mouse_coords)
 	
-	interaction_ray.target_position = get_local_mouse_position() + (world.tile_size * Vector2(0.5, 0.5))
+	interaction_ray.target_position = get_local_mouse_position()
 
 	direction = Input.get_axis("move_left", "move_right")
 
