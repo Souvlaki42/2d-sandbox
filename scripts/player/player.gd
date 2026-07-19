@@ -14,6 +14,7 @@ extends CharacterBody2D
 @export_category("View")
 @export var camera: Camera2D
 @export var world: Terrain
+@export var interaction_ray: RayCast2D
 
 @export_category("Skin")
 @export var skin: CharacterSkin
@@ -47,7 +48,6 @@ func _ready() -> void:
 	left_leg.texture = skin.legs
 	right_leg.texture = skin.legs
 
-
 func _process(_delta: float) -> void:
 	coords = world.foreground.local_to_map(world.foreground.to_local(global_position))
 	mouse_coords = world.foreground.local_to_map(world.foreground.to_local(get_global_mouse_position()))
@@ -68,15 +68,19 @@ func _process(_delta: float) -> void:
 
 	if Input.is_action_just_pressed("select") and current_tile:
 		selected_tile = current_tile.chosen_tile
-
+	
+	# todo: maybe check this only when interacting
 	var in_range: bool = (
 		mouse_coords != coords and
 		mouse_coords != Vector2i(coords.x, coords.y - 1) and
 		coords.distance_to(mouse_coords) <= action_range
 	)
+	
+	if interaction_ray.is_colliding():
+		print(world.world_tiles.get(world.foreground.local_to_map(interaction_ray.get_collision_point())).tile_name)
 
 	var is_hitting: bool = animator.get("parameters/OneShot/active")
-
+	
 	if in_range and not is_hitting and Input.is_action_just_pressed("attack"):
 		animator.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 		world.remove_tile(mouse_coords)
