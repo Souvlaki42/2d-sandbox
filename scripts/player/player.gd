@@ -14,7 +14,6 @@ extends CharacterBody2D
 @export_category("View")
 @export var camera: Camera2D
 @export var world: Terrain
-@export var interaction_ray: RayCast2D
 
 @export_category("Skin")
 @export var skin: CharacterSkin
@@ -35,11 +34,13 @@ var coords: Vector2i
 var current_tile: Terrain.WorldTile
 var jump_velocity: float
 
+var astar: AStarGrid2D
 
 func _ready() -> void:
 	direction = 0
 	jump_velocity = -sqrt(2 * jump_height * world.tile_size * gravity)
 	world.set_limits()
+	astar = pathfinding_setup()
 
 	head.texture = skin.head
 	body.texture = skin.body
@@ -48,25 +49,52 @@ func _ready() -> void:
 	left_leg.texture = skin.legs
 	right_leg.texture = skin.legs
 	
+func pathfinding_setup() -> AStarGrid2D:
+	var pathfinder = AStarGrid2D.new()
+	
+	var tilemap_size: Vector2i = world.foreground.get_used_rect().end - world.foreground.get_used_rect().position
+	var world_rect: Rect2i = Rect2i(Vector2i.ZERO, tilemap_size)
+		
+	pathfinder.region = world_rect
+	pathfinder.cell_size = world.tile_size * Vector2i.ONE
+	pathfinder.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	pathfinder.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	pathfinder.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	
+	pathfinder.update()
+	
+	for i in range(tilemap_size.x):
+		for j in range(tilemap_size.y):
+			pathfinder.set_point_solid(Vector2i(i, j))
+	
+	return pathfinder
+	
+	
+func is_reachable() -> bool:
+	var path: Array[Vector2i] = astar.get_id_path(coords, mouse_coords).slice(1)
+	
+	return (
+		mouse_coords != coords and
+		mouse_coords != Vector2i(coords.x, coords.y - 1) and
+		coords.distance_to(mouse_coords) <= action_range
+	)
+	
 func show_debug() -> void:
 		var selected_tile_name: StringName = selected_tile.tile_name if selected_tile else StringName("None")
 		var current_tile_name: StringName = current_tile.chosen_tile.tile_name if current_tile else StringName("None")
-		var ray_coords: Vector2i = world.foreground.local_to_map(world.foreground.to_local(interaction_ray.get_collision_point()))
-
+	
 		world.debug.add_debug_property("FPS", Engine.get_frames_per_second())
 		world.debug.add_debug_property("Player Coordinates", coords)
 		world.debug.add_debug_property("Mouse Coordinates", mouse_coords)
 		world.debug.add_debug_property("Selected Tile", selected_tile_name)
 		world.debug.add_debug_property("Current Tile", current_tile_name)
 		world.debug.add_debug_property("Seed", world.noise_seed)
-		world.debug.add_debug_property("Reachable", interaction_ray.is_colliding(), ray_coords == mouse_coords)
+		world.debug.add_debug_property("Reachable", is_reachable())
 
 func _process(_delta: float) -> void:
 	coords = world.foreground.local_to_map(world.foreground.to_local(global_position))
 	mouse_coords = world.foreground.local_to_map(world.foreground.to_local(get_global_mouse_position()))
 	current_tile = world.world_tiles.get(mouse_coords)
-	
-	interaction_ray.target_position = get_local_mouse_position()
 
 	direction = Input.get_axis("move_left", "move_right")
 
@@ -74,11 +102,7 @@ func _process(_delta: float) -> void:
 		selected_tile = current_tile.chosen_tile
 	
 	# todo: maybe check this only when interacting
-	var in_range: bool = (
-		mouse_coords != coords and
-		mouse_coords != Vector2i(coords.x, coords.y - 1) and
-		coords.distance_to(mouse_coords) <= action_range
-	)
+	var in_range: bool = is_reachable()
 
 	var is_hitting: bool = animator.get("parameters/OneShot/active")
 	

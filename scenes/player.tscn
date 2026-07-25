@@ -63,12 +63,11 @@ nodes/ThreeScale/node = SubResource("AnimationNodeTimeScale_tuyoq")
 nodes/ThreeScale/position = Vector2(100, 300)
 node_connections = [&"output", 0, &"OneShot", &"OneShot", 0, &"OneNHalfScale", &"OneShot", 1, &"ThreeScale", &"OneNHalfScale", 0, &"Movement", &"ThreeScale", 0, &"Animation"]
 
-[node name="Player" type="CharacterBody2D" unique_id=1716267208 node_paths=PackedStringArray("skeleton", "animator", "camera", "interaction_ray", "head", "body", "left_arm", "right_arm", "left_leg", "right_leg") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1716267208 node_paths=PackedStringArray("skeleton", "animator", "camera", "head", "body", "left_arm", "right_arm", "left_leg", "right_leg") groups=["Player"]]
 script = ExtResource("1_g2els")
 skeleton = NodePath("Skeleton")
 animator = NodePath("Animator")
 camera = NodePath("Eyes")
-interaction_ray = NodePath("InteractionRay")
 head = NodePath("Skeleton/Hip/Skull/Head")
 body = NodePath("Skeleton/Hip/Body")
 left_arm = NodePath("Skeleton/Hip/LeftArmBone/LeftArm")
@@ -194,5 +193,3 @@ bone_angle = 0.0
 [node name="Eyes" type="Camera2D" parent="." unique_id=1473644967]
 zoom = Vector2(0.35, 0.35)
 process_callback = 0
-
-[node name="InteractionRay" type="RayCast2D" parent="." unique_id=1362863630]
