@@ -18,13 +18,13 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func add_debug_property(id: StringName, value: Variant) -> void:
+func add_debug_property(id: StringName, ...values: Array[Variant]) -> void:
 	if properties.has(id):
 		var target: Label = container.find_child(id, true, false)
-		target.text = id + ": " + str(value)
+		target.text = id + ": " + " ".join(values)
 	else:
 		var property: Label = Label.new()
 		container.add_child(property)
 		property.name = id
-		property.text = id + ": " + str(value)
+		property.text = id + ": " + " ".join(values)
 		properties.append(id)
