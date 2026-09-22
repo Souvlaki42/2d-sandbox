@@ -26,8 +26,8 @@ extends Node2D
 @export var tile_drop: PackedScene
 
 var biome_noise: PerlinNoise = null
-var biome_lookup: Dictionary[int, Biome] = { }
-var world_tiles: Dictionary[Vector2i, WorldTile] = { }
+var biome_lookup: Dictionary[int, Biome] = {}
+var world_tiles: Dictionary[Vector2i, WorldTile] = {}
 var noise_seed: int = 0
 var biome_map: NoiseTexture2D = null
 
@@ -184,6 +184,8 @@ func remove_tile(pos: Vector2i) -> void:
 
 	if world_tile.chosen_tile.wall_variant and world_tile.is_natural:
 		place_tile(world_tile.chosen_tile.wall_variant, pos, background)
+		
+	player.set_obstacle(pos, false)
 
 
 func place_tile(tile: Tile, pos: Vector2i, layer: TileMapLayer = null, natural: bool = true) -> void:
@@ -212,6 +214,7 @@ func place_tile(tile: Tile, pos: Vector2i, layer: TileMapLayer = null, natural: 
 	chosen_layer.set_cell(pos, tile.source_id, coord_choice)
 	world_tiles[pos] = WorldTile.new(tile, chosen_layer, natural)
 
+	player.set_obstacle(pos, true)
 
 func place_tree(current_biome: Biome, x: int, y: int) -> void:
 	var tree_height: int = randi_range(current_biome.min_tree_height, current_biome.max_tree_height)

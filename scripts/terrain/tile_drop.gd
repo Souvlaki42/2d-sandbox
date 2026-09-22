@@ -9,4 +9,4 @@ class_name TileDrop
 func _on_pickup_area_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):
 		queue_free()
-		# todo: add player inventory
+		# TASK(20260922-135746): add inventory system

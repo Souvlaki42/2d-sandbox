@@ -1,0 +1,7 @@
+# optimization
+
+- STATUS: OPEN
+- PRIORITY: 75
+- TAGS: bugs
+
+[TASK(20260922-140520)](../20260922-140520/TASK.md)
