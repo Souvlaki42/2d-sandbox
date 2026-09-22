@@ -50,15 +50,9 @@ func _ready() -> void:
 	left_leg.texture = skin.legs
 	right_leg.texture = skin.legs
 	
-func pathfinding_solid_update() -> void:
-	if not pathfinder: return
-
-	pathfinder.region = world.foreground.get_used_rect()
-	pathfinder.update()
-
-	for cell in world.foreground.get_used_cells():
-		if pathfinder.is_in_boundsv(cell):
-			pathfinder.set_point_solid(cell)
+func set_obstacle(cell: Vector2i, solid: bool) -> void:
+	if pathfinder and pathfinder.is_in_boundsv(cell):
+		pathfinder.set_point_solid(cell, solid)
 
 func pathfinding_setup() -> void:
 	pathfinder = AStarGrid2D.new()
@@ -67,18 +61,12 @@ func pathfinding_setup() -> void:
 	pathfinder.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
 	pathfinder.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
 	pathfinder.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
-	
-	pathfinding_solid_update()
-	
-func set_obstacle(cell: Vector2i, solid: bool) -> void:
-	if not pathfinder: return
+	pathfinder.region = world.foreground.get_used_rect()
+	pathfinder.update()
 
-	if not pathfinder.is_in_boundsv(cell):
-		pathfinding_solid_update()
-		# call_deferred("pathfinding_solid_update")
-		return
-
-	pathfinder.set_point_solid(cell, solid)
+	for cell in world.foreground.get_used_cells():
+		if pathfinder.is_in_boundsv(cell):
+			pathfinder.set_point_solid(cell)
 	
 func is_reachable(target: Vector2i) -> bool:
 	var distance: int = absi(coords.x - target.x) + absi(coords.y - target.y)
