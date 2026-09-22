@@ -34,13 +34,14 @@ var coords: Vector2i
 var current_tile: Terrain.WorldTile
 var jump_velocity: float
 
-var astar: AStarGrid2D
+var pathfinder: AStarGrid2D
 
 func _ready() -> void:
 	direction = 0
-	jump_velocity = -sqrt(2 * jump_height * world.tile_size * gravity)
+	jump_velocity = - sqrt(2 * jump_height * world.tile_size * gravity)
 	world.set_limits()
-	astar = pathfinding_setup()
+	
+	pathfinding_setup()
 
 	head.texture = skin.head
 	body.texture = skin.body
@@ -49,35 +50,57 @@ func _ready() -> void:
 	left_leg.texture = skin.legs
 	right_leg.texture = skin.legs
 	
-func pathfinding_setup() -> AStarGrid2D:
-	var pathfinder = AStarGrid2D.new()
-	
-	var tilemap_size: Vector2i = world.foreground.get_used_rect().end - world.foreground.get_used_rect().position
-	var world_rect: Rect2i = Rect2i(Vector2i.ZERO, tilemap_size)
+func pathfinding_solid_update() -> void:
+	if not pathfinder: return
+
+	pathfinder.region = world.foreground.get_used_rect()
+	pathfinder.update()
+
+	for cell in world.foreground.get_used_cells():
+		if pathfinder.is_in_boundsv(cell):
+			pathfinder.set_point_solid(cell)
+
+func pathfinding_setup() -> void:
+	pathfinder = AStarGrid2D.new()
 		
-	pathfinder.region = world_rect
-	pathfinder.cell_size = world.tile_size * Vector2i.ONE
+	pathfinder.cell_size = world.foreground.tile_set.tile_size
 	pathfinder.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
 	pathfinder.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
 	pathfinder.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 	
-	pathfinder.update()
+	pathfinding_solid_update()
 	
-	for i in range(tilemap_size.x):
-		for j in range(tilemap_size.y):
-			pathfinder.set_point_solid(Vector2i(i, j))
+func set_obstacle(cell: Vector2i, solid: bool) -> void:
+	if not pathfinder: return
+
+	if not pathfinder.is_in_boundsv(cell):
+		pathfinding_solid_update()
+		# call_deferred("pathfinding_solid_update")
+		return
+
+	pathfinder.set_point_solid(cell, solid)
 	
-	return pathfinder
-	
-	
-func is_reachable() -> bool:
-	var path: Array[Vector2i] = astar.get_id_path(coords, mouse_coords).slice(1)
-	
-	return (
-		mouse_coords != coords and
-		mouse_coords != Vector2i(coords.x, coords.y - 1) and
-		coords.distance_to(mouse_coords) <= action_range
-	)
+func is_reachable(target: Vector2i) -> bool:
+	var distance: int = absi(coords.x - target.x) + absi(coords.y - target.y)
+
+	if distance <= 0 or distance > action_range:
+		return false
+
+	for dir: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+		var stand_position := target + dir
+
+		if not pathfinder.is_in_boundsv(stand_position):
+			continue
+
+		if pathfinder.is_point_solid(stand_position):
+			continue
+
+		var path := pathfinder.get_id_path(coords, stand_position)
+
+		if not path.is_empty():
+			return true
+
+	return false
 	
 func show_debug() -> void:
 		var selected_tile_name: StringName = selected_tile.tile_name if selected_tile else StringName("None")
@@ -89,7 +112,7 @@ func show_debug() -> void:
 		world.debug.add_debug_property("Selected Tile", selected_tile_name)
 		world.debug.add_debug_property("Current Tile", current_tile_name)
 		world.debug.add_debug_property("Seed", world.noise_seed)
-		world.debug.add_debug_property("Reachable", is_reachable())
+		world.debug.add_debug_property("Reachable", is_reachable(mouse_coords))
 
 func _process(_delta: float) -> void:
 	coords = world.foreground.local_to_map(world.foreground.to_local(global_position))
@@ -102,7 +125,7 @@ func _process(_delta: float) -> void:
 		selected_tile = current_tile.chosen_tile
 	
 	# todo: maybe check this only when interacting
-	var in_range: bool = is_reachable()
+	var in_range: bool = is_reachable(mouse_coords)
 
 	var is_hitting: bool = animator.get("parameters/OneShot/active")
 	
