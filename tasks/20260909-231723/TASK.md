@@ -4,7 +4,7 @@
 - PRIORITY: 5
 - TAGS: reference
 
-## Todo
+## Tasks
 
 - [ ] ~~Separate dirt and gravel~~
 - [x] Add debugging menu
