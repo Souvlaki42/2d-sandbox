@@ -112,7 +112,7 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("select") and current_tile:
 		selected_tile = current_tile.chosen_tile
 	
-	# todo: maybe check this only when interacting
+	# TASK(20260922-140520): check if is reachable only on input
 	var in_range: bool = is_reachable(mouse_coords)
 
 	var is_hitting: bool = animator.get("parameters/OneShot/active")
